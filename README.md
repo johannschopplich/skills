@@ -22,6 +22,7 @@ Some skills are adapted from other authors:
 | --- | --- |
 | [design-an-interface](design-an-interface/) | [mattpocock/skills/design-an-interface](https://github.com/mattpocock/skills/tree/main/design-an-interface) |
 | [prd-to-issues](prd-to-issues/) | [mattpocock/skills/prd-to-issues](https://github.com/mattpocock/skills/tree/main/prd-to-issues) |
+| [prd-to-plan](prd-to-plan/) | [mattpocock/skills/prd-to-plan](https://github.com/mattpocock/skills/tree/main/prd-to-plan) |
 | [tdd](tdd/) | [mattpocock/skills/tdd](https://github.com/mattpocock/skills/tree/main/tdd) |
 | [write-a-prd](write-a-prd/) | [mattpocock/skills/write-a-prd](https://github.com/mattpocock/skills/tree/main/write-a-prd) |
 
