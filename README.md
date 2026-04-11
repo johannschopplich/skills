@@ -7,6 +7,7 @@ A collection of reusable agent skills for AI coding assistants.
 | Skill | Description |
 | --- | --- |
 | [design-an-interface](design-an-interface/) | Generate multiple radically different interface designs using parallel sub-agents, then compare trade-offs. Based on "Design It Twice". |
+| [edit-an-article](edit-an-article/) | Edit, rewrite, or draft articles, project descriptions, and personal essays in Johann's personal writing voice for johannschopplich.com. |
 | [grill-me](grill-me/) | A three-sentence skill that forces deeper thinking before any code gets written. |
 | [improve-codebase-architecture](improve-codebase-architecture/) | Making your codebase more agent-friendly. |
 | [prd-to-issues](prd-to-issues/) | Breaking down a PRD into separate GitHub issues. |
@@ -15,7 +16,7 @@ A collection of reusable agent skills for AI coding assistants.
 | [skill-authoring](skill-authoring/) | Create and review agent skills with proper structure, progressive disclosure, and bundled resources. |
 | [tdd](tdd/) | Enforcing test-driven development (the most consistent way to improve agent output). |
 | [write-a-prd](write-a-prd/) | Turning conversations into proper Product Requirements Documents. |
-| [writing-coach](writing-coach/) | Review, rewrite, or draft articles matching Johann's personal writing style. |
+| [write-dev-copy](write-dev-copy/) | Draft, rewrite, or review developer-facing copy in Johann's maintainer voice – GitHub replies, PR descriptions, release notes, commit messages, technical docs. |
 
 ## Sources
 
