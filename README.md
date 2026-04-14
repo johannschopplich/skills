@@ -6,6 +6,7 @@ A collection of reusable agent skills for AI coding assistants.
 
 | Skill | Description |
 | --- | --- |
+| [audit-skill](audit-skill/) | Audit a SKILL.md against loading, discoverability, and style rules, then produce a severity-grouped report. |
 | [design-an-interface](design-an-interface/) | Generate multiple radically different interface designs using parallel sub-agents, then compare trade-offs. Based on "Design It Twice". |
 | [edit-an-article](edit-an-article/) | Edit, rewrite, or draft articles, project descriptions, and personal essays in Johann's personal writing voice for johannschopplich.com. |
 | [grill-me](grill-me/) | A three-sentence skill that forces deeper thinking before any code gets written. |
