@@ -12,6 +12,7 @@ A collection of reusable agent skills for AI coding assistants.
 | [prompt-review](prompt-review/) | Review and optimize prompts for LLM reasoning models. Checks clarity, structure, anti-patterns, and agentic concerns. |
 | [skill-authoring](skill-authoring/) | Create and review agent skills with proper structure, progressive disclosure, and bundled resources. |
 | [tdd](tdd/) | Enforcing test-driven development (the most consistent way to improve agent output). |
+| [triage-issue](triage-issue/) | Triage a bug or issue by exploring the codebase to find its root cause and print a diagnosis. |
 | [write-a-prd](write-a-prd/) | Turning conversations into proper Product Requirements Documents. |
 
 ## Sources
