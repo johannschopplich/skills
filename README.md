@@ -11,6 +11,7 @@ A collection of reusable agent skills for AI coding assistants.
 | [design-an-interface](design-an-interface/) | Generate multiple radically different interface designs using parallel sub-agents, then compare trade-offs. Based on "Design It Twice". |
 | [edit-an-article](edit-an-article/) | Edit, rewrite, or draft articles, project descriptions, and personal essays in Johann's personal writing voice for johannschopplich.com. |
 | [grill-me](grill-me/) | A three-sentence skill that forces deeper thinking before any code gets written. |
+| [review-mr](review-mr/) | Deep review of a GitLab MR or GitHub PR against the local codebase. Produces a prioritized must/should/nit punch list. |
 | [skill-authoring](skill-authoring/) | Create and review agent skills with proper structure, progressive disclosure, and bundled resources. |
 | [tdd](tdd/) | Enforcing test-driven development (the most consistent way to improve agent output). |
 | [triage-issue](triage-issue/) | Triage a bug or issue by exploring the codebase to find its root cause and print a diagnosis. |
