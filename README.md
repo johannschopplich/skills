@@ -1,32 +1,65 @@
 # Skills
 
-A collection of reusable agent skills for AI coding assistants.
+Agent skills I use across my consulting and writing work. Each one is small, opinionated, and earned its place by being reached for more than once. A few are forks of [Matt Pocock's](https://github.com/mattpocock/skills) – credited inline.
 
-## Available Skills
+## Planning & Design
 
-| Skill | Description |
-| --- | --- |
-| [audit-prompt](audit-prompt/) | Review and revise prompts written for modern thinking-capable LLMs, applying current best practices. |
-| [audit-skill](audit-skill/) | Audit a SKILL.md against loading, discoverability, and style rules, then produce a severity-grouped report. |
-| [design-an-interface](design-an-interface/) | Generate multiple radically different interface designs using parallel sub-agents, then compare trade-offs. Based on "Design It Twice". |
-| [edit-an-article](edit-an-article/) | Edit, rewrite, or draft articles, project descriptions, and personal essays in Johann's personal writing voice for johannschopplich.com. |
-| [grill-me](grill-me/) | A three-sentence skill that forces deeper thinking before any code gets written. |
-| [review-mr](review-mr/) | Deep review of a GitLab MR or GitHub PR against the local codebase. Produces a prioritized must/should/nit punch list. |
-| [skill-authoring](skill-authoring/) | Create and review agent skills with proper structure, progressive disclosure, and bundled resources. |
-| [tdd](tdd/) | Enforcing test-driven development (the most consistent way to improve agent output). |
-| [triage-issue](triage-issue/) | Triage a bug or issue by exploring the codebase to find its root cause and print a diagnosis. |
-| [write-a-prd](write-a-prd/) | Turning conversations into proper Product Requirements Documents. |
+- **grill-me**: Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved. *Adapted from [@mattpocock](https://github.com/mattpocock/skills/tree/main/grill-me).*
 
-## Sources
+  ```
+  npx skills add johannschopplich/skills/grill-me
+  ```
 
-Some skills are adapted from other authors:
+- **design-an-interface**: Generate multiple radically different interface designs in parallel, then compare trade-offs. Based on "Design It Twice." *Adapted from [@mattpocock](https://github.com/mattpocock/skills/tree/main/design-an-interface).*
 
-| Skill | Source |
-| --- | --- |
-| [design-an-interface](design-an-interface/) | [mattpocock/skills/design-an-interface](https://github.com/mattpocock/skills/tree/main/design-an-interface) |
-| [grill-me](grill-me/) | [mattpocock/skills/grill-me](https://github.com/mattpocock/skills/tree/main/grill-me) |
-| [tdd](tdd/) | [mattpocock/skills/tdd](https://github.com/mattpocock/skills/tree/main/tdd) |
+  ```
+  npx skills add johannschopplich/skills/design-an-interface
+  ```
 
-## License
+## Development
 
-[MIT](./LICENSE) License © [Johann Schopplich](https://github.com/johannschopplich)
+- **tdd**: Test-driven development with a red-green-refactor loop, one vertical slice at a time. *Adapted from [@mattpocock](https://github.com/mattpocock/skills/tree/main/tdd).*
+
+  ```
+  npx skills add johannschopplich/skills/tdd
+  ```
+
+- **triage-issue**: Investigate a bug by exploring the codebase, find the root cause, and print a clear diagnosis before deciding how to fix it.
+
+  ```
+  npx skills add johannschopplich/skills/triage-issue
+  ```
+
+## Review & Audit
+
+- **review-mr**: Deep review of a GitLab MR or GitHub PR against the local codebase. Produces a prioritized must/should/nit punch list.
+
+  ```
+  npx skills add johannschopplich/skills/review-mr
+  ```
+
+- **audit-prompt**: Review and revise prompts written for modern thinking-capable LLMs, applying current best practices.
+
+  ```
+  npx skills add johannschopplich/skills/audit-prompt
+  ```
+
+- **audit-skill**: Audit a `SKILL.md` against loading, discoverability, and style rules, then produce a severity-grouped report.
+
+  ```
+  npx skills add johannschopplich/skills/audit-skill
+  ```
+
+## Writing
+
+- **write-dev-copy**: Draft, rewrite, or review developer-facing copy in my voice: GitHub/GitLab replies, PR descriptions, release notes, commit messages, technical docs.
+
+  ```
+  npx skills add johannschopplich/skills/write-dev-copy
+  ```
+
+- **edit-an-article**: Edit, rewrite, or draft articles, project descriptions, and personal essays in my voice for [johannschopplich.com](https://johannschopplich.com).
+
+  ```
+  npx skills add johannschopplich/skills/edit-an-article
+  ```
