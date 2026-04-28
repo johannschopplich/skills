@@ -49,7 +49,7 @@ Skill loads but won't trigger reliably, or triggers on wrong requests.
 - `description` names the capability in the first 80 characters.
 - `description` includes `Use when...` with concrete trigger verbs a user would say.
 - `description` includes `Don't use for...` with at least one concrete exclusion.
-- `description` and skill body use third person — no `I`, `we`, `our`, `my`, `me`, `you`, or `your`.
+- `description` and skill body use third person – no `I`, `we`, `our`, `my`, `me`, `you`, or `your`.
 - Skill name is specific, not vague (`helper`, `utils`, `tool`, `agent`, `skill`).
 
 ### Quality

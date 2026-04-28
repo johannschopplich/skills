@@ -45,12 +45,12 @@ Omit any severity heading with zero findings. If nothing is flagged, report `Pro
 Prompt won't produce useful output, or actively burns reasoning tokens.
 
 - [ ] Verify the prompt contains an actual task or question, not just context without an ask.
-- [ ] Flag contradictions — an instruction required in one place and forbidden in another, or hierarchy conflicts without precedence. Reasoning models burn tokens trying to reconcile.
+- [ ] Flag contradictions – an instruction required in one place and forbidden in another, or hierarchy conflicts without precedence. Reasoning models burn tokens trying to reconcile.
 - [ ] Verify every constraint has an escape hatch. "Never respond without full confidence" without a fallback causes reasoning spirals; pair with "if you cannot reach full confidence, state your best assessment and flag the uncertainty."
 
 ### Anti-patterns
 
-Reasoning-model-specific mistakes. Highest measured impact — flag first.
+Reasoning-model-specific mistakes. Highest measured impact – flag first.
 
 - [ ] Flag explicit chain-of-thought instructions ("think step by step", "explain your reasoning"). Reasoning models think internally; explicit CoT is redundant and can degrade performance.
 - [ ] Flag aggressive directives ("CRITICAL: You MUST…", caps-locked ALWAYS/NEVER). Claude 4.5+ and GPT-5.x overtrigger; replace with normal language ("Use X when…").
@@ -62,8 +62,8 @@ Reasoning-model-specific mistakes. Highest measured impact — flag first.
 ### Clarity
 
 - [ ] Verify instructions are specific, not vague. "Change this function to improve performance" beats "Can you suggest some changes?".
-- [ ] Verify output format is explicitly stated — structured output schema, tool schema, XML tags, or described sections with per-section length limits.
-- [ ] Verify success criteria are defined — what "done" looks like, with concrete parameters (length, scope, budget).
+- [ ] Verify output format is explicitly stated – structured output schema, tool schema, XML tags, or described sections with per-section length limits.
+- [ ] Verify success criteria are defined – what "done" looks like, with concrete parameters (length, scope, budget).
 - [ ] Verify instructions tell what to do, not what to avoid. "Write flowing prose" beats "Don't use bullet points."
 - [ ] Verify sequential steps use numbered lists when order matters.
 - [ ] Verify action verbs are direct and imperative, not suggestive ("Change X" not "Can you suggest changes to X?").
@@ -81,9 +81,9 @@ Reasoning-model-specific mistakes. Highest measured impact — flag first.
 
 Apply only if the prompt drives an autonomous or tool-using agent.
 
-- [ ] Verify stop conditions are defined — when to finish, when to hand back to the user, when to ask for clarification.
+- [ ] Verify stop conditions are defined – when to finish, when to hand back to the user, when to ask for clarification.
 - [ ] Verify safe vs unsafe actions are distinguished. Destructive or shared-state actions require confirmation; local reversible actions proceed.
-- [ ] Verify eagerness is calibrated — persistence for autonomous tasks, guardrails for high-risk actions.
+- [ ] Verify eagerness is calibrated – persistence for autonomous tasks, guardrails for high-risk actions.
 - [ ] Verify tool-use rules are explicit: when to call, parallelize independent calls, sequence dependent ones.
-- [ ] Verify completion criteria are measurable — internal checklist of deliverables, explicit follow-through policy for irreversible actions.
+- [ ] Verify completion criteria are measurable – internal checklist of deliverables, explicit follow-through policy for irreversible actions.
 - [ ] For prompts driving code changes, verify scope guidance is present: no extra files, no unsolicited features or refactors, no error handling for impossible cases, no abstractions for one-time operations. Claude 4.5/4.6 default to overengineering without this.
