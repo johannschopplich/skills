@@ -1,6 +1,7 @@
 ---
 name: audit-skill
 description: Audit a SKILL.md against loading, discoverability, and style rules, then produce a severity-grouped report. Use when asked to review, audit, critique, or validate an existing skill. Don't use for code reviews, PRs, or writing new skills.
+disable-model-invocation: true
 ---
 
 # Audit Skill
