@@ -5,7 +5,7 @@ description: Draft, rewrite, or review developer-facing written copy in Johann's
 
 # Write Dev Copy
 
-See [REFERENCE.md](REFERENCE.md) for voice patterns, per-scope rules, and examples.
+See [REFERENCE.md](REFERENCE.md) for voice patterns and per-scope rules.
 
 ## Process
 
