@@ -1,6 +1,7 @@
 ---
 name: review-mr
-description: Deep review of a GitLab merge request or GitHub pull request against the local codebase. Produces a prioritized punch list (must/should/nit). Use when the user asks to review an MR/PR, pastes an MR/PR link, or invokes /review-mr. Don't use for writing new code, triaging bugs, or posting comments to the platform.
+description: Deep review of a GitLab merge request or GitHub pull request against the local codebase. Produces a prioritized punch list (must/should/nit). Use when the user asks to review an MR/PR, pastes an MR/PR link, or invokes /review-mr.
+disable-model-invocation: true
 ---
 
 # Review MR
