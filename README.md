@@ -30,6 +30,14 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
   npx skills add johannschopplich/skills/triage-issue
   ```
 
+## Integrations
+
+- **asana-formatting**: Stops Asana MCP writes from coming out as plain text or 400ing. Forces the HTML field, the `<body>` wrapper, and the schema's tag whitelist.
+
+  ```
+  npx skills add johannschopplich/skills/asana-formatting
+  ```
+
 ## Review & Audit
 
 - **review-mr**: Deep review of a GitLab MR or GitHub PR against the local codebase. Produces a prioritized must/should/nit punch list.
