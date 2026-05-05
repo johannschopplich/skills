@@ -10,10 +10,10 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
   npx skills add johannschopplich/skills/grill-me
   ```
 
-- **design-an-interface**: Generate multiple radically different interface designs in parallel, then compare trade-offs. Based on "Design It Twice." *Adapted from [@mattpocock](https://github.com/mattpocock/skills/tree/main/design-an-interface).*
+- **grill-with-docs**: Stress-test a plan against the project's domain language and existing ADRs, capturing resolved decisions into `CONTEXT.md` and `docs/adr/` as the session unfolds. *Adapted from [@mattpocock](https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs).*
 
   ```
-  npx skills add johannschopplich/skills/design-an-interface
+  npx skills add johannschopplich/skills/grill-with-docs
   ```
 
 ## Development
