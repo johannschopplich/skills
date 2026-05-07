@@ -1,28 +1,8 @@
 # Skills
 
-Agent skills I use across my consulting and writing work. Each one is small, opinionated, and earned its place by being reached for more than once. A few are forks of [Matt Pocock's](https://github.com/mattpocock/skills) – credited inline.
-
-## Planning & Design
-
-- **grill-me**: Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved. *Adapted from [@mattpocock](https://github.com/mattpocock/skills/tree/main/grill-me).*
-
-  ```
-  npx skills add johannschopplich/skills/grill-me
-  ```
-
-- **grill-with-docs**: Stress-test a plan against the project's domain language and existing ADRs, capturing resolved decisions into `CONTEXT.md` and `docs/adr/` as the session unfolds. *Adapted from [@mattpocock](https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs).*
-
-  ```
-  npx skills add johannschopplich/skills/grill-with-docs
-  ```
+Agent skills I use across my consulting and writing work. Each one is small, opinionated, and earned its place by being reached for more than once.
 
 ## Development
-
-- **tdd**: Test-driven development with a red-green-refactor loop, one vertical slice at a time. *Adapted from [@mattpocock](https://github.com/mattpocock/skills/tree/main/tdd).*
-
-  ```
-  npx skills add johannschopplich/skills/tdd
-  ```
 
 - **triage-issue**: Investigate a bug by exploring the codebase, find the root cause, and print a clear diagnosis before deciding how to fix it.
 
