@@ -2,14 +2,6 @@
 
 Agent skills I use across my consulting and writing work. Each one is small, opinionated, and earned its place by being reached for more than once.
 
-## Development
-
-- **triage-issue**: Investigate a bug by exploring the codebase, find the root cause, and print a clear diagnosis before deciding how to fix it.
-
-  ```
-  npx skills add johannschopplich/skills/triage-issue
-  ```
-
 ## Integrations
 
 - **asana-formatting**: Stops Asana MCP writes from coming out as plain text or 400ing. Forces the HTML field, the `<body>` wrapper, and the schema's tag whitelist.
