@@ -1,25 +1,61 @@
 ---
 name: write-dev-copy
-description: Draft, rewrite, or review developer-facing written copy in Johann's voice. Use when writing GitHub or GitLab replies, PR/MR descriptions, release notes, commit messages, or technical docs.
+description: Draft developer-facing copy in Johann's voice. Use when writing GitHub/GitLab replies, MR/PR descriptions, or commit messages – or when the user says "draft a reply", "PR description", or "rewrite this".
 ---
 
 # Write Dev Copy
 
-See [REFERENCE.md](REFERENCE.md) for voice patterns and per-scope rules.
+Match Johann's developer voice across replies, PR descriptions, and commits – concise, peer-to-peer, calibrated to context.
 
-## Process
+## Voice
 
-1. **Read** the full context – the issue, PR/MR, prior comments, branch diff, or existing doc – before drafting.
-2. **When responding to a reporter:** if you don't have their specific evidence (config, error message, repro steps, exact symptom), ask for it instead of drafting.
-3. **When drafting an MR/PR description:** decide on the intent first (what the MR does and why), then group changes by logical unit. Do not mirror the diff structure. See REFERENCE.md's "Writing MR/PR Descriptions" section.
-4. **Draft** following the voice patterns in [REFERENCE.md](REFERENCE.md).
-5. **Review** against the checklist below before posting.
+- **Peer-to-peer.** Assume the reader's competence. Never explain down.
+- **Concise by default.** One-liner for simple things. Depth only when the topic demands it.
+- **Technically precise.** Use real symbols from the source material – never invent config keys, type names, or API shapes.
 
-## Review Checklist
+Formatting: en dash with spaces ( – ), never em dash. Bold for bullet lead-ins, not for mid-sentence terms. Italics for spec/API language; use italic emphasis only when the specific word carries weight – not as register. Backticks on every identifier in every artifact, including commit subjects. No ALL CAPS.
 
-- [ ] Voice matches: concise by default, reasoning only when the topic demands it
-- [ ] For replies: thanks-first for contributions, never apologetic when declining
-- [ ] For MR/PR descriptions: leads with intent; aggregates by logical unit; no file-by-file enumeration
-- [ ] En dashes with spaces ( – ), zero em dashes (—), zero italic single-word emphasis
-- [ ] Zero fabricated symbols: every config key, type name, env var, API shape comes from the source material (the reporter's message, the branch, the existing doc)
-- [ ] Would a competent peer write this? If the opening line could begin a Stack Overflow answer, rewrite it.
+Cross-cutting anti-patterns:
+
+- No corporate filler ("great question!", "absolutely!"). Substantive acknowledgment paired with a pivot ("Great idea overall, but ...") is fine.
+- No marketing fuzz ("blazing-fast", "supercharged", "intuitive", "without thinking about it"). Concrete strong verbs are fine.
+- No labeled asides ("Separately:", "Worth flagging:"). Integrate or cut.
+
+## Replies
+
+Calibrate by effort × correctness – thank substantive contributions specifically. When declining a feature, redirect to userland – never apologetic, never dismissive. No essay-length "why" – one clause is enough. When correcting, link the commit or spec section that proves the point. Don't re-explain what the reporter correctly described, and don't recycle their snippet or framing as "the fix".
+
+**Low-effort report.** Close with the reason. No thanks – zero-effort doesn't earn engagement.
+
+```
+Closing this, as no minimal reproducible example provided.
+```
+
+**Wrong-but-trying reporter.** Correct the misdiagnosis without lecturing. Door stays open.
+
+```
+Actually, the library returns the raw response body already. The `{ data: ... }` wrapping must be coming from your backend – can you check your server's response shape?
+```
+
+Signature: open with `Actually,` + state the correct behavior with `already` + hypothesize the cause with `must be` + end with a question.
+
+## PR/MR descriptions
+
+1. **Lead with intent.** One or two sentences saying what the MR does and why. Never a heading or list first.
+2. **Aggregate, don't enumerate.** Group changes by logical unit (package, concern, surface). One bold lead-in + 2–5 high-level bullets per group. Never a file-by-file inventory – the diff is the inventory.
+3. **Structure proportional to content.** A one-line fix gets prose only. Use `##` only when there are multiple groups worth navigating.
+4. **Skip what's obvious from the diff.** Describe what isn't visible by scrolling – intent, cross-package coordination, consequences, migration steps.
+
+## Commit messages
+
+Conventional Commits. Subject only, never a body. Lowercase after the colon. Noun phrases are fine; strict imperative is not required. Backticks on every identifier.
+
+```
+chore: update ESLint rules
+feat: add support for `kirby-markdown` plugin
+feat!: rename `createClient` to `defineClient`
+chore(vscode): remove deprecated flat config option
+```
+
+The subject doubles as the user-facing changelog line – write it to stand alone in a release page. Prefer many small commits over one large. Migration explanations live in `CHANGELOG.md` / `MIGRATION.md`, never in a commit body.
+
