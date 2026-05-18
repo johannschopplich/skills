@@ -57,5 +57,5 @@ feat!: rename `createClient` to `defineClient`
 chore(vscode): remove deprecated flat config option
 ```
 
-The subject doubles as the user-facing changelog line – write it to stand alone in a release page. Prefer many small commits over one large. Migration explanations live in `CHANGELOG.md` / `MIGRATION.md`, never in a commit body.
+The subject doubles as the user-facing changelog line – write it to stand alone in a release page.
 
