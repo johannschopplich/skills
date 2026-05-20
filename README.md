@@ -30,6 +30,12 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
   npx skills add johannschopplich/skills/audit-skill
   ```
 
+- **cross-review**: Spin up a Claude subagent and the codex CLI in parallel on the same artifact, then merge their findings into one report grouped by agreement, divergence, and direct contradictions.
+
+  ```
+  npx skills add johannschopplich/skills/cross-review
+  ```
+
 ## Writing
 
 - **write-dev-copy**: Draft, rewrite, or review developer-facing copy in my voice: GitHub/GitLab replies, PR descriptions, release notes, commit messages, technical docs.
