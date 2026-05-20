@@ -1,6 +1,6 @@
 ---
 name: cross-review
-description: Two independent perspectives on one artifact: spin up a Claude subagent and codex CLI in parallel → merge findings by agreement, divergence, contradictions. Use when user wants a triangulated review or to cross-check a plan across model families.
+description: "Two independent perspectives on one artifact: spin up a Claude subagent and codex CLI in parallel → merge findings by agreement, divergence, contradictions. Use when user wants a triangulated review or to cross-check a plan across model families."
 disable-model-invocation: true
 argument-hint: "[optional focus]"
 ---
@@ -99,5 +99,5 @@ If one worker errors, times out, or returns output that does not fit the finding
 - Continue with the surviving worker.
 - Render the output template with the failed worker's section as `(N/A – <worker> failed: <one-line reason>)`.
 - `Direct contradictions` becomes `(N/A – single-engine review, no cross-check)`.
-- `Synthesis` opens with: *Treat findings as un-triangulated; only one engine ran.*
+- `Synthesis` opens with: _Treat findings as un-triangulated; only one engine ran._
 - Quote the failed worker's verbatim error at the top of the output.
