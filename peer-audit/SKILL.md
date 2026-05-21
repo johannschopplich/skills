@@ -1,25 +1,25 @@
 ---
-name: cross-review
-description: "Two independent perspectives on one artifact: launch Claude CLI and Codex CLI in parallel → merge findings by agreement, divergence, contradictions. Use when user wants a triangulated review or to cross-check a plan across model families."
+name: peer-audit
+description: "Two independent perspectives on one artifact: launch Claude CLI and Codex CLI in parallel → merge findings by agreement, divergence, contradictions. Use when user wants a triangulated review or to verify a plan with a second engine."
 disable-model-invocation: true
 argument-hint: "[optional focus]"
 ---
 
-# Cross-Review
+# Peer Audit
 
 **Core principle**: divergence is the signal. Symmetric prompts and inline reduction make it interpretable.
 
 ## Workflow
 
-1. **Compose the task spec.** Read the current conversation for the artifact under discussion. Build a self-contained brief – workers receive zero conversation history. If args were passed to `/cross-review`, fold them in as the `FOCUS` line of the worker prompt below.
+1. **Compose the task spec.** Read the current conversation for the artifact under discussion. Build a self-contained brief – workers receive zero conversation history. If args were passed to `/peer-audit`, fold them in as the `FOCUS` line of the worker prompt below.
 
 2. **Spin up both workers in parallel.** Single host message, two `Bash` calls – one per worker invocation below.
 
-3. **Collect both outputs.** Read `/tmp/cross-review-claude-$$.txt` and `/tmp/cross-review-codex-$$.txt`. If one is empty, errored, or does not fit the finding-list shape, treat that worker as failed and apply the Failure handling section.
+3. **Collect both outputs.** Read `/tmp/peer-audit-claude-$$.txt` and `/tmp/peer-audit-codex-$$.txt`. If one is empty, errored, or does not fit the finding-list shape, treat that worker as failed and apply the Failure handling section.
 
 4. **Reduce inline.** Merge both finding-lists using the output template below. Do not spawn a third worker for synthesis – the host has the conversation context that makes it the natural arbiter.
 
-5. **Clean up.** `rm -f /tmp/cross-review-*-$$.txt`.
+5. **Clean up.** `rm -f /tmp/peer-audit-*-$$.txt`.
 
 ## Worker prompt template
 
@@ -31,7 +31,7 @@ TASK: <one-line evaluation goal>
 ARTIFACT:
 <paste code / list file paths / state the question>
 
-FOCUS (optional, from /cross-review args): <refinement>
+FOCUS (optional, from /peer-audit args): <refinement>
 
 OUTPUT REQUIREMENTS
 - Return a flat list of findings, one per line.
@@ -52,7 +52,7 @@ claude -p "$WORKER_PROMPT" \
   --add-dir /tmp \
   --no-session-persistence \
   --output-format text \
-  > /tmp/cross-review-claude-$$.txt \
+  > /tmp/peer-audit-claude-$$.txt \
   < /dev/null
 ```
 
@@ -65,7 +65,7 @@ codex exec \
   -c 'sandbox_workspace_write.network_access=true' \
   -c tools.web_search=true \
   --cd "$PWD" --color never \
-  --output-last-message /tmp/cross-review-codex-$$.txt \
+  --output-last-message /tmp/peer-audit-codex-$$.txt \
   --skip-git-repo-check \
   "$WORKER_PROMPT" \
   < /dev/null
@@ -109,6 +109,6 @@ If one worker errors, times out, or returns output that does not fit the finding
 
 - Continue with the surviving worker.
 - Render the output template with the failed worker's section as `(N/A – <worker> failed: <one-line reason>)`.
-- `Direct contradictions` becomes `(N/A – single-engine review, no cross-check)`.
+- `Direct contradictions` becomes `(N/A – single-engine audit, no peer verification)`.
 - `Synthesis` opens with: _Treat findings as un-triangulated; only one engine ran._
 - Quote the failed worker's verbatim error at the top of the output.
