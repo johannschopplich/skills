@@ -1,6 +1,6 @@
 ---
 name: cross-review
-description: "Two independent perspectives on one artifact: spin up a Claude subagent and codex CLI in parallel → merge findings by agreement, divergence, contradictions. Use when user wants a triangulated review or to cross-check a plan across model families."
+description: "Two independent perspectives on one artifact: launch Claude CLI and Codex CLI in parallel → merge findings by agreement, divergence, contradictions. Use when user wants a triangulated review or to cross-check a plan across model families."
 disable-model-invocation: true
 argument-hint: "[optional focus]"
 ---
@@ -13,15 +13,13 @@ argument-hint: "[optional focus]"
 
 1. **Compose the task spec.** Read the current conversation for the artifact under discussion. Build a self-contained brief – workers receive zero conversation history. If args were passed to `/cross-review`, fold them in as the `FOCUS` line of the worker prompt below.
 
-2. **Spin up both workers in parallel.** Single assistant message, two tool calls:
-   - `Agent` tool – `subagent_type: general-purpose`, prompt = filled worker template.
-   - `Bash` tool – the codex command below, prompt = the same filled worker template.
+2. **Spin up both workers in parallel.** Single host message, two `Bash` calls – one per worker invocation below.
 
-3. **Collect both outputs.** Read the Agent tool result and the codex `--output-last-message` file. If one worker errored or returned output that does not fit the finding-list shape, treat that worker as failed and apply the Failure handling section.
+3. **Collect both outputs.** Read `/tmp/cross-review-claude-$$.txt` and `/tmp/cross-review-codex-$$.txt`. If one is empty, errored, or does not fit the finding-list shape, treat that worker as failed and apply the Failure handling section.
 
-4. **Reduce inline.** The main agent merges both finding-lists using the output template below. Do not spawn a third subagent for synthesis – the main agent has the conversation context that makes it the natural arbiter.
+4. **Reduce inline.** Merge both finding-lists using the output template below. Do not spawn a third worker for synthesis – the host has the conversation context that makes it the natural arbiter.
 
-5. **Clean up.** `rm -f /tmp/cross-review-codex-$$.txt`.
+5. **Clean up.** `rm -f /tmp/cross-review-*-$$.txt`.
 
 ## Worker prompt template
 
@@ -43,24 +41,37 @@ OUTPUT REQUIREMENTS
 - Web search and shell-level network are available; clone reference repos, install deps, or curl upstream sources when useful.
 ```
 
-## Codex invocation
+## Worker invocations
+
+Claude:
+
+```bash
+claude -p "$WORKER_PROMPT" \
+  --model opus --effort xhigh \
+  --permission-mode auto \
+  --add-dir /tmp \
+  --no-session-persistence \
+  --output-format text \
+  > /tmp/cross-review-claude-$$.txt \
+  < /dev/null
+```
+
+Codex:
 
 ```bash
 codex exec \
-  -m gpt-5.5 \
-  -c model_reasoning_effort="medium" \
+  -m gpt-5.5 -c model_reasoning_effort="medium" \
   --sandbox workspace-write \
   -c 'sandbox_workspace_write.network_access=true' \
-  --cd "$PWD" \
-  --color never \
+  -c tools.web_search=true \
+  --cd "$PWD" --color never \
   --output-last-message /tmp/cross-review-codex-$$.txt \
   --skip-git-repo-check \
-  -c tools.web_search=true \
   "$WORKER_PROMPT" \
   < /dev/null
 ```
 
-`network_access=true` enables outbound network (clones, deps, curl) inside the filesystem sandbox.
+`--permission-mode auto` and `--sandbox workspace-write` are the equivalent classifier/sandbox layers: both allow local ops in project scope, both let prompt-level rules enforce no-cwd-edit. `network_access=true` enables outbound network inside the codex sandbox.
 
 ## Output template
 
@@ -87,10 +98,10 @@ When both workers flag the same finding at different severities, render both tag
 
 ## Hard rules
 
-- **On codex auth error**: report the codex error verbatim, mark the codex side as failed, continue with the Claude survivor. Do not attempt to log in.
-- **Stdin redirect is non-negotiable.** Every `codex exec` invocation ends in `< /dev/null`. Without it, codex hangs on stdin reads.
+- **On worker auth error**: report the error verbatim, mark that side as failed, continue with the survivor. Do not attempt to log in.
+- **Stdin redirect is non-negotiable.** Every worker invocation ends in `< /dev/null`. Without it, both CLIs hang on stdin reads.
 - **Both workers get the same prompt.** No tailoring per engine.
-- **Workers do not modify the working directory.** Enforcement is via the prompt's no-edit clause; the sandbox does not block writes to cwd.
+- **Workers do not modify the working directory.** Enforcement is via the prompt's no-edit clause; neither auto mode nor `workspace-write` blocks cwd writes.
 
 ## Failure handling
 

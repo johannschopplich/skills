@@ -30,7 +30,7 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
   npx skills add johannschopplich/skills/audit-skill
   ```
 
-- **cross-review**: Spin up a Claude subagent and the codex CLI in parallel on the same artifact, then merge their findings into one report grouped by agreement, divergence, and direct contradictions.
+- **cross-review**: Launch Claude CLI and Codex CLI in parallel on the same artifact, then merge their findings into one report grouped by agreement, divergence, and direct contradictions. Engine-agnostic host – runs from Claude Code, Codex, or a plain shell.
 
   ```
   npx skills add johannschopplich/skills/cross-review
