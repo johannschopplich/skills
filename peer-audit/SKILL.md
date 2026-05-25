@@ -15,11 +15,11 @@ argument-hint: "[optional focus]"
 
 2. **Spin up both workers in parallel.** Single host message, two `Bash` calls – one per worker invocation below.
 
-3. **Collect both outputs.** Read `/tmp/peer-audit-claude-$$.txt` and `/tmp/peer-audit-codex-$$.txt`. If one is empty, errored, or does not fit the finding-list shape, treat that worker as failed and apply the Failure handling section.
+3. **Collect both outputs.** Read `/tmp/peer-audit-claude-$RUN_ID.txt` and `/tmp/peer-audit-codex-$RUN_ID.txt`. If one is empty, errored, or does not fit the finding-list shape, treat that worker as failed and apply the Failure handling section.
 
 4. **Reduce inline.** Merge both finding-lists using the output template below. Do not spawn a third worker for synthesis – the host has the conversation context that makes it the natural arbiter.
 
-5. **Clean up.** `rm -f /tmp/peer-audit-*-$$.txt`.
+5. **Clean up.** `rm -f /tmp/peer-audit-*-$RUN_ID.txt`.
 
 ## Worker prompt template
 
@@ -52,7 +52,7 @@ claude -p "$WORKER_PROMPT" \
   --add-dir /tmp \
   --no-session-persistence \
   --output-format text \
-  > /tmp/peer-audit-claude-$$.txt \
+  > /tmp/peer-audit-claude-$RUN_ID.txt \
   < /dev/null
 ```
 
@@ -65,7 +65,7 @@ codex exec \
   -c 'sandbox_workspace_write.network_access=true' \
   -c tools.web_search=true \
   --cd "$PWD" --color never \
-  --output-last-message /tmp/peer-audit-codex-$$.txt \
+  --output-last-message /tmp/peer-audit-codex-$RUN_ID.txt \
   --skip-git-repo-check \
   "$WORKER_PROMPT" \
   < /dev/null
@@ -102,6 +102,7 @@ When both workers flag the same finding at different severities, render both tag
 - **Stdin redirect is non-negotiable.** Every worker invocation ends in `< /dev/null`. Without it, both CLIs hang on stdin reads.
 - **Both workers get the same prompt.** No tailoring per engine.
 - **Workers do not modify the working directory.** Enforcement is via the prompt's no-edit clause; neither auto mode nor `workspace-write` blocks cwd writes.
+- **Use `$RUN_ID`, not shell `$$`.** Each Bash call has its own PID.
 
 ## Failure handling
 
