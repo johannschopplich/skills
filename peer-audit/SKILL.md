@@ -102,7 +102,6 @@ When both workers flag the same finding at different severities, render both tag
 - **Stdin redirect is non-negotiable.** Every worker invocation ends in `< /dev/null`. Without it, both CLIs hang on stdin reads.
 - **Both workers get the same prompt.** No tailoring per engine.
 - **Workers do not modify the working directory.** Enforcement is via the prompt's no-edit clause; neither auto mode nor `workspace-write` blocks cwd writes.
-- **Use `$RUN_ID`, not shell `$$`.** Each Bash call has its own PID.
 
 ## Failure handling
 
