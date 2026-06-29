@@ -12,10 +12,22 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
 
 ## Review & Audit
 
-- **review-mr**: Deep review of a GitLab MR or GitHub PR against the local codebase. Produces a prioritized must/should/nit punch list.
+- **mr-shepherd**: Take one GitLab MR or GitHub PR to ready-to-ship – review, triage comments, stage safe fixes, draft replies – then stop with a grill-ready brief and an approvable tray. Pushes and posts nothing without sign-off.
 
   ```
-  npx skills add johannschopplich/skills/review-mr
+  npx skills add johannschopplich/skills/mr-shepherd
+  ```
+
+- **ci-triage**: Take one red GitLab or GitHub pipeline to a proven verdict – real regression, flaky, infra, or config – disproving the obvious cause empirically before asserting it, then stage the minimal fix where one applies and stop with a grill-ready brief.
+
+  ```
+  npx skills add johannschopplich/skills/ci-triage
+  ```
+
+- **dependency-hygiene**: Discover what's drifted, sweep the safe bumps, and land deliberate upgrades or migrations cleanly – breaking changes handled against the installed source, every gate green – then stop with a grill-ready brief and an approvable tray. Pushes and opens nothing without sign-off.
+
+  ```
+  npx skills add johannschopplich/skills/dependency-hygiene
   ```
 
 - **audit-prompt**: Review and revise prompts written for modern thinking-capable LLMs, applying current best practices.
