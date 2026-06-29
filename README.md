@@ -2,15 +2,7 @@
 
 Agent skills I use across my consulting and writing work. Each one is small, opinionated, and earned its place by being reached for more than once.
 
-## Integrations
-
-- **asana-formatting**: Stops Asana MCP writes from coming out as plain text or 400ing. Forces the HTML field, the `<body>` wrapper, and the schema's tag whitelist.
-
-  ```
-  npx skills add johannschopplich/skills/asana-formatting
-  ```
-
-## Review & Audit
+## Workflows
 
 - **mr-shepherd**: Take one GitLab MR or GitHub PR to ready-to-ship – review, triage comments, stage safe fixes, draft replies – then stop with a grill-ready brief and an approvable tray. Pushes and posts nothing without sign-off.
 
@@ -29,6 +21,8 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
   ```
   npx skills add johannschopplich/skills/dependency-hygiene
   ```
+
+## Review & Audit
 
 - **audit-prompt**: Review and revise prompts written for modern thinking-capable LLMs, applying current best practices.
 
@@ -60,4 +54,20 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
 
   ```
   npx skills add johannschopplich/skills/edit-an-article
+  ```
+
+## Design
+
+- **generate-tailwind-shades**: Generate a full Tailwind v4 OKLCH palette (shades 50–950) from a single hex or OKLCH brand color, anchored at shade 500.
+
+  ```
+  npx skills add johannschopplich/skills/generate-tailwind-shades
+  ```
+
+## Integrations
+
+- **asana-formatting**: Stops Asana MCP writes from coming out as plain text or 400ing. Forces the HTML field, the `<body>` wrapper, and the schema's tag whitelist.
+
+  ```
+  npx skills add johannschopplich/skills/asana-formatting
   ```
