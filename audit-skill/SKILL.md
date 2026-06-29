@@ -1,6 +1,6 @@
 ---
 name: audit-skill
-description: Audit a SKILL.md against loading, discoverability, and style rules, then produce a severity-grouped report. Use when asked to review, audit, critique, or validate an existing skill. Don't use for code reviews, PRs, or writing new skills.
+description: Audit a SKILL.md against loading, discoverability, and style rules, then produce a severity-grouped report.
 disable-model-invocation: true
 ---
 
@@ -48,8 +48,8 @@ Skill won't load, won't trigger, or will malfunction.
 Skill loads but won't trigger reliably, or triggers on wrong requests.
 
 - `description` names the capability in the first 80 characters.
-- `description` includes `Use when...` with concrete trigger verbs a user would say.
-- `description` includes `Don't use for...` with at least one concrete exclusion.
+- `description` includes `Use when...` with concrete trigger verbs a user would say – **model-invoked skills only**; a `disable-model-invocation` skill strips triggers to a one-line human-facing summary.
+- `description` includes a `Don't use for...` exclusion only when a sibling skill could plausibly be confused for this one; omit it when there's no real overlap, rather than pad with a contrived one.
 - `description` and skill body use third person – no `I`, `we`, `our`, `my`, `me`, `you`, or `your`.
 - Skill name is specific, not vague (`helper`, `utils`, `tool`, `agent`, `skill`).
 
