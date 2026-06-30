@@ -6,9 +6,9 @@ argument-hint: "pipeline or job URL, or branch name"
 
 # CI Triage
 
-Take one red pipeline to a proven verdict – real regression, flaky, infra/deploy, or config – by disproving the obvious hypothesis empirically before asserting any cause, then stage the minimal fix (with a reproduction) where one applies and stop once, late, with a grill-ready brief so the human makes only the real decisions and picks what ships.
+Take one red pipeline to a proven verdict by disproving the obvious hypothesis empirically before asserting any cause, then stage the minimal fix (with a reproduction) where one applies and stop once, late, with a grill-ready brief so the human makes only the real decisions and picks what ships.
 
-The easy answer is the one to distrust: past sessions blamed Cloudflare, a slow origin, a 403, a wrong URL – none survived a real test. Step zero is disproof, not diagnosis.
+The easy answer is the one to distrust – step zero is disproof, not diagnosis.
 
 **Push-right** – do maximal diagnostic work first; the three irreversible actions (push a fix or revert, retry CI, post a comment) wait behind one late checkpoint.
 
@@ -82,15 +82,6 @@ cascade: also failed <N> downstream jobs from this root        (omit if none)
 [ ] comment cause+fix on MR/pipeline [show]
 ```
 
-## Outward-actions tray
-
-Nothing here happens until the human approves that specific item:
-
-- Push the local fix commit (or the revert).
-- Retry the failed CI jobs.
-- Quarantine/flag a repeatedly-flapping test, or open a tracking issue for it – only if drafted.
-- Post the drafted cause+fix comment on the MR / pipeline / issue.
-
 ## After approval
 
 Execute only the checked items, in a safe order: stage/push the commit → retry jobs → post the comment. Before any **irreversible** action (push, force-push, retry), re-run the safety check **at execution time** – abort that item if the remote branch advanced (the push would be non-fast-forward) or the target pipeline is no longer the latest red one (superseded, already retried, or now green). Never act on a stale read. Then return a terse confirmation: what pushed, retried, and posted (with links), the refreshed state line, and any item that **failed** – reported, never swallowed.
@@ -99,11 +90,8 @@ Execute only the checked items, in a safe order: stage/push the commit → retry
 
 - **DOES NOT auto-retry CI** – retry is a tray item behind approval.
 - **DOES NOT push** a fix or revert without approval.
-- Does not assert a cause without an empirical reproduction or a passing-vs-failing comparison – no guessing from logs.
 - Does not auto-quarantine a test on a single flaky sighting.
-- Does not add code comments that restate implementation.
-- Does not hardcode project-specific assumptions – it discovers the repo's stages, runners, and test idiom.
 
 ## Degradation
 
-Can't reproduce up the ladder, no comparison run available, logs truncated, a deploy stage needs credentials → the brief **states exactly what couldn't be established** and offers the cheapest next step – often a `retry` – rather than asserting a cause it didn't prove. Never claim a green that wasn't observed.
+Can't reproduce up the ladder, no comparison run available, logs truncated, a deploy stage needs credentials → the brief **states exactly what couldn't be established** and offers the cheapest next step rather than asserting a cause it didn't prove. Never claim a green that wasn't observed.
