@@ -6,7 +6,7 @@ argument-hint: "MR or PR URL or number"
 
 # MR Shepherd
 
-Take one merge request from needs-attention to ready-to-ship: review it, triage every comment, stage the safe fixes, verify them, pre-draft every outward reply – then stop once, late, with a grill-ready brief so the human makes only the real decisions and picks what posts.
+Take one merge request from needs-attention to ready-to-ship – then stop once, late, with a grill-ready brief so the human makes only the real decisions and picks what posts.
 
 **Push-right** – do maximal non-destructive work first; the two irreversible actions (push to remote, post to the thread) wait behind one late checkpoint.
 
@@ -61,7 +61,7 @@ Detect the host from the URL or the local remote:
 
 ## The brief
 
-An intent mismatch leads the Decisions. Drafts collapse behind `[show]`, never dumped inline. Render the brief even when a section is empty – a clean review still reports the state line and a one-line ready verdict. `write-dev-copy` voice throughout (en dash, backticked identifiers, fact-only).
+Drafts collapse behind `[show]`, never dumped inline. Render the brief even when a section is empty – a clean review still reports the state line and a one-line ready verdict. `write-dev-copy` voice throughout (en dash, backticked identifiers, fact-only).
 
 ```
 ## MR !<id> · <source-branch> → <target>
@@ -87,15 +87,7 @@ intent: <✅/⚠️ vs linked ticket, or "no ticket"> – [ticket]
 
 ## Outward-actions tray
 
-Nothing here happens until the human approves that specific item:
-
-- Post the comment replies.
-- Mark threads resolved.
-- Batch-resolve the downweighted bot threads as noise.
-- Push the local fix commits.
-- Rebase or force-push onto target – only if the merge-safety check flagged it.
-- Update the MR description – only if drafted.
-- Post the Asana update – only if drafted.
+Nothing in the brief's "Ready to ship" checklist happens until the human checks that specific item. Two carry conditions: rebase/force-push only if the merge-safety check flagged it; the MR description and Asana update only if drafted.
 
 ## After approval
 
@@ -105,10 +97,8 @@ Execute only the checked items, in a safe order: stage/push commits → post rep
 
 - **DOES NOT MERGE.** Stops at ready-to-merge; merging is the human's or CI's call.
 - Does not write to Asana except an approved, pre-drafted comment.
-- Does not auto-rebase, auto-force-push, or auto-resolve conflicts – all are tray items behind approval.
-- Does not add code comments that restate implementation.
-- Does not hardcode project-specific conventions – it discovers them per repo.
+- Does not auto-resolve merge conflicts – conflicts are surfaced, never silently fixed.
 
 ## Degradation
 
-MR not found, branch won't check out, no local run env, verification needs secrets → the brief **states it plainly** and still presents whatever work completed. Never claim a green that wasn't observed.
+MR not found, branch won't check out → the brief **states it plainly** and still presents whatever work completed. Never claim a green that wasn't observed.
