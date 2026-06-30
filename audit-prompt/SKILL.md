@@ -1,6 +1,6 @@
 ---
 name: audit-prompt
-description: Reviews and revises prompts written for modern thinking-capable LLMs (Claude 4.x, GPT-5.x), applying current best practices. Use when user wants to review, critique, improve, or optimize an LLM prompt. Don't use for classic prompt-tuning patterns (pre-reasoning-era) or general copy-editing.
+description: Reviews and revises prompts written for modern thinking-capable LLMs (Claude 4.x, GPT-5.x), applying current best practices.
 disable-model-invocation: true
 ---
 
