@@ -6,7 +6,7 @@ argument-hint: "MR or PR URL or number"
 
 # MR Shepherd
 
-Take one merge request from needs-attention to ready-to-ship – then stop once, late, with a grill-ready brief so the human makes only the real decisions and picks what posts.
+Take one merge request from needs-attention to ready-to-ship – then stop once, late, with a grill-ready brief so the human makes only the real decisions and picks what posts – merging itself stays the human's or CI's call.
 
 **Push-right** – do maximal non-destructive work first; the two irreversible actions (push to remote, post to the thread) wait behind one late checkpoint.
 
@@ -24,7 +24,7 @@ Detect the host from the URL or the local remote:
 1. **Resolve the MR.** Fetch metadata (title, author, source/target branch, description, any linked Asana URL) and every comment thread – inline diff comments and general discussion. If the MR carries no Asana link, reverse-discover the ticket: search Asana for the task whose **Merge request** field equals this MR before concluding there is no ticket.
 2. **Merge-safety pre-check** – read-only, every run. Behind its target? Local/remote diverged, so a push would be non-fast-forward and clobber a teammate's force-push? Unpushed local commits, or remote ahead? CI status on the latest pushed commit? Conflicts with target? Record it for the state line. **Never act on it.**
 3. **Discover the repo's conventions; never enumerate them.** Read its `CLAUDE.md`/`AGENTS.md`, its lint/format/dependency config, and above all the surrounding code's idiom (naming, structure, comment density).
-4. **Check out the branch; diff against the MR target.**
+4. **Check out the branch; diff against the MR target.** A merge conflict is surfaced for the human, never resolved silently.
 5. **Review.** Run the `/code-review` skill at **high** effort over the diff – it is the bug and quality engine (correctness + reuse/simplification/efficiency). Layer only the repo-independent lenses on top:
    - **duplication / centralization** – flag, then propose; centralization is a judgment call.
    - **naming restraint** – touch only *wrong or misleading* names, never for taste.
@@ -92,12 +92,6 @@ Nothing in the brief's "Ready to ship" checklist happens until the human checks 
 ## After approval
 
 Execute only the checked items, in a safe order: stage/push commits → post replies → resolve threads (defects, then the bot-noise batch) → update description → post Asana. Before any **irreversible** action (push, force-push, rebase), re-run the merge-safety check **at execution time** and abort that item if the remote moved since the brief – never act on a stale read. Then return a terse confirmation: what posted, pushed, and resolved (with links), the refreshed state line (CI re-triggered, new behind/ahead), and any item that **failed** – reported, never swallowed.
-
-## Non-goals
-
-- **DOES NOT MERGE.** Stops at ready-to-merge; merging is the human's or CI's call.
-- Does not write to Asana except an approved, pre-drafted comment.
-- Does not auto-resolve merge conflicts – conflicts are surfaced, never silently fixed.
 
 ## Degradation
 

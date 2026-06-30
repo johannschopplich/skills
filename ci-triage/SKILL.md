@@ -86,12 +86,6 @@ cascade: also failed <N> downstream jobs from this root        (omit if none)
 
 Execute only the checked items, in a safe order: stage/push the commit → retry jobs → post the comment. Before any **irreversible** action (push, force-push, retry), re-run the safety check **at execution time** – abort that item if the remote branch advanced (the push would be non-fast-forward) or the target pipeline is no longer the latest red one (superseded, already retried, or now green). Never act on a stale read. Then return a terse confirmation: what pushed, retried, and posted (with links), the refreshed state line, and any item that **failed** – reported, never swallowed.
 
-## Non-goals
-
-- **DOES NOT auto-retry CI** – retry is a tray item behind approval.
-- **DOES NOT push** a fix or revert without approval.
-- Does not auto-quarantine a test on a single flaky sighting.
-
 ## Degradation
 
 Can't reproduce up the ladder, no comparison run available, logs truncated, a deploy stage needs credentials → the brief **states exactly what couldn't be established** and offers the cheapest next step rather than asserting a cause it didn't prove. Never claim a green that wasn't observed.
