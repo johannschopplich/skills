@@ -45,7 +45,7 @@ Actually, the library returns the raw response body already. The `{ data: ... }`
 Conventional Commits, subject only – never a body. Lowercase after the colon; noun phrases are fine. The subject doubles as the changelog line – write it to stand alone.
 
 ```
-feat(ff-api): add `/scalar` and `/swagger` docs routes
+feat(api): add `/scalar` and `/swagger` docs routes
 fix(comparisons): safely access `parsedData` value to prevent runtime errors
 refactor: harmonize `useState` keys
 feat!: rename `OpenAPI` to `OpenAPIBuilder`

@@ -16,7 +16,7 @@ The easy answer is the one to distrust – step zero is disproof, not diagnosis.
 
 Detect the host from the URL or the local remote:
 
-- GitLab → `glab ci` (the `finanzfluss-group` case): `get`, `list`, `trace`, `lint`, `retry`.
+- GitLab → `glab ci`: `get`, `list`, `trace`, `lint`, `retry`.
 - GitHub → `gh run` (`list`, `view`, `view --log`, `rerun`). There is no clean `lint` equivalent – validate workflow YAML with `actionlint` if it's available, otherwise skip that check and say so in the brief.
 
 ## State – the branch, not the pipeline
@@ -48,7 +48,7 @@ No state file – the **branch** is the state; the failing pipeline is just wher
    - **Flaky** → *no code fix*. Retry unblocks (a tray item, never auto). Name the flaky test in the brief; when the branch's history shows it **repeatedly flapping**, offer a staged quarantine/flag commit and/or a drafted tracking issue as tray items – never auto-quarantine on a single sighting.
    - **Infra / Deploy** → *no code fix*. Recommend the retry or escalate the infra issue. Stage nothing.
 6. **Re-running CI is outward** – never auto-retry. If flakiness can only be confirmed by a re-run (no comparison run, won't reproduce up the ladder), say so and put `retry failed jobs` on the tray.
-7. **Pre-draft any outward copy via `/write-dev-copy` – stage, never post.** E.g. a comment on the MR/pipeline explaining cause + fix. Language matches the thread – German for `finanzfluss-group`, English for public/OSS.
+7. **Pre-draft any outward copy via `/write-dev-copy` – stage, never post.** E.g. a comment on the MR/pipeline explaining cause + fix. Language matches the thread – the repo's working language when the thread gives no signal.
 8. **Assemble the brief and present at the checkpoint.** When an **orchestrator** opened the pipeline, return the brief and tray **without prompting** – it batches the approval.
 
 ## Fix vs revert

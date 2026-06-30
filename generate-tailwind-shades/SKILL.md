@@ -26,7 +26,7 @@ Output is 11 lines of `--color-NN: oklch(L% C H); /* #hex */` ready to paste int
 
 ### 3. Apply
 
-Paste into the target CSS. Use the variable name the user requested (e.g. `--color-brand-NN`, `--color-finanzfluss-NN`).
+Paste into the target CSS. Use the variable name the user requested (e.g. `--color-brand-NN`).
 
 ## How it works
 

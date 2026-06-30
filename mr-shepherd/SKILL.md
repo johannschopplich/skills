@@ -14,14 +14,14 @@ Take one merge request from needs-attention to ready-to-ship – then stop once,
 
 Detect the host from the URL or the local remote:
 
-- GitLab → `glab` (the `finanzfluss-group` case).
+- GitLab → `glab`.
 - GitHub → `gh`.
 
 **No state file – the thread is the state.** A first run does the full review. A return run works only the delta past the **boundary marker** – the latest of {the last comment the loop replied to, the remote branch HEAD}. Local unpushed commits from a prior run count as **not-done** – they never reached the thread – so re-derive their fixes; but before staging any fix, diff-check whether an identical change already exists locally and skip it if so. Never re-surface a Decision whose thread is already replied-to or resolved: settled is settled.
 
 ## Run – in order
 
-1. **Resolve the MR.** Fetch metadata (title, author, source/target branch, description, any linked Asana URL) and every comment thread – inline diff comments and general discussion. If the MR carries no Asana link, reverse-discover the ticket: search Asana for the task whose **Merge request** field equals this MR before concluding there is no ticket.
+1. **Resolve the MR.** Fetch metadata (title, author, source/target branch, description, any linked tracker ticket) and every comment thread – inline diff comments and general discussion. If the MR carries no ticket link, reverse-discover it from the tracker (e.g. in Asana, the task whose **Merge request** field points back at this MR) before concluding there is none.
 2. **Merge-safety pre-check** – read-only, every run. Behind its target? Local/remote diverged, so a push would be non-fast-forward and clobber a teammate's force-push? Unpushed local commits, or remote ahead? CI status on the latest pushed commit? Conflicts with target? Record it for the state line. **Never act on it.**
 3. **Discover the repo's conventions; never enumerate them.** Read its `CLAUDE.md`/`AGENTS.md`, its lint/format/dependency config, and above all the surrounding code's idiom (naming, structure, comment density).
 4. **Check out the branch; diff against the MR target.** A merge conflict is surfaced for the human, never resolved silently.
@@ -31,14 +31,14 @@ Detect the host from the URL or the local remote:
    - **fit on the touched path** – a half-applied change, cleanup the diff left behind, or tests that don't cover what it actually changed.
 
    With a ticket resolved (forward link or reverse-discovered), fetch it read-only and judge **intent**: does the MR actually do what the ticket asked? An intent mismatch is the **highest-stakes finding** – it leads the brief's Decisions (what diverges, ticket-requirement vs diff-behavior evidence, recommendation), never just the state-line flag.
-6. **Triage every thread.** Tell **bot (CodeRabbit)** from **human** by author metadata, not a name list. Bucket each:
+6. **Triage every thread.** Tell **bot** from **human** by author metadata, not a name list. Bucket each:
    - **blocker** – a real defect.
    - **nit** – minor or style.
    - **idea** – a design suggestion; a judgment call.
    - **question** – wants an answer, not code.
    - **noise** – false-positive, already handled, or out of scope.
 
-   CodeRabbit is **downweighted by default** – a concrete, reproducible defect earns an individual reply + resolve; everything else (noise, already-handled, out-of-scope) is rolled into one silent batch-resolve offered as a single tray item, never per-comment chatter.
+   Review bots (e.g. CodeRabbit) are **downweighted by default** – a concrete, reproducible defect earns an individual reply + resolve; everything else (noise, already-handled, out-of-scope) is rolled into one silent batch-resolve offered as a single tray item, never per-comment chatter.
 7. **Decide each finding and comment on the apply-vs-propose boundary.**
 
    The discriminator is **single correct form, not merely verified** – green verification is necessary but not sufficient. One correct change exists → apply; a *choice* exists → propose.
@@ -54,9 +54,9 @@ Detect the host from the URL or the local remote:
    - Backend, library, or CLI → exercise the real code path (the relevant test, or a scoped repro), not just types.
    - If verification genuinely can't run (needs secrets, no local env), the brief **says so explicitly** – never a silent "should work".
 9. **Pre-draft every outward artifact via `/write-dev-copy` – stage, never post.**
-   - One reply per thread. **Language matches the thread** – default German for `finanzfluss-group`, English for public/OSS, detected per comment; for a short or ambiguous comment, fall back to the thread's dominant language rather than guess.
+   - One reply per thread. **Language matches the thread** – detected per comment; for a short or ambiguous comment, fall back to the thread's dominant language rather than guess.
    - Optional **tightened MR description** – only if the current one is thin, verbose, or merely enumerates the diff. Otherwise omit it; no noise.
-   - Optional **Asana update comment** – e.g. "MR reviewed, X and Y addressed, ready for merge".
+   - Optional **tracker update comment** – e.g. "MR reviewed, X and Y addressed, ready for merge".
 10. **Assemble the brief and present it at the checkpoint.**
 
 ## The brief
@@ -82,16 +82,16 @@ intent: <✅/⚠️ vs linked ticket, or "no ticket"> – [ticket]
 ### Ready to ship – pick what posts
 [ ] post <K> replies   [ ] resolve <M> threads   [ ] resolve <B> bot threads as noise
 [ ] push <P> fix commits   [ ] rebase onto <target> (<N> behind)
-[ ] update MR description [show]   [ ] post Asana update [show]
+[ ] update MR description [show]   [ ] post tracker update [show]
 ```
 
 ## Outward-actions tray
 
-Nothing in the brief's "Ready to ship" checklist happens until the human checks that specific item. Two carry conditions: rebase/force-push only if the merge-safety check flagged it; the MR description and Asana update only if drafted.
+Nothing in the brief's "Ready to ship" checklist happens until the human checks that specific item. Two carry conditions: rebase/force-push only if the merge-safety check flagged it; the MR description and tracker update only if drafted.
 
 ## After approval
 
-Execute only the checked items, in a safe order: stage/push commits → post replies → resolve threads (defects, then the bot-noise batch) → update description → post Asana. Before any **irreversible** action (push, force-push, rebase), re-run the merge-safety check **at execution time** and abort that item if the remote moved since the brief – never act on a stale read. Then return a terse confirmation: what posted, pushed, and resolved (with links), the refreshed state line (CI re-triggered, new behind/ahead), and any item that **failed** – reported, never swallowed.
+Execute only the checked items, in a safe order: stage/push commits → post replies → resolve threads (defects, then the bot-noise batch) → update description → post tracker update. Before any **irreversible** action (push, force-push, rebase), re-run the merge-safety check **at execution time** and abort that item if the remote moved since the brief – never act on a stale read. Then return a terse confirmation: what posted, pushed, and resolved (with links), the refreshed state line (CI re-triggered, new behind/ahead), and any item that **failed** – reported, never swallowed.
 
 ## Degradation
 
