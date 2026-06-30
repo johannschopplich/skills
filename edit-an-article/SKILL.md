@@ -18,8 +18,8 @@ Review, rewrite, or draft text matching Johann's personal voice – **personal, 
 
 After editing or drafting, verify:
 
-- [ ] Verify it opens with a hook (question, teaser, or scene) – not a preamble
-- [ ] Confirm personal anecdotes bridge to broader themes
-- [ ] Check headers are conversational or evocative, never generic labels
-- [ ] Verify sentence rhythm varies and at least one moment of humor lands
-- [ ] Confirm ending is open-ended or forward-looking – no neat bows
+- [ ] Opens with a hook (question, teaser, or scene) – not a preamble
+- [ ] Personal anecdotes bridge to broader themes
+- [ ] Headers are conversational or evocative, never generic labels
+- [ ] Sentence rhythm varies and at least one moment of humor lands
+- [ ] Ending is open-ended or forward-looking – no neat bows
