@@ -36,7 +36,7 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
   npx skills add johannschopplich/skills/audit-skill
   ```
 
-- **peer-audit**: Launch Claude CLI and Codex CLI in parallel on the same artifact, then merge their findings into one report grouped by agreement, divergence, and direct contradictions. Engine-agnostic host – runs from Claude Code, Codex, or a plain shell.
+- **peer-audit**: Run Claude Opus 4.8 and GPT-5.6 Sol in parallel on the same artifact, then merge evidence-bearing findings by agreement, divergence, and direct contradiction. Prefers native Claude/Codex CLIs and falls back per model to Copilot CLI.
 
   ```
   npx skills add johannschopplich/skills/peer-audit
