@@ -11,7 +11,7 @@ Produce a severity-grouped report listing every rule violation found in the skil
 ## Process
 
 1. **Read** the skill's SKILL.md and list its folder tree.
-2. **Run the checklist** below. Record each violation with specific evidence: file, line number, and the actual value or quoted text.
+2. **Run the checklist** below – every rule against the entire skill, each yielding a pass or a violation with evidence: file, line number, and the actual value or quoted text.
 3. **Report** the findings using this template.
 
 <report-template>
@@ -21,11 +21,14 @@ Produce a severity-grouped report listing every rule violation found in the skil
 ## Discoverability
 - <violation with evidence>
 
+## Effectiveness
+- <violation with evidence>
+
 ## Quality
 - <violation with evidence>
 
 ## Summary
-N blockers, N discoverability, N quality.
+N blockers, N discoverability, N effectiveness, N quality.
 </report-template>
 
 Omit any severity heading with zero findings. If nothing is flagged, report `Skill passes audit.` followed by the summary line.
@@ -50,15 +53,27 @@ Skill loads but won't trigger reliably, or triggers on wrong requests.
 - `description` names the capability in the first 80 characters.
 - `description` includes `Use when...` with concrete trigger verbs a user would say – **model-invoked skills only**; a `disable-model-invocation` skill strips triggers to a one-line human-facing summary.
 - `description` includes a `Don't use for...` exclusion only when a sibling skill could plausibly be confused for this one; omit it when there's no real overlap, rather than pad with a contrived one.
-- `description` and skill body use third person – no `I`, `we`, `our`, `my`, `me`, `you`, or `your`.
+- `description` uses third person (`the user`); the body is imperative or second person. Flag first person anywhere and second person in the description.
+- Each `Use when...` trigger names a distinct case; flag synonym triggers that restate one.
 - Skill name is specific, not vague (`helper`, `utils`, `tool`, `agent`, `skill`).
+
+### Effectiveness
+
+Skill loads and triggers but steers the agent weakly.
+
+- Every instruction changes behaviour versus the model's default; flag no-ops (`be thorough`, `write clean code`, `use best practices`).
+- Every prohibition names the replacement behaviour; flag a bare `don't X` without a `do Y instead`.
+- Each rule or fact lives in exactly one place; flag the same meaning restated across sections.
+- Completion criteria are checkable (`every modified file accounted for`); flag vague bounds (`understand the code`, `review thoroughly`).
+- A concept's definition, rules, and caveats sit under one heading; flag one concept scattered across the file.
+- `SKILL.md` inlines what every invocation path needs; material only some paths reach lives in a sibling file behind a pointer that states when to load it.
 
 ### Quality
 
 Skill works but violates style or structure rules.
 
-- `SKILL.md` is under 500 lines. Move detail into sibling files under `references/` if longer.
+- `SKILL.md` is under 500 lines. Move detail into named sibling files if longer.
 - Folder layout: only `scripts/`, `references/`, and `assets/` appear as subdirectories, each one level deep; no `README.md`, `CHANGELOG.md`, or human-facing documentation at the skill root.
-- Instructions are declarative: no hedging (`typically`, `usually`, `might want to`, `aim for`, `consider`, `try to`), no callout boxes (`> **Note:**`), no closing summaries, no preamble sections (`## Overview`, `## Introduction`, `## Background`), and no self-confirmation prompts (`confirm you understand`).
+- Instructions are declarative: flag compliance hedging (`might want to`, `aim for`, `try to`), callout boxes (`> **Note:**`), closing summaries, preamble sections (`## Overview`, `## Introduction`, `## Background`), and self-confirmation prompts (`confirm you understand`). Calibrated facts (`logs are usually wrong`) and imperative `Consider X` pass.
 - Terminology is consistent: one term per concept across the skill, with no drift between synonyms.
-- Workflows are numbered lists with explicit decision branches (`if X → Y; else → Z`); rules and checklists are bulleted, never numbered.
+- Sequences are explicitly ordered (numbered list or phase headings) with decision branches (`if X → Y; else → Z`); rules are bulleted unless count or order is load-bearing (`all three must hold`).
