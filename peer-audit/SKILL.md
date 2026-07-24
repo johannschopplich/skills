@@ -1,6 +1,6 @@
 ---
 name: peer-audit
-description: Runs evidence-bearing audits with Claude Opus 4.8 and GPT-5.6 Sol, then synthesizes agreement, divergence, and contradictions.
+description: Runs evidence-bearing audits with a Claude and a GPT worker in parallel, then synthesizes agreement, divergence, and contradictions.
 disable-model-invocation: true
 argument-hint: "[optional focus]"
 ---
@@ -9,20 +9,11 @@ argument-hint: "[optional focus]"
 
 **Core principle**: divergence is the signal.
 
-**Prompt parity** means both model slots receive the same worker prompt and output contract. A Copilot fallback uses the same base model through a different agent harness, which must be disclosed.
-
-## Completion criteria
-
-- Both model slots contain a valid result envelope or a terminal failure.
-- Every valid finding appears once under agreement, model-only divergence, or direct contradiction.
-- Every Copilot fallback is disclosed by model.
-- The temporary run directory is deleted.
-
 ## Steps
 
-1. **Compose one self-contained worker prompt.** Include the goal, complete artifact or absolute artifact paths, and optional `/peer-audit` focus. Create a temporary run directory and write the prompt to `prompt.txt`. This step is complete when either worker can evaluate the artifact without conversation history.
+1. **Compose one self-contained worker prompt.** Include the goal, complete artifact or absolute artifact paths, and optional `/peer-audit` focus. Create a temporary run directory, note its path, and write the prompt to `prompt.txt`. This step is complete when either worker can evaluate the artifact without conversation history.
 
-2. **Launch both model slots in parallel.** In one host message, run:
+2. **Launch both model slots in parallel, in the background** – foreground shells may cap command runtime below the slot budget. Run:
 
    ```bash
    "<skill-dir>/scripts/run-worker.sh" claude \
@@ -34,13 +25,13 @@ argument-hint: "[optional focus]"
      "<run-dir>/prompt.txt" "<run-dir>/gpt.result" "<project-dir>"
    ```
 
-   Each command has one 15-minute budget covering its native attempt and any fallback. This step is complete when both commands exit.
+   This step is complete when both commands exit.
 
-3. **Collect both envelopes.** Read `claude.result` and `gpt.result`. A successful body follows the `---` separator; a failed envelope records its reason. This step is complete when each model slot has findings or one terminal failure reason.
+3. **Collect both envelopes.** Read `claude.result` and `gpt.result`. Envelope headers name each slot's model and transport; a successful body follows the `---` separator; a failed envelope records its reason. This step is complete when each model slot has findings or one terminal failure reason.
 
-4. **Reduce inline.** Apply the output template and merge rules below. This step is complete when every valid finding is classified once and every failure or fallback is disclosed.
+4. **Reduce inline** – the host holds the conversation context the workers never saw, which makes it the arbiter. Apply the output template and merge rules below. This step is complete when every valid finding is classified once and every failure is disclosed.
 
-5. **Clean the run.** Delete only the recorded temporary run directory.
+5. **Clean the run.** Delete only the run directory noted in step 1.
 
 ## Worker prompt
 
@@ -63,9 +54,9 @@ CONTRACT
 
 ## Runner contract
 
-- Native Claude CLI runs Claude Opus 4.8 at `xhigh`; native Codex CLI runs GPT-5.6 Sol at `high`.
-- A missing native executable, nonzero native exit, or malformed native result retries the same model slot through Copilot CLI when installed.
-- The 15-minute slot timeout is terminal. Missing credentials are reported; no login is attempted.
+- The Claude slot runs on native Claude CLI; the GPT slot runs on native Codex CLI. Each envelope names the model that ran in its `model:` header.
+- A missing native executable, nonzero native exit, or malformed native result retries the same model slot through Copilot CLI when installed. A Copilot fallback runs the same base model through a different agent harness.
+- Each slot has one budget – default 15 minutes, `PEER_AUDIT_TIMEOUT_SECONDS` – covering the native attempt and any fallback; timeout is terminal. Missing credentials are reported; no login is attempted.
 - Workers have shell, network, and project access. Filesystem non-editing is prompt-enforced, not sandbox-enforced. Use this skill only with trusted artifacts and projects.
 
 ## Output
@@ -76,14 +67,14 @@ Transport: <include only model slots that used Copilot fallback>
 ## Both flagged
 - [severity] <finding> - <evidence>
 
-## Only Claude Opus 4.8
+## Only <Claude slot model>
 - [severity] <finding> - <evidence>
 
-## Only GPT-5.6 Sol
+## Only <GPT slot model>
 - [severity] <finding> - <evidence>
 
 ## Direct contradictions
-- <topic>: Claude Opus 4.8 says X; GPT-5.6 Sol says Y.
+- <topic>: <Claude slot model> says X; <GPT slot model> says Y.
 
 ## Synthesis
 <what to act on first, what needs investigation, and what to ignore>
@@ -91,8 +82,9 @@ Transport: <include only model slots that used Copilot fallback>
 
 ## Merge rules
 
+- Render section labels with each slot's model name from its envelope `model:` header.
 - Keep empty sections blank; emptiness is signal. A `NO_FINDINGS` result contributes no bullet.
-- When both models flag the same finding at different severities, render both tags pipe-separated with Claude first. Collapse matching severities.
+- When both models flag the same finding at different severities, render both tags pipe-separated with the Claude slot first. Collapse matching severities.
 - If one slot fails, mark its model-only section `(N/A - <model> failed: <reason>)`, mark contradictions `(N/A - single-model audit, no peer verification)`, and open synthesis with: _Treat findings as untriangulated; only one model ran._
 - If both slots fail, mark both model-only sections with their reasons, mark contradictions `(N/A - both models failed)`, and open synthesis with: _Audit unavailable; neither model produced a valid result._
 - Report fallback once as `Transport: <model> via Copilot fallback (<native failure reason>)`; keep section labels model-based.

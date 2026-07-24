@@ -47,12 +47,14 @@ case "$MODEL_KIND" in
   claude)
     NATIVE_TRANSPORT="claude"
     NATIVE_BIN=$CLAUDE_BIN
+    MODEL_NAME="Claude Opus 4.8"
     COPILOT_MODEL="claude-opus-4.8"
     COPILOT_EFFORT="xhigh"
     ;;
   gpt)
     NATIVE_TRANSPORT="codex"
     NATIVE_BIN=$CODEX_BIN
+    MODEL_NAME="GPT-5.6 Sol"
     COPILOT_MODEL="gpt-5.6-sol"
     COPILOT_EFFORT="high"
     ;;
@@ -82,6 +84,7 @@ write_result() {
 
   {
     printf 'status: %s\n' "$status"
+    printf 'model: %s\n' "$MODEL_NAME"
     printf 'transport: %s\n' "$transport"
     printf 'reason: %s\n' "$reason"
     printf '%s\n' "---"
@@ -98,12 +101,8 @@ normalize_and_validate() {
     BEGIN { valid = 1 }
     {
       sub(/\r$/, "")
-      if ($0 ~ /^[[:space:]]*$/) {
-        if (seen) pending_blank = 1
-        next
-      }
-      if (pending_blank) valid = 0
-      seen = 1
+      if ($0 ~ /^[[:space:]]*$/) next
+      if ($0 ~ /^[[:space:]]*```/) next
       print
       if ($0 ~ /^NO_FINDINGS \| evidence: checked .+$/) {
         count++
@@ -280,6 +279,10 @@ SLOT_STATUS=$?
 
 if [[ -f "$TIMED_OUT" ]]; then
   wait "$TIMER_PID" 2>/dev/null || true
+  if [[ -f "$RESULT_FILE" ]]; then
+    head -1 "$RESULT_FILE" | grep -q '^status: success$' && exit 0
+    exit 1
+  fi
   TRANSPORT=none
   [[ ! -f "$CURRENT_TRANSPORT" ]] || TRANSPORT=$(<"$CURRENT_TRANSPORT")
   write_result "failed" "$TRANSPORT" "timed out after ${TIMEOUT_SECONDS}s"
