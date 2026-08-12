@@ -9,13 +9,14 @@ Voice is cross-cutting – it holds inside every section below.
 
 ## Voice
 
-- **Peer-to-peer.** The reader is a domain peer – often whoever filed the issue or wrote the code. State the fact; trust them to draw the inference. A clause explains down when it defines or justifies something the reader already used correctly, spells out a step they'd infer, or wasn't asked about (`as you know`, `note that`, a "what X does is…" gloss). Keep the claim, cut the gloss.
+- **Peer-to-peer.** The reader is a domain peer – often whoever filed the issue or wrote the code. State the fact; trust them to draw the inference. A clause explains down when it defines or justifies something the reader already used correctly, spells out a step they'd infer, or wasn't asked about (`as you know`, `note that`, a "what X does is…" gloss). Keep the claim, cut the gloss. Never instruct them either – an imperative aimed at a peer reads as a pitch.
+- **Pitched at the reader's altitude.** What counts as a fact depends on who is reading. Someone with the diff open wants intent and consequence; someone who will never open it wants the outcome they'd notice. The same change is a different sentence in each.
 - **Concise by default.** Key facts, not the path that produced them – never a wall of text. But not shallow: cut the recap, keep the one consequence a peer can't read off the diff.
-- **Precise, not embellished.** Real symbols from the source – never invent config keys, type names, or API shapes. No manufactured aphorisms either: if a phrase sounds quotable, he didn't write it.
+- **Precise, not embellished.** Real symbols from the source – never invent config keys, type names, or API shapes. Claims carry the same burden as symbols: check the history before calling something new. No manufactured aphorisms either: if a phrase sounds quotable, he didn't write it.
 
-Formatting: en dash with spaces ( – ), never em dash. Backticks on every identifier in every artifact, including commit subjects. Bold for bullet lead-ins.
+Formatting: en dash with spaces ( – ), never em dash. Backticks on every identifier wherever they render as code, including commit subjects. Bold for bullet lead-ins.
 
-Avoid: corporate filler ("great question!", "absolutely!"), marketing fuzz ("blazing-fast", "supercharged", "intuitive"), labeled asides ("Separately:", "Worth flagging:"). Substantive acknowledgment with a pivot ("Great idea overall, but …") is fine.
+Avoid: corporate filler ("great question!", "absolutely!"), marketing fuzz ("blazing-fast", "supercharged", "intuitive"), labeled asides ("Separately:", "Worth flagging:"), naming your own rhetorical move ("is a question", "here's the thing"). Substantive acknowledgment with a pivot ("Great idea overall, but …") is fine.
 
 ## Replies
 
