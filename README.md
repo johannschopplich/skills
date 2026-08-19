@@ -50,12 +50,6 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
   npx skills add johannschopplich/skills/write-dev-copy
   ```
 
-- **edit-an-article**: Edit, rewrite, or draft articles, project descriptions, and personal essays in my voice for [johannschopplich.com](https://johannschopplich.com).
-
-  ```
-  npx skills add johannschopplich/skills/edit-an-article
-  ```
-
 ## Design
 
 - **generate-tailwind-shades**: Generate a full Tailwind v4 OKLCH palette (shades 50–950) from a single hex or OKLCH brand color, anchored at shade 500.
