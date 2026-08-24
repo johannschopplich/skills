@@ -4,6 +4,14 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
 
 ## Workflows
 
+The three workflow skills below share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
+
+- **push-right**: Loaded by the three below rather than invoked directly. The shared doctrine they run on: do maximal non-destructive work first, apply only what has a single correct form, verify differentially against a baseline, and hold every irreversible action behind one approval tray.
+
+  ```
+  npx skills add johannschopplich/skills/push-right
+  ```
+
 - **mr-shepherd**: Take one GitLab MR or GitHub PR to ready-to-ship – review, triage comments, stage safe fixes, draft replies – then stop with a grill-ready brief and an approvable tray. Pushes and posts nothing without sign-off.
 
   ```
