@@ -1,9 +1,9 @@
 ---
-name: write-dev-copy
+name: writing-for-developers
 description: Draft developer-facing copy in Johann's voice. Use when writing GitHub/GitLab replies, MR/PR descriptions, commit messages, or Slack/Notion status updates and tickets – or when the user says "draft a reply", "PR description", "status update", or "rewrite this".
 ---
 
-# Write Dev Copy
+# Writing for Developers
 
 Voice is cross-cutting – it holds inside every section below.
 

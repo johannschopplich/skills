@@ -44,10 +44,10 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
 
 ## Writing
 
-- **write-dev-copy**: Draft, rewrite, or review developer-facing copy in my voice: GitHub/GitLab replies, PR descriptions, release notes, commit messages, technical docs.
+- **writing-for-developers**: Draft, rewrite, or review developer-facing copy in my voice: GitHub/GitLab replies, PR descriptions, release notes, commit messages, technical docs.
 
   ```
-  npx skills add johannschopplich/skills/write-dev-copy
+  npx skills add johannschopplich/skills/writing-for-developers
   ```
 
 ## Design

@@ -43,7 +43,7 @@ Detect the host from the URL or the local remote:
 
    The discriminator is **single correct form, not merely verified** – green verification is necessary but not sufficient. One correct change exists → apply; a *choice* exists → propose.
 
-   **Apply** – staged in a reviewable local commit, only once its verification is green. Changes with one correct form: typos, dead code, formatting/convention/import fixes, and comments pointing at an unambiguous real defect. One logical change per commit · `write-dev-copy` commit subjects · **no explanatory comments** unless the code is genuinely non-obvious. Commit locally; **never push**.
+   **Apply** – staged in a reviewable local commit, only once its verification is green. Changes with one correct form: typos, dead code, formatting/convention/import fixes, and comments pointing at an unambiguous real defect. One logical change per commit · `writing-for-developers` commit subjects · **no explanatory comments** unless the code is genuinely non-obvious. Commit locally; **never push**.
 
    **Propose** – described in the brief, never written to disk. Anything that adds or alters control flow – null/undefined guards, early returns, error handling, defaults – **even when verified**, unless the guard is the sole correct fix for a reproduced crash. Also duplication/centralization tradeoffs, naming choices, API or interface shape, behavioral changes, anything that expands scope.
 8. **Verify – differential, change-scoped; disprove before asserting.**
@@ -53,7 +53,7 @@ Detect the host from the URL or the local remote:
    - A UI or user-facing change in a browser repo → reproduce the *specific* change live via **Chrome DevTools MCP** (the exact bug it fixes, or the new behavior) and capture screenshot/console as evidence.
    - Backend, library, or CLI → exercise the real code path (the relevant test, or a scoped repro), not just types.
    - If verification genuinely can't run (needs secrets, no local env), the brief **says so explicitly** – never a silent "should work".
-9. **Pre-draft every outward artifact via `/write-dev-copy` – stage, never post.**
+9. **Pre-draft every outward artifact via `/writing-for-developers` – stage, never post.**
    - One reply per thread. **Language matches the thread** – detected per comment; for a short or ambiguous comment, fall back to the thread's dominant language rather than guess.
    - Optional **tightened MR description** – only if the current one is thin, verbose, or merely enumerates the diff. Otherwise omit it; no noise.
    - Optional **tracker update comment** – e.g. "MR reviewed, X and Y addressed, ready for merge".
@@ -61,7 +61,7 @@ Detect the host from the URL or the local remote:
 
 ## The brief
 
-Drafts collapse behind `[show]`, never dumped inline. Render the brief even when a section is empty – a clean review still reports the state line and a one-line ready verdict. `write-dev-copy` voice throughout (en dash, backticked identifiers, fact-only).
+Drafts collapse behind `[show]`, never dumped inline. Render the brief even when a section is empty – a clean review still reports the state line and a one-line ready verdict. `writing-for-developers` voice throughout (en dash, backticked identifiers, fact-only).
 
 ```
 ## MR !<id> · <source-branch> → <target>
