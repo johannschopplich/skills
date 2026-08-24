@@ -65,3 +65,9 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
   ```
   npx skills add johannschopplich/skills/asana-formatting
   ```
+
+## Personal
+
+Built for my own machine and archive layout. Published as a reference rather than something to install: it assumes specific hardware and my folder conventions, so it will misfire elsewhere.
+
+- **footage-ingest**: Ingest a camera card into a multi-drive footage archive. Finds material that exists in only one place and copies that first, settles every routing decision with the human before writing, then gates each copy on file count and total bytes.
