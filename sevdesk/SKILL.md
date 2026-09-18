@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # sevDesk
 
-Keep the books in sevDesk for a German freelancer who invoices German and foreign clients, sells through merchants of record, and buys software and gear abroad: SKR04, Ist-Versteuerung, no UStVA filed (Finanzamt exemption), the ZM filed quarterly, so every period of the open year is editable. Years whose annual return is filed (currently 2025 and earlier) are read-only history.
+Keep the books in sevDesk for a German Freiberufler (§ 18 EStG) who invoices German and foreign clients, sells through merchants of record, and buys software and gear abroad: SKR04, Ist-Versteuerung, no UStVA filed (Finanzamt exemption), the ZM filed quarterly, so every period of the open year is editable. Years whose annual return is filed (currently 2025 and earlier) are read-only history.
 
 **Load the doctrine first: invoke the `push-right` skill.** Here the artifact is the sevDesk account, an applied change is a draft voucher, the gates are the reports, and shipping is finalizing and linking. The irreversible actions are **finalize**, **link a payment**, **correct a finalized voucher**, **delete**, and **tag**. `enshrine` (Festschreiben) never runs.
 
@@ -21,11 +21,11 @@ The spec is the reference for endpoints and fields: fetch `https://api.sevdesk.d
 | --- | --- |
 | Bookkeeping 2.0 | `taxRule` + `accountDatev` on every voucher and position; `taxType`, `taxSet`, `accountingType`, and `CreditNote/Factory/createFromVoucher` are dead. `GET /ReceiptGuidance/forAccountNumber?accountNumber=` maps an SKR04 number to its `accountDatev` id with its allowed rules and rates. |
 | Reports | Undocumented, same figures as the UI. `GET /AccountingReports/ustva?startMonth=YYYY-MM&endMonth=YYYY-MM&taxationType=IST` takes a month, a quarter, or a whole year (other ranges answer 500); each KZ is a `fields[]` entry nested under `objects.categories` (`fieldNumber` like `"84 / 85"`, `taxableBaseAmountPrecise`, `taxAmountPrecise`, contributing documents in `objects[]`): collect them with `.. | objects | select(has("fieldNumber"))`. `/AccountingReports/balanceList?startDate=YYYY-MM&endDate=YYYY-MM` and `/AccountingReports/accountSheet?…&skr04AccountNumber=NNNN&sortColumn=date&sortDirection=ASC` return German-formatted strings (`"913,47 €"`, side `(S)`/`(H)`). |
-| Periods | KZ 81 counts by payment date, input tax (KZ 66, 67, and §13b) by `voucherDate`, accounts post by `deliveryDate`. A voucher date in the wrong quarter moves its tax there. KZ 21 and the ZM follow the service period (§ 18b UStG): an EU invoice paid in a later quarter than its service is a Decision. |
-| Lists | Filter server-side: `status=` on `/Voucher`, `/CheckAccountTransaction`, and `/Invoice`, `descriptionLike=` on `/Voucher`, `startDate`/`endDate` as Unix timestamps. Send `countAll=true` and page with `offset` when `total` exceeds the `limit`. Bank row status 100 is unlinked. |
+| Periods | KZ 81 counts by payment date, input tax (KZ 66, 67, and §13b) by `voucherDate`, accounts post by `deliveryDate`. A voucher date in the wrong year moves its tax there. KZ 21 and the ZM follow the service period (§ 18b UStG): an EU invoice paid in a later quarter than its service is a Decision. |
+| Lists | Filter server-side: `status=` on `/Voucher`, `/CheckAccountTransaction`, and `/Invoice`, `descriptionLike=` on `/Voucher`, `startDate`/`endDate` as Unix timestamps. Send `countAll=true` and page with `offset` when `total` exceeds the `limit`. Bank row status 100 is unlinked. `GET /VoucherPos?embed=accountDatev` returns every position in one call, keyed by `voucher.id`. |
 | Documents | `GET /Document/{voucher.document.id}/download` returns the file as base64 in `objects.content`. Upload: `POST /Voucher/Factory/uploadTempFile` (multipart `file=@x.pdf;type=application/pdf`) → `objects.filename` into `saveVoucher`. |
 | Save | `saveVoucher` creates with the `status` it is sent – before the checkpoint always `status: 50` – and takes its payload shape from the spec's example; JSON bodies need `-H 'Content-Type: application/json'`. With `voucher.id` it updates that draft, and drafts only: a position carrying its `id` is updated, one without is added, `voucherPosDelete: [{id, objectName: "VoucherPos"}]` removes one, and `voucherPosSave: null` with `filename: null` keeps positions and document. Finalizing is that update with `status: 100`. A finalized voucher changes through `PUT /Voucher/{id}/resetToOpen` (unlinks its payments) → `resetToDraft` → update → finalize → re-link. |
-| Payment | `PUT /Voucher/{id}/bookAmount` with `amount`, `date` (the bank row's `valueDate`), `type` (`FULL_PAYMENT`, or `N` for each partial row before the last), `checkAccount`, `checkAccountTransaction`, `createFeed: true`. `amount` carries the bank row's sign: negative for an expense (`C`), positive for a revenue (`D`). Existing links: `GET /CheckAccountTransactionLog?checkAccountTransaction[id]=…&checkAccountTransaction[objectName]=CheckAccountTransaction`, the voucher in `object`, the amount in `amountPaid`. |
+| Payment | `PUT /Voucher/{id}/bookAmount` with `amount`, `date` (the bank row's `valueDate`), `type` (`FULL_PAYMENT`, or `N` for each partial row before the last), `checkAccount`, `checkAccountTransaction`, `createFeed: true`. `amount` carries the bank row's sign: negative for an expense (`C`), positive for a revenue (`D`). Existing links: one `GET /CheckAccountTransactionLog?limit=1000&countAll=true`, mapped locally by `checkAccountTransaction` and `object` (the voucher), the amount in `amountPaid`; a filter by `object` is silently ignored. |
 | Foreign currency | `sum*ForeignCurrency` is the document amount, `sum*` EUR at the document rate, `sum*Accounting` EUR as paid. |
 | Tags | Create: `POST /Tag/Factory/create` with `{name, object: {id, objectName}}` (Voucher or Invoice). Read: `GET /TagRelation`. |
 
@@ -33,11 +33,11 @@ Not yet proven through the API, so each is a Decision: creating a foreign-curren
 
 ## Boundary Marker
 
-The **sevDesk account is the state**. The delta: unlinked bank rows, draft and open vouchers, invoice drafts. The tag `akzeptiert` marks a deviation the human accepted, never one that changes the year's tax: it reports under Accepted, and its amounts leave the account checks. A bank fee row waits for its bank's monthly fee invoice: it reports as waiting until that invoice is due, then as a failure.
+The **sevDesk account is the state**. The delta: unlinked bank rows, draft and open vouchers, invoice drafts, and the `akzeptiert` tags (`GET /TagRelation`). The tag `akzeptiert` marks a deviation the human accepted, never one that changes the year's tax payable: it reports under Accepted, and its amounts leave the account checks. A bank fee row waits for its bank's monthly fee invoice: it reports as waiting until the 5th of the following month, then as a failure.
 
 ## Booking Rules
 
-**The supplier's last finalized voucher is the precedent**, unless tagged `akzeptiert`: its account and rule carry over. Supplier names vary in spelling across vouchers; match them loosely. A new supplier's expense account follows the line item: 6837 software, hosting, domains and licences; 6821 courses and conference tickets; 6820 books, magazines and paid newsletters; 6845 tools and small devices up to 250 € net – a device above that is an asset (GWG up to 800 € net, AfA beyond; position flags `isAsset`/`isGwg`, no ReceiptGuidance for 0670), not yet proven through the API, so a Decision; 6850 Sonstiger Betriebsbedarf; 6815 Bürobedarf, consumables only; 6855 bank and FX fees.
+**The supplier's last finalized voucher is the precedent**, unless tagged `akzeptiert`: its account and rule carry over. Supplier names vary in spelling across vouchers; match them loosely. A new supplier's expense account follows the line item: 6837 software, hosting, domains and licences; 6821 courses and conference tickets; 6820 books, magazines and paid newsletters; 6845 tools and small devices up to 250 € net – a self-contained device above that is an asset (GWG up to 800 € net, AfA beyond; position flags `isAsset`/`isGwg`, no ReceiptGuidance for 0670), not yet proven through the API, so a Decision; 6850 Sonstiger Betriebsbedarf; 6815 Bürobedarf, consumables only; 6855 bank and FX fees.
 
 Purchases, first matching row wins:
 
@@ -91,11 +91,12 @@ Audit checks for the unit:
 - 4200 carries no balance. KZ 60 is 0. KZ 81 traces to 4400, KZ 21 to 4336, KZ 45 to 4338. Each KZ 21 invoice is listed with its service quarter as the ZM reminder.
 - 3300 is 0 for the year, or equals the open expense vouchers.
 - No bank row in the unit has status 100, no draft or open voucher is left unlisted, and every array under `ustva` `failures` is empty.
-- No voucher departs from its supplier's precedent, and no voucher date sits in another quarter than its document date.
+- No voucher departs from its supplier's precedent, and no voucher dated in the first or last two weeks of the year sits in another year than its document.
+- Every bank row marked private (status 300) whose payee is a business or an authority is listed.
 
 ## The Brief
 
-Rendered in the conversation's language.
+Rendered in German.
 
 ```
 ## sevDesk · <mode> · <unit>
