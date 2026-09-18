@@ -26,10 +26,10 @@ The spec is the reference for endpoints and fields: fetch `https://api.sevdesk.d
 | Documents | `GET /Document/{voucher.document.id}/download` returns the file as base64 in `objects.content`. Upload: `POST /Voucher/Factory/uploadTempFile` (multipart `file=@x.pdf;type=application/pdf`) → `objects.filename` into `saveVoucher`. |
 | Save | `saveVoucher` creates with the `status` it is sent – before the checkpoint always `status: 50` – and takes its payload shape from the spec's example; JSON bodies need `-H 'Content-Type: application/json'`. With `voucher.id` it updates that draft, and drafts only: a position carrying its `id` is updated, one without is added, `voucherPosDelete: [{id, objectName: "VoucherPos"}]` removes one, and `voucherPosSave: null` with `filename: null` keeps positions and document. Finalizing is that update with `status: 100`. A finalized voucher changes through `PUT /Voucher/{id}/resetToOpen` (unlinks its payments) → `resetToDraft` → update → finalize → re-link. |
 | Payment | `PUT /Voucher/{id}/bookAmount` with `amount`, `date` (the bank row's `valueDate`), `type` (`FULL_PAYMENT`, or `N` for each partial row before the last), `checkAccount`, `checkAccountTransaction`, `createFeed: true`. `amount` carries the bank row's sign: negative for an expense (`C`), positive for a revenue (`D`). Existing links: one `GET /CheckAccountTransactionLog?limit=1000&countAll=true`, mapped locally by `checkAccountTransaction` and `object` (the voucher), the amount in `amountPaid`; a filter by `object` is silently ignored. |
-| Foreign currency | `sum*ForeignCurrency` is the document amount, `sum*` EUR at the document rate, `sum*Accounting` EUR as paid. |
+| Foreign currency | `sum*ForeignCurrency` is the document amount, `sum*` EUR at the document rate, `sum*Accounting` EUR as paid. Positions are sent in document currency. Every `resetToOpen` and `resetToDraft` converts the stored EUR sums again: after a reset, re-save each position by `id` with its document-currency amount and check `sumGrossForeignCurrency` before finalizing. A payment that differs from `sumGross` links with `type: "MTC"`, the difference landing on 6855 (`FULL_PAYMENT` and `CF` answer 422, `O` books it against the expense account). |
 | Tags | Create: `POST /Tag/Factory/create` with `{name, object: {id, objectName}}` (Voucher or Invoice). Read: `GET /TagRelation`. |
 
-Not yet proven through the API, so each is a Decision: creating a foreign-currency voucher, a payment whose amount differs from the voucher (fees, FX), and goods bought from an EU seller.
+Not yet proven through the API, so each is a Decision: creating a foreign-currency voucher and goods bought from an EU seller.
 
 ## Boundary Marker
 
@@ -68,9 +68,9 @@ Sales:
 
 ## Apply vs Propose
 
-**Apply** – a draft (status 50) with its document attached, wherever the precedent or the purchase table gives the document a single form and, once paid, a bank row matches its amount exactly.
+**Apply** – a draft (status 50) with its document attached, wherever the precedent or the purchase table gives the document a single form and, once paid, a bank row matches its amount: exactly in EUR, within the card's FX difference for a foreign-currency document.
 
-**Propose** where a choice exists: a document that departs from its precedent, an amount difference, a refund, a document dated in a filed year, anything on the not-yet-proven list, and every correction of a finalized voucher.
+**Propose** where a choice exists: a document that departs from its precedent, an amount difference outside FX, a refund, a document dated in a filed year, anything on the not-yet-proven list, and every correction of a finalized voucher.
 
 ## Run – in Order
 
