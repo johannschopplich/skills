@@ -25,8 +25,19 @@ METHOD=$1
 API_PATH=$2
 shift 2
 
+[[ "$API_PATH" != *enshrine* ]] || {
+  echo "enshrine (Festschreiben) never runs through this script" >&2
+  exit 2
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    -v | --verbose | --trace*) echo "$arg would print the token" >&2; exit 2 ;;
+  esac
+done
+
 curl -sS --globoff --fail-with-body -X "$METHOD" "https://my.sevdesk.de/api/v1$API_PATH" \
-  -H "Authorization: $SEVDESK_API_KEY" \
+  -H @<(printf 'Authorization: %s' "$SEVDESK_API_KEY") \
   -H "Accept: application/json" \
   -H "User-Agent: sevdesk-skill" \
   "$@"
