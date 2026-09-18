@@ -4,9 +4,9 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
 
 ## Workflows
 
-The three workflow skills below share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
+The three workflow skills below, plus **sevdesk** under Personal, share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
 
-- **push-right**: Loaded by the three below rather than invoked directly. The shared doctrine they run on: do maximal non-destructive work first, apply only what has a single correct form, verify differentially against a baseline, and hold every irreversible action behind one approval tray.
+- **push-right**: Loaded by the workflow skills rather than invoked directly. The shared doctrine they run on: do maximal non-destructive work first, apply only what has a single correct form, verify differentially against a baseline, and hold every irreversible action behind one approval tray.
 
   ```
   npx skills add johannschopplich/skills/push-right
@@ -79,3 +79,5 @@ The three workflow skills below share one doctrine – work staged behind a sing
 Built for my own machine and archive layout. Published as a reference rather than something to install: it assumes specific hardware and my folder conventions, so it will misfire elsewhere.
 
 - **footage-ingest**: Ingest a camera card into a multi-drive footage archive. Finds material that exists in only one place and copies that first, settles every routing decision with the human before writing, then gates each copy on file count and total bytes.
+
+- **sevdesk**: Book, correct, and audit sevDesk vouchers through the API behind one approval tray (loads **push-right**). Carries the German VAT rules for selling via merchants of record and buying software abroad, plus what the sevDesk OpenAPI spec leaves out: the report endpoints, payment signs, and the refund booking that keeps the payables account balanced.
