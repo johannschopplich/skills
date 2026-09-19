@@ -28,15 +28,15 @@ The spec is the reference for endpoints and fields: fetch `https://api.sevdesk.d
 | Payment | `PUT /Voucher/{id}/bookAmount` with `date` the bank row's `valueDate`, `type` `FULL_PAYMENT` (`N` for each partial row before the last), and `createFeed: true`. `amount` carries the bank row's sign: negative for an expense (`C`), positive for a revenue (`D`). Existing links: one `GET /CheckAccountTransactionLog?limit=1000&countAll=true`, mapped locally by `checkAccountTransaction` and `object` (the voucher), the amount in `amountPaid`; a filter by `object` is silently ignored. |
 | Foreign currency | `sum*ForeignCurrency` is the document amount, `sum*` EUR at the document rate, `sum*Accounting` EUR as paid. Positions are sent in document currency. Every `resetToOpen` and `resetToDraft` converts the stored EUR sums again: after a reset, re-save each position by `id` with its document-currency amount and check `sumGrossForeignCurrency` before finalizing. A payment that differs from `sumGross` links with `type: "MTC"`, the difference landing on 6855 (`FULL_PAYMENT` and `CF` answer 422, `O` books it against the expense account). |
 
-Not yet proven through the API, so each is a Decision: creating a foreign-currency voucher, goods bought from an EU seller, and an asset – a self-contained device above 250 € net.
+Not yet proven through the API, so each is a Decision: creating a foreign-currency voucher, goods bought from an EU seller, and an asset – a durable item above 250 € net, import duty and courier fee included (GWG up to 800 € net if self-contained, otherwise AfA).
 
 ## Boundary Marker
 
-The **sevDesk account is the state**. The delta: unlinked bank rows, draft and open vouchers, invoice drafts, and the `akzeptiert` tags (`GET /TagRelation`). The tag `akzeptiert` marks a deviation the human accepted, never one that changes the year's tax payable: it reports under Accepted, and its amounts leave the account checks. A bank fee row waits for its bank's monthly fee invoice: it reports as waiting until the 5th of the following month, then as a failure.
+The **sevDesk account is the state**. The delta: unlinked bank rows, draft and open vouchers, invoice drafts, and the `akzeptiert` tags (`GET /TagRelation`). The tag `akzeptiert` marks a deviation the human accepted: it reports under Accepted, and its amounts leave the account checks. A bank fee row waits for its bank's monthly fee invoice: it reports as waiting until the 5th of the following month, then as a failure.
 
 ## Booking Rules
 
-**The supplier's last finalized voucher is the precedent**, unless tagged `akzeptiert`: its account and rule carry over (supplier names matched loosely). A new supplier's expense account follows the line item: 6837 software, hosting, domains and licences; 6821 courses and conference tickets; 6820 books, magazines and paid newsletters; 6845 tools and small devices up to 250 € net; 6850 Sonstiger Betriebsbedarf; 6815 Bürobedarf, consumables only; 6855 bank and FX fees.
+**The supplier's last finalized voucher is the precedent**, unless tagged `akzeptiert`: its account and rule carry over (supplier names matched loosely). A new supplier's expense account follows the line item: 6837 software, hosting, domains and licences; 6821 courses and conference tickets; 6820 books, magazines and paid newsletters; 6845 tools, accessories, and small devices up to 250 € net per item; 6850 Sonstiger Betriebsbedarf; 6815 Bürobedarf, consumables only; 6855 bank and FX fees.
 
 Purchases, first matching row wins:
 
@@ -44,8 +44,9 @@ Purchases, first matching row wins:
 | --- | --- | --- |
 | Imported physical goods (customs apply) | 9, 0 % | – |
 | German 19 % printed with the seller's `DE` USt-IdNr. or German Steuernummer, or up to 250 € gross (Kleinbetragsrechnung); 19 % printed otherwise (Amazon EU for a foreign seller) is a Decision | 9, 19 % → Vorsteuer 1406 | KZ 66 |
+| Event admission, hotel, or property service abroad (taxed where it takes place, § 3a Abs. 3 UStG) | a Decision | – |
 | EU member prefix (`AT`, `FR`, `NL`, …), services | 14 (§13b Abs. 1 EU), 0 % | KZ 46/47, offset on 1407 |
-| `EU` (non-Union OSS), `GB`, `US`, or none | 12 (§13b Abs. 2 mit Vorsteuerabzug), 0 % | KZ 84/85, offset on 1407 |
+| `EU` (non-Union OSS), `GB`, `US`, or a foreign address with no number, services | 12 (§13b Abs. 2 mit Vorsteuerabzug), 0 % | KZ 84/85, offset on 1407 |
 
 Sales:
 
@@ -85,6 +86,7 @@ Audit checks for the unit:
 - Every voucher on the 1406 account sheet shows the supplier's `DE` USt-IdNr. or German Steuernummer (documents also print the buyer's own), or is a Kleinbetragsrechnung or a refund voucher.
 - 1407 and 3837 carry the same amount, and each KZ traces to its row in the Booking Rules tables.
 - 4200 carries no balance. KZ 60 is 0. Each KZ 21 invoice is listed with its service quarter as the ZM reminder.
+- The year's tax payable is reported against the 2 000 € line above which Voranmeldungen resume the next year (§ 18 Abs. 2 UStG).
 - 3300 is 0 for the year, or equals the open expense vouchers.
 - No bank row in the unit has status 100, no draft or open voucher is left unlisted, and every array under `ustva` `failures` is empty.
 - No voucher departs from the purchase table or from its supplier's other vouchers in the unit, and no voucher dated in the first or last two weeks of the year sits in another year than its document.
@@ -118,7 +120,7 @@ state: <N> unlinked bank rows · <D> drafts · <O> open vouchers · baseline <ti
 [ ] tag <voucher> `akzeptiert`   [ ] delete draft <id>
 ```
 
-Offer `tag` for a Decision whose recommendation is to accept the deviation, `delete` for a duplicate or failed draft this run created.
+Offer `tag` for a Decision whose recommendation is to accept a deviation that leaves the year's tax payable unchanged, `delete` for a duplicate or failed draft this run created.
 
 ## After Approval
 
