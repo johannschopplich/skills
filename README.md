@@ -4,7 +4,7 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
 
 ## Workflows
 
-The three workflow skills below, plus **sevdesk** under Personal and **gate**'s Own Work flow, share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
+The four workflow skills below, plus **sevdesk** under Personal and **gate**'s Own Work flow, share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
 
 - **push-right**: Loaded by the workflow skills rather than invoked directly. The shared doctrine they run on: do maximal non-destructive work first, apply only what has a single correct form, verify differentially against a baseline, and hold every irreversible action behind one approval tray.
 
@@ -30,15 +30,21 @@ The three workflow skills below, plus **sevdesk** under Personal and **gate**'s 
   npx skills add johannschopplich/skills/dependency-hygiene
   ```
 
+- **implement**: Implement a spec, a ticket, or the current conversation test-first – a commit per slice, the branch reviewed through **gate** – then stop with a grill-ready brief. Pushes nothing without sign-off. Needs Matt Pocock's `tdd`.
+
+  ```
+  npx skills add johannschopplich/skills/implement
+  ```
+
 ## Review & Audit
 
-- **gate**: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a verdict: ship, fix, or incomplete. On your own branch it applies the fixes with a single correct form, re-gates once, and stops at the marginal benefit (loads **push-right**); a teammate's MR or PR goes through **mr-shepherd**. Builds on Matt Pocock's `code-review` and `tdd`.
+- **gate**: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a verdict: ship, fix, or incomplete. On your own branch it applies the fixes with a single correct form, re-gates once, and stops at the marginal benefit (loads **push-right**); a teammate's MR or PR goes through **mr-shepherd**, which runs it, as does **implement**. Builds on Matt Pocock's `code-review` and `tdd`.
 
   ```
   npx skills add johannschopplich/skills/gate
   ```
 
-- **audit-prompt**: Review and revise prompts written for modern thinking-capable LLMs, applying current best practices. When a new model ships, re-check its version-pinned facts against the live vendor guides with [`scripts/audit-vs-guides.js`](scripts/audit-vs-guides.js), a Claude Code workflow script.
+- **audit-prompt**: Audit a prompt an app sends to a Claude or OpenAI model API – severity-grouped findings plus a revised prompt. When a new model ships, re-check its version-pinned facts against the live vendor guides with [`scripts/audit-vs-guides.js`](scripts/audit-vs-guides.js), a Claude Code workflow script.
 
   ```
   npx skills add johannschopplich/skills/audit-prompt
@@ -52,7 +58,7 @@ The three workflow skills below, plus **sevdesk** under Personal and **gate**'s 
 
 ## Writing
 
-- **writing-for-developers**: Draft, rewrite, or review developer-facing copy in my voice: issue replies, review comments, Slack and tracker notes, PR descriptions, commit subjects, READMEs, and doc pages.
+- **writing-for-developers**: Draft, rewrite, or review developer-facing copy in my voice: issue replies, review comments, Slack and tracker notes, PR descriptions, commit subjects, READMEs, and doc pages – German calques rewritten from the meaning.
 
   ```
   npx skills add johannschopplich/skills/writing-for-developers
@@ -60,7 +66,7 @@ The three workflow skills below, plus **sevdesk** under Personal and **gate**'s 
 
 ## Design
 
-- **generate-tailwind-shades**: Generate a full Tailwind v4 OKLCH palette (shades 50–950) from a single hex or OKLCH brand color, anchored at shade 500.
+- **generate-tailwind-shades**: Generate or re-tune Tailwind v4 OKLCH palettes (shades 50–950) anchored at shade 500, with a comparison page against the current palette and the nearest Tailwind palette.
 
   ```
   npx skills add johannschopplich/skills/generate-tailwind-shades

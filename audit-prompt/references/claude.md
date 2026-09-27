@@ -1,42 +1,55 @@
 # Claude Supplement
 
-Tag every finding from this file `[Claude]`.
+Tag findings `[Claude]`. Snapshot 2026-09-27 – Opus 5.5, Fable 5.1, Fable 5, Sonnet 5; Mythos matches Fable. Source: platform.claude.com (models overview, `effort`, prompting and migration guides).
 
-Snapshot 2026-09-27 – Opus 4.8 and the Claude 5 family (Opus 5, Opus 5.5, Sonnet 5, Fable 5/5.1, Mythos 5/5.1); Opus 5.5 inherits Opus 5 patterns and Opus 4.7 guidance carries to 4.8, per Anthropic. Sources: platform.claude.com docs `claude-prompting-best-practices`, `prompting-claude-opus-5-5`, `prompting-claude-opus-5`, `prompting-claude-opus-4-8`, `effort`, `thinking`, `thinking-troubleshooting`, and the Opus 5.5 and Fable 5.1 migration guides.
+## Blockers
 
-Current Claude models interpret instructions literally and respect effort levels strictly. Items below are net-additional to the universal checklist.
+| Request | Opus 5.5, Fable 5.x | Sonnet 5 | Fix |
+|---|---|---|---|
+| `thinking: {type: "disabled"}` | 400 | allowed | omit; lower `effort` |
+| `budget_tokens` | 400 | 400 | `effort` |
+| `tool_choice` `any` / `tool` | 400 (Fable 5 allows) | allowed | `auto` plus when to call; `strict: true` or Structured Outputs for data |
+| non-default `temperature` / `top_p` / `top_k` | 400 | 400 | remove |
+| last-turn assistant prefill | 400 | 400 | Structured Outputs or format instructions |
+| earlier turn edited or `system` / `tools` rebuilt, thinking replayed | 400 for accounts from 2026-08-31 (not Fable 5) | – | append-only history; per-turn reminders as turn-scoped system messages (`clear_at: "next_user_message"`, beta `mid-conversation-system-clear-at-2026-08-21`) |
 
-### Blockers
+Fable 5 also rejects per-message effort.
 
-- [ ] Flag prefilled assistant responses on the last turn – requests return a 400 error on Claude 4.6+ and Mythos Preview. Use Structured Outputs, tool schemas, XML tags, or explicit format instructions instead. Prefills earlier in the conversation are unaffected.
-- [ ] Opus 5.5, Fable 5.1, Mythos 5.1: flag `tool_choice` set to `{type: "any"}` or `{type: "tool", …}` – returns 400. Keep `auto` (or `none` for a turn that must not call tools) and state in the prompt when the tool applies; where the forced call existed to get structured data, set `strict: true` on the tool or use Structured Outputs.
-- [ ] Opus 4.7+ and the Claude 5 family: flag non-default `temperature`, `top_p`, or `top_k` – returns 400. Remove them and steer style with instructions.
-- [ ] Flag thinking configurations that return 400: `thinking: {type: "enabled", budget_tokens: …}` on Opus 4.7+ and the Claude 5 family; `thinking: {type: "disabled"}` on Opus 5.5, Fable 5/5.1, Mythos 5/5.1, and Mythos Preview, and on Opus 5 at `xhigh` or `max` effort. Remove the setting and control depth with `effort`.
+## All Models
 
-### Anti-Patterns
+- **Effort** – default `medium` on Opus 5.5, `high` elsewhere. Flag `xhigh`/`max` on Opus 5.5 without a measured gain. Lower effort before adding prose that asks for less thinking.
+- **Reasoning in the response** – Opus 5.5 and Fable 5.x can refuse it as `reasoning_extraction`. Remove it and read `thinking.display: "summarized"` (default `"omitted"` returns empty text). Remove "don't think" rules too – they increase tag leakage. Sonnet 5 with thinking disabled: `<thinking>`/`<answer>` tags are the fallback, not a finding.
+- **Review filters** – "only report high-severity", "don't nitpick" are followed literally and cut findings. Report all with confidence and severity; filter downstream.
+- **Frontend** – "avoid a generic AI look" → name the patterns.
+- **`max_tokens`** – thinking counts toward it: at least 64k at `xhigh`/`max`, 128k for long Opus 5.5 agent turns. Sonnet 5 uses ~30% more tokens than Sonnet 4.6.
 
-- [ ] Flag filtering instructions in code-review or finding-style prompts ("only report high-severity," "be conservative," "don't nitpick"). Current models follow these faithfully and convert fewer findings into reports. For coverage, instruct the model to report all findings with confidence and severity, and filter downstream.
-- [ ] Opus 5 and 5.5: flag instructions or harness steps that re-check the model's own work ("double-check your answer," "add a final verification step," "use a subagent to verify," a rubric self-check before finishing) – they cause over-verification; remove them rather than reword. On these targets this replaces the universal self-check. Distinct and passing: a writer–verifier team where one agent checks another's output as part of the product's design (not a verification step kept from an earlier model's scaffolding), a separate pass that filters reported findings, and deterministic validators (tests, scripts).
-- [ ] Opus 5.5: report each universal chain-of-thought finding once, tagged `[Claude]`, with this consequence and fix – prompts asking for reasoning written into the response ("explain your reasoning step by step," `<thinking>` tags) can be declined under the `reasoning_extraction` refusal category. Remove them, set `thinking.display: "summarized"` (the default `"omitted"` returns empty thinking text), and read the summarized reasoning from the thinking blocks.
-- [ ] Verify thinking matches the target's default. Always on and cannot be turned off: Opus 5.5, Fable 5/5.1, Mythos 5/5.1 – omitting the field is correct. On by default, `disabled` accepted: Opus 5 (at `high` effort or below) and Sonnet 5; on Opus 5, flag `disabled` used to save tokens – thinking at `low` effort beats thinking off at similar cost. Off by default: Opus 4.7/4.8 – verify `thinking: {type: "adaptive"}` is set where the task needs reasoning.
-- [ ] Flag `effort` left unset or mis-scaled for the target – level names mean different amounts of thinking per model. Opus 5.5 (default `medium`, which matches or exceeds Opus 5 at `high`): flag `xhigh` or `max` without a stated, measured quality gain. Opus 5, Sonnet 5, Fable and Mythos 5/5.1 (default `high`): `xhigh` for demanding coding and agentic work; `medium` or `low` where evals show quality holds. Opus 4.7/4.8: `xhigh` for coding and agentic work, `high` minimum for intelligence-sensitive tasks, `medium` only for measured cost-sensitive work, `max` only with measured headroom at `xhigh` (it risks overthinking). Any model: `low` for short, scoped, latency-sensitive work.
-- [ ] For cost- or latency-sensitive prompts, flag prose steers that cut thinking where effort has not been lowered first – lowering effort reduces thinking more reliably than instructions do. On Opus 5.5 chat prompts, flag "think carefully before answering" lines for removal. "Answer directly without deliberating." is a last resort at `low`, kept only if measured.
-- [ ] Opus 5.5 frontend or design prompts: flag "avoid a generic AI look" without named patterns – it swaps one default for another. Replace with the specific patterns to avoid.
+## Opus 5.5 and Fable
 
-### Clarity
+| | Opus 5.5 | Fable 5.x |
+|---|---|---|
+| Self-verification | remove "double-check", rubric self-checks, verify-subagents; tests and a separate reviewer pass | long runs: a fresh-context verifier subagent |
+| Progress updates | state cadence and shape | 5.1 writes few: remove "hold findings for the end", "keep updates brief" |
+| Subagents | damp: "Do not delegate work you can finish yourself in a handful of tool calls" | encourage: frequent, asynchronous |
 
-- [ ] Opus 5 and 5.5: extend the universal scope guardrail to every narrow task, not only code changes – verify a line like "Deliver what was asked, at the scope intended. If the request seems mistaken or a better approach exists, say so in a sentence and continue with the task as asked."
-- [ ] Opus 5 and 5.5: for prompts that write files or documents, verify a length target – written deliverables run longer than on earlier models.
+**Both (Opus 5.5, Fable 5.1)**
+- Scope: "Deliver what was asked; don't quietly narrow, widen, or swap it. If a better approach exists, say so in a sentence and continue as asked."
+- Unattended agents: name the unwanted early stops (a summary announcing the next step instead of taking it, an offer to continue, a question no one will answer) and the wanted one (no progress possible without the user).
+- Visible progress: `thinking.display: "updates"` (beta `thinking-display-updates-2026-08-18`).
 
-### Structure
+**Opus 5.5 only**
+- Pasted text in `<pasted_content id="…">`, one random id on both tags; say which text is the user's own.
+- Multiagent fan-out: a time-budget line (`elapsed 340s / 1200s`).
+- Multi-app agents: "read the relevant sources before acting".
+- Chat: drop "think carefully"; add a line treating earlier answers as settled.
 
-- [ ] Opus 5.5 with pasted or external text: verify it is wrapped in `<pasted_content id="…">` tags carrying the same random id on the opening and closing tag, and the system prompt says which text is the user's own.
+**Fable 5.1 only**
+- Remove anti-formatting language.
+- Batch tools: "First privately list what you need next; then request every item that doesn't depend on another's result in this one response."
+- At `low` effort, nudge search.
+- Targeted edits, not whole-file rewrites.
+- Mid-conversation effort changes per message, not top-level.
+- No context-budget countdowns.
 
-### Agentic
-
-- [ ] For agents at `xhigh` or `max` effort, verify `max_tokens` is at least 64k; for long agentic turns on Opus 5.5, 128k (its maximum).
-- [ ] Verify subagent guidance matches the target. Opus 5 and 5.5 delegate readily: flag missing damping where a handful of tool calls finishes the task (subagents sent to verify the model's own work fall under the self-verification item). Delegation fits large, independent, parallel tracks; for Opus 5.5 fan-out, suggest a time budget line (`elapsed 340s / 1200s`). Opus 4.8 spawns fewer by default: flag only blanket always-spawn directives on single-file, sequential, or shared-context work.
-- [ ] For long-horizon agents in harnesses with context compaction or external memory, verify the prompt states the compaction policy and tells the model not to wrap up early on context-budget concerns. Pair with the memory tool where available.
-- [ ] Opus 5.5 unattended agents: verify the prompt names the specific early stops to avoid (a summary that announces the next step instead of taking it, an offer to continue that waits for an answer, a question no one will answer) and the stops that are wanted (no work can advance without the user's input).
-- [ ] Opus 5.5 multi-app or multi-source agents: verify a look-before-acting line ("read the relevant sources before acting").
-- [ ] Opus 5.5, Fable 5/5.1, and Mythos 5.1 where users see progress: verify `thinking.display` is `"updates"` (beta, `thinking-display-updates-2026-08-18` header) or `"summarized"`, and the prompt states update cadence and shape; at the default `"omitted"`, text between tool calls arrives in empty `thinking` blocks.
+**Sonnet 5**
+- Literal: state the scope explicitly; it won't generalize an instruction from one item to the next.
+- Remove forced interim-status scaffolding ("summarize every 3 tool calls").

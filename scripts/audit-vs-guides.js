@@ -95,7 +95,7 @@ const results = await parallel(SOURCES.map(s => () =>
 3. Focus: ${s.focus}
 4. Adjudicate every skill claim this source can speak to:
    - contradicted: the skill asserts something this source contradicts or shows to be outdated. Quote the exact skill line in skill_excerpt and the doc passage in evidence.
-   - missing: guidance in this source that a prompt auditor should check for but the skill lacks. Only material items - things that would change an audit verdict. Write suggested_checklist_item in the skill's own style (imperative Verify/Flag bullet).
+   - missing: guidance in this source that a prompt auditor should check for but the skill lacks. Only material items - things that would change an audit verdict. Write suggested_checklist_item in the skill's own style (a bold name, an en dash, one line).
    - confirmed: skill claims this source directly supports (short list, one line each).
 Severity: blocker = the skill would give actively wrong advice today; major = meaningfully outdated or incomplete; minor = nuance.
 Be strict: if the source does not address a claim, do not list it as confirmed. Record in notes anything you could not verify because content would not load.`,

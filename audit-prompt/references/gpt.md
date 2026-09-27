@@ -1,33 +1,37 @@
-# GPT-5.6 Supplement
+# OpenAI Supplement
 
-Tag every finding from this file `[GPT-5.6]`.
+Tag findings `[GPT]`. Snapshot 2026-09-27 – GPT-6 Astra/Sol/Luna, GPT-5.6 Sol/Terra/Luna (Terra ≈ mini, Luna ≈ nano; `gpt-6-terra` doesn't exist). Source: developers.openai.com (`guides/latest-model`, `prompt-guidance-gpt-5p6`, `reasoning`, Astra blog post).
 
-Snapshot 2026-07-15 – GPT-5.6 (gpt-5.6-sol/terra/luna). Sources: developers.openai.com guides `prompt-guidance-gpt-5p6`, `reasoning`, `reasoning-best-practices`, `latest-model`.
+## Blockers
 
-GPT-5.6 follows prompt contracts closely and is more concise by default than earlier 5.x models. Universal Anti-Pattern and Agentic stop-rule items hit harder on this family; treat unbudgeted absolutes and weak stop conditions as Blockers, not Anti-Patterns. Items below are net-additional to the universal checklist.
+| Request | GPT-6 Astra | GPT-6 Sol/Luna | GPT-5.6 |
+|---|---|---|---|
+| `reasoning.effort: "none"` | 400 | allowed | allowed |
+| `minimal` effort | unsupported – use `low` | same | same |
+| Chat Completions + function calling | unsupported | only at effort `none` | – |
+| `temperature` / `top_p` / `top_logprobs` | remove unless effort `none` | same | – |
+| `prompt_cache_retention` | → `prompt_cache_options.ttl: "30m"` | same | same |
 
-### Anti-Patterns
+## Parameters
 
-- [ ] Flag verbose process descriptions, redundant role reminders, schema or tool-semantics duplication, persona reinforcement, and self-check blocks carried over from earlier 5.x stacks – leaner prompts improve eval scores ~10-15% while cutting tokens 41-66%. Tool-specific guidance belongs in tool descriptions, not the prompt. Migration is incremental: keep the working prompt, run evals before changing it, trim obsolete scaffolding, and add back only the smallest targeted instruction that fixes a measured regression – do not rewrite a working prompt stack all at once.
-- [ ] Flag repeated approval instructions ("ask first", "confirm before…") scattered through the prompt – GPT-5.6 over-triggers approvals. Define approval thresholds once: external writes, destructive actions, purchases, material scope expansion.
+- **Effort** – default `medium`; flag effort raised to cover a vague goal or missing output contract, and `xhigh`/`max` without eval evidence. GPT-6 mid-conversation change: a `configuration_update` input item keeps the cache (single-agent, not with automatic compaction).
+- **`text.verbosity`** over "be concise" prose; GPT-5.6 is concise by default.
+- **`reasoning.mode: "pro"`** only with a stated reason.
+- **`reasoning.context`** – `all_turns` for stable goals, `current_turn` when earlier reasoning is stale.
 
-### Clarity
+## Prompt
 
-- [ ] Flag inline JSON schemas, TypeScript type definitions, or "respond in this exact format" blocks. Use Structured Outputs (`response_format` / JSON Schema) instead. Description fields on schema properties are the right place for per-field instructions.
-- [ ] Flag injection of the current date or "today is YYYY-MM-DD". The model is already aware of the current UTC date. Keep date injection only when the task requires a non-UTC timezone or a date other than now.
-- [ ] Verify the prompt follows the canonical structure: `Role / # Personality / # Goal / # Success criteria / # Constraints / # Tools / # Output / # Stop rules`. Matching this shape gives the strongest training signal.
+- **Lean** – cut verbose process, repeated role lines, and tool semantics duplicated from tool descriptions.
+- **One approval policy, stated once** – repeated "ask first" over-stops. One threshold list: external writes, destructive actions, purchases, scope expansion.
+- **Preamble** – tool-heavy tasks: a short visible update before the first tool call.
+- **o1-era markers** – remove `Formatting re-enabled` and developer-message rules.
 
-### Structure
+## GPT-6 Astra
 
-- [ ] Verify instructions are in a developer message (not a system message). If markdown output is expected, `Formatting re-enabled` is on the first line.
+Prompts tuned for Sol, Luna, or 5.6 can overconstrain it.
 
-### Agentic
-
-- [ ] Verify `reasoning_effort` is set deliberately, with a stated reason, and is a supported value: `none` for latency-critical tasks that need no reasoning (behaves like a non-reasoning model); `minimal` for near-zero reasoning tokens and the fastest first visible token – don't conflate it with `none`; `low` for efficient reasoning on cost-sensitive tool use, planning, and multi-step work; `medium` is the default; `high` for hard reasoning, complex debugging, and deep planning; `xhigh` and `max` only when evals show clear benefit, with `max` reserved for the hardest quality-first workloads. When migrating models, baseline the current effort and test one level lower.
-- [ ] Flag `reasoning_effort` raised to compensate for a vague goal, weak constraints, or a missing output contract – effort is a tuning knob, not a quality-recovery mechanism; fix the prompt first.
-- [ ] Verify `reasoning.mode: "pro"` is used only with a stated justification – quality matters more than latency and token cost. Flag pro mode enabled by default.
-- [ ] For multi-turn agents, verify `reasoning.context` is set intentionally: `all_turns` when the task's goals stay stable across turns; `current_turn` when earlier reasoning is no longer relevant.
-- [ ] Flag `prompt_cache_retention` – superseded by `prompt_cache_options.ttl`; explicit caching is available via `prompt_cache_options.mode: "explicit"`.
-- [ ] Verify `text.verbosity` is set intentionally. Flag prompts that lean on prose instructions ("be concise," "be brief") instead of the parameter. GPT-5.6 is more concise by default than 5.5, so set the level the task needs rather than defaulting low.
-- [ ] For tool-heavy Responses workflows, verify the prompt or harness preserves the `phase` value on each replayed assistant item: `commentary` for intermediate updates, `final_answer` for completed answers.
-- [ ] For multi-step or tool-heavy tasks, verify a streaming-preamble rule: a short user-visible update before the first tool call that acknowledges the request and states the first step.
+- **Initiative** – it asks more. Authorize action and define completion up front: "ask for approval only after preparing a concrete, reviewable result." Soften ask-first language carried over from 5.6.
+- **Testing** – it tests on its own; remove "test/check your work", scope tests on small tasks.
+- **Formatting** – defaults to lists and tables; state a prose preference where the app needs one.
+- **Delegation** – delegates less; say when and how much.
+- **Embedded skills or instruction files** – add "The user's instructions take precedence over guidelines provided in a skill."
