@@ -12,7 +12,7 @@ For prompts an app sends to a model API. Skills, `CLAUDE.md`, and `AGENTS.md` be
 
 1. **Target.** Read the model ID and request parameters from the calling code. `claude-*` → [`references/claude.md`](references/claude.md); `gpt-*` → [`references/gpt.md`](references/gpt.md); several models → each supplement, and the revision holds on all. Configurable model: audit the shipped default, and flag parameters that break on other models the app supports. No supplement for the target → universal only.
 2. **Trace** SDK parameters to the raw request before checking the tables; don't assume the SDK rejects invalid combinations.
-3. **Check** the universal checklist plus the supplement. Quote the prompt for each finding, or cite request code as `file:line`.
+3. **Check** every item of the universal checklist and the supplement against the whole prompt; each yields a pass or a finding. Quote the prompt for each finding, or cite request code as `file:line`.
 4. **Report.** The revision resolves every Blocker and Anti-Pattern, the rest unless the fix breaks the prompt's intent (note the skip). Fixes outside the prompt text go under Request Changes.
 
 <report-template>
@@ -47,7 +47,7 @@ Omit empty headings. Nothing flagged → `Prompt passes audit.`, the summary, an
 ### Anti-Patterns
 
 - **Aggressive directives** – "CRITICAL: You MUST…", caps-locked ALWAYS/NEVER → normal language; absolutes only for true invariants.
-- **Reasoning in the response** ("think step by step", "explain your reasoning") on reasoning targets.
+- **Reasoning in the response** ("think step by step", "explain your reasoning") on reasoning targets → remove it; the model reasons in its thinking.
 
 ### Clarity
 
