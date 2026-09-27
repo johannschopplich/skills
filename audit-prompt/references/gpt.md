@@ -1,12 +1,12 @@
-# GPT-5.6 supplement
+# GPT-5.6 Supplement
 
 Tag every finding from this file `[GPT-5.6]`.
 
-Snapshot 2026-07-15 – GPT-5.6 (gpt-5.6-sol/terra/luna). Sources: developers.openai.com guides `prompt-guidance-gpt-5p6`, `reasoning`, `reasoning-best-practices`, `latest-model`. Re-verify with `scripts/audit-vs-guides.js` when a newer model ships.
+Snapshot 2026-07-15 – GPT-5.6 (gpt-5.6-sol/terra/luna). Sources: developers.openai.com guides `prompt-guidance-gpt-5p6`, `reasoning`, `reasoning-best-practices`, `latest-model`.
 
-GPT-5.6 follows prompt contracts closely and is more concise by default than earlier 5.x models. Universal Anti-pattern and Agentic stop-rule items hit harder on this family; treat unbudgeted absolutes and weak stop conditions as Blockers, not Anti-patterns. Items below are net-additional to the universal checklist.
+GPT-5.6 follows prompt contracts closely and is more concise by default than earlier 5.x models. Universal Anti-Pattern and Agentic stop-rule items hit harder on this family; treat unbudgeted absolutes and weak stop conditions as Blockers, not Anti-Patterns. Items below are net-additional to the universal checklist.
 
-### Anti-patterns
+### Anti-Patterns
 
 - [ ] Flag verbose process descriptions, redundant role reminders, schema or tool-semantics duplication, persona reinforcement, and self-check blocks carried over from earlier 5.x stacks – leaner prompts improve eval scores ~10-15% while cutting tokens 41-66%. Tool-specific guidance belongs in tool descriptions, not the prompt. Migration is incremental: keep the working prompt, run evals before changing it, trim obsolete scaffolding, and add back only the smallest targeted instruction that fixes a measured regression – do not rewrite a working prompt stack all at once.
 - [ ] Flag repeated approval instructions ("ask first", "confirm before…") scattered through the prompt – GPT-5.6 over-triggers approvals. Define approval thresholds once: external writes, destructive actions, purchases, material scope expansion.

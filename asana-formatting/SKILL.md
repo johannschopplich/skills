@@ -1,10 +1,8 @@
 ---
 name: asana-formatting
-description: Format Asana MCP writes correctly. Use when creating or updating any Asana task, project, status update, or comment that contains anything beyond plain text.
+description: Writes rich text into Asana tasks, projects, status updates, and comments through the Asana MCP's HTML fields. Use when an Asana write carries formatting, links, or @-mentions.
 ---
 
-When an Asana MCP write tool exposes an HTML-formatted field (e.g. `html_notes`, `html_text`), use it – never the plain-text alternative.
+Asana renders no Markdown: `**bold**` or `- item` in `notes` or `text` shows up literally. Put formatted content in the tool's HTML field (`html_notes`, `html_text`) as XML, and plain prose in the plain field.
 
-- Wrap the content in a single `<body>...</body>` root. Asana returns `400 Rich text should be wrapped in <body> tag` without it.
-- Use only the tags enumerated in the field's own schema. Anything else returns `400 XML invalid` (common foot-guns: `<p>`, `<br/>`, `<div>`).
-- Attributes belong only on `<a>`.
+Take the allowed elements from that field's schema; they differ per tool (task `html_notes` allows headings, `<hr/>`, `<img>`, and tables; project `html_notes`, comments, and status updates do not). `update_project` lists no elements: hold it to the `create_project` set. Paragraphs have no element: `<p>`, `<br/>`, and `<div>` return `400 XML invalid`.

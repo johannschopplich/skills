@@ -1,87 +1,88 @@
 ---
 name: mr-shepherd
-description: Take one GitLab MR or GitHub PR to ready-to-ship – review, comment triage, staged fixes, drafted replies – behind one approval tray.
-argument-hint: "MR or PR URL or number"
-disable-model-invocation: true
+description: Take a GitLab MR or GitHub PR – or a tracker ticket, several related MRs, or a stack – to ready-to-ship behind one approval tray. Use when asked to review, shepherd, rebase, or land an MR or PR.
+argument-hint: "MR/PR URL(s), a tracker ticket URL, or 'merged' to land the next in a stack"
 ---
 
 # MR Shepherd
 
-Take one merge request from needs-attention to ready-to-ship. Merging itself stays the human's or CI's call.
+Take merge requests from needs-attention to ready-to-ship. Merging stays the human's or CI's call.
 
-**Load the doctrine first: invoke the `push-right` skill.** It carries the shared rules – push-right, the boundary marker, apply-vs-propose, differential verification, outward copy, the brief, and the checkpoint. This file carries what is specific to a merge request. The irreversible actions here are **push to remote** and **post to the thread**.
+**Load the doctrine first: invoke the `push-right` skill.** This file adds what is specific to a merge request. The irreversible actions here are **push to remote**, **post to the thread or tracker** (a bot re-review request included), **create inline drafts**, **resolve a thread**, and **edit the description**. The hard failures are an unauthenticated `glab`/`gh` and an unreachable tracker (step 1) – a brief built without the thread is a guess.
 
-## Host Detection
+## Bind the Run
 
-Detect the host from the URL or the local remote, and bind all three for the run:
+Bind these once, from the invocation and the host; they hold for every step and show in the brief's header.
 
-- GitLab → `glab` · sigil `!` · noun *MR*.
-- GitHub → `gh` · sigil `#` · noun *PR*.
-
-The brief renders `<sigil><id>` and the bound noun. *MR* below means whichever noun the host bound.
+- **Host** from the URL or the local remote: GitLab → `glab` · sigil `!` · noun *MR*; GitHub → `gh` · sigil `#` · noun *PR*. *MR* below means whichever noun the host bound.
+- **Mode** – whose fixes these are:
+  - **teach** (default when the author is someone else): findings become inline review drafts that imply the fix and leave the work to the author; only a fix with a single correct form that the author would never want to learn from – a typo, a missing import – is committed.
+  - **take-over** (the invocation says the author is away, sick, or handing over): fixes are committed on top of the author's commits, and each gets a short draft saying what changed and why, so the author still learns from it.
+  - **own** (the authenticated user wrote the MR): the `gate` skill's Own Work flow applies the fixes and re-gates, then returns its report, Applied, and Decisions into this brief; nothing is drafted to the author.
+- **Inputs.** One MR URL is the plain case. A tracker ticket resolves to its MRs through its merge-request field. Several MRs are reviewed jointly when they share a branch lineage or files (one gate per MR, cross-MR findings in one brief section), separately otherwise – say which in one line. A stack (an MR whose target is another MR's branch) is reviewed bottom-up, one brief section per MR under one combined tray.
 
 ## Boundary Marker
 
-The **thread is the state**. A first run does the full review; a re-fire works only the delta past the boundary marker – the latest of {the last comment this skill replied to, the remote branch HEAD}.
+The **thread is the state**. The boundary marker is the newest note or pending draft by the authenticated account (`glab api user` / `gh api user`). A re-fire works only the delta past it: threads newer than it, and pushes after it – on GitLab the MR versions created since (`glab api projects/:id/merge_requests/:iid/versions`), on GitHub the commits past the `commit_id` of the account's newest review. Only the gate re-runs over the full MR, on purpose; a finding that already has a draft is skipped.
+
+`merged` as the argument is the **land** re-fire: confirm the merge on the host, watch the target's pipeline once, remove the worktree if `git status` there is clean (otherwise name it), and in a stack rebase the next MR onto its new target and shepherd it.
 
 ## Run – in Order
 
-1. **Resolve the MR.** Fetch metadata (title, author, source/target branch, description, any linked tracker ticket) and every comment thread – inline diff comments and general discussion. With no ticket link on the MR, reverse-discover it from the tracker (e.g. in Asana, the task whose **Merge request** field points back at this MR) before concluding there is none.
-2. **Merge-safety pre-check** – read-only, every run. Behind its target? Local/remote diverged, so a push would be non-fast-forward and clobber a teammate's force-push? Unpushed local commits, or remote ahead? CI status on the latest pushed commit? Conflicts with target? Record it for the state line and leave it there – acting on it belongs to the tray.
-3. **Discover the repo's conventions from the repo itself, not from a remembered list.** Read its `CLAUDE.md`/`AGENTS.md`, its lint/format/dependency config, and above all the surrounding code's idiom (naming, structure, comment density). Done once every convention the diff touches is named.
-4. **Check out the branch; diff against the MR target.** A merge conflict is surfaced for the human, never resolved silently.
-5. **Review.** Run the `/code-review` skill at **high** effort over the diff – it is the bug and quality engine (correctness + reuse/simplification/efficiency). Layer only the repo-independent lenses on top:
-   - **duplication / centralization** – flag, then propose; centralization is a judgment call.
-   - **naming restraint** – touch only *wrong or misleading* names, and leave taste alone.
-   - **fit on the touched path** – a half-applied change, cleanup the diff left behind, or tests that don't cover what it actually changed.
-
-   With a ticket resolved (forward link or reverse-discovered), fetch it read-only and judge **intent**: does the MR actually do what the ticket asked? An intent mismatch is the **highest-stakes finding** – it leads the brief's Decisions (what diverges, ticket-requirement vs diff-behavior evidence, recommendation) rather than sitting in the state line as a flag.
-6. **Triage every thread.** Tell **bot** from **human** by author metadata, not a name list. Bucket each:
-   - **blocker** – a real defect.
-   - **nit** – minor or style.
-   - **idea** – a design suggestion; a judgment call.
-   - **question** – wants an answer, not code.
-   - **noise** – false-positive, already handled, or out of scope.
-
-   Review bots (e.g. CodeRabbit) are **downweighted by default** – a concrete, reproducible defect earns an individual reply + resolve; everything else (noise, already-handled, out-of-scope) rolls into one silent batch-resolve, offered as a single tray item rather than per-comment chatter.
-7. **Decide each finding and comment on the apply-vs-propose boundary** (`push-right`). The changes that carry a single correct form here: typos, dead code, formatting/convention/import fixes, and comments pointing at an unambiguous real defect. **Propose** anything that adds or alters control flow – null/undefined guards, early returns, error handling, defaults – *even when verified*, unless the guard is the sole correct fix for a reproduced crash.
-8. **Verify differentially** (`push-right`). A fix that passes its own target but reddens anything else is **discarded**, and the finding it came from moves to Decisions. This skill's targets:
-   - Scope gates to the change – changed-file lint/typecheck, the relevant test path – and fall back to the full suite when scoping isn't reliable.
-   - A UI or user-facing change in a browser repo → reproduce the *specific* change live via **Chrome DevTools MCP** (the exact bug it fixes, or the new behavior) and capture screenshot/console as evidence. MCP unavailable → fall back to the closest automated check (component or e2e test) and name the gap in the brief.
-   - Backend, library, or CLI → exercise the real code path (the relevant test, or a scoped repro), not just types.
-9. **Draft the outward artifacts** (`push-right`). One reply per thread, plus two optional pieces: a **tightened MR description**, only when the current one is thin, verbose, or merely enumerates the diff; and a **tracker update comment**, e.g. "<noun> reviewed, X and Y addressed, ready for merge". Omit either when it adds nothing.
-10. **Assemble the brief and present it at the checkpoint.**
+1. **Preflight.** `glab api user` (or `gh api user`) and one cheap tracker call. A failure ends the run here with the exact fix (`! glab auth login`, `/mcp`).
+2. **Resolve the MR.** Metadata (title, author, source and target branch, description, CI), every comment thread – inline and general – and the linked ticket: the forward link, else one tracker search for the MR URL (in Asana, the task whose **Merge request** field holds it); no hit means no ticket.
+3. **Merge-safety pre-check**, read-only, after a fresh `git fetch`: behind the target? local and remote diverged? unpushed local commits, or the remote ahead? CI on the latest pushed commit? conflicts with the target? Record it for the state line, where a conflict is surfaced, never resolved silently; acting on it belongs to the tray.
+4. **Check out into a worktree** – a dedicated `git worktree` per MR (`../<repo>-mr-<id>`), reused on re-fire, never the user's own checkout.
+5. **Review** – from the worktree, invoke the `gate` skill with the merge-base of the MR's target as the fixed point; the ticket URL as the spec (gate fetches it); and as context the mode (own runs gate's Own Work, the others want the report alone), the author, and any product or design decision the ticket shows as accepted. Then triage its findings through these lenses:
+   - **Intent** – a spec finding that the MR does something other than what the ticket asked is the highest-stakes finding and leads the Decisions.
+   - **Prevention** – a finding class that recurs within this MR, or that the thread shows was raised before, gets one Decision proposing where to stop it for good: a lint rule, a line in a repo skill or `AGENTS.md`, or a CodeRabbit path instruction.
+   - **Product scope** – visual and product-value doubts on work a PM or designer accepted (the report's `PM:` lines) become one line for them, never an author comment.
+6. **Triage every thread.** Tell bot from human by author metadata. Bucket each as **blocker**, **nit**, **idea**, **question**, or **noise** (false positive, already handled, out of scope). A review bot's (CodeRabbit's) concrete defect earns the mode's treatment and a short reply; everything else of the bot's goes to one batch-resolve tray item, with no reply.
+7. **Stage fixes by mode** on the `push-right` Apply vs. Propose boundary; own mode skips this step, since gate's Own Work staged them. Anything that adds or alters control flow – guards, early returns, error handling, defaults – is proposed, unless it is the sole fix for a reproduced crash. Commit subjects carry no conventional-commit scope (`fix:`, not `fix(ui):`); commits stack on the author's HEAD, never rewriting the author's commits.
+8. **Verify differentially** (`push-right`). A fix that passes its target but reddens anything else is discarded, and its finding moves to Decisions. Targets:
+   - Changed-file lint and typecheck, and the relevant test path; the full suite when scoping isn't reliable.
+   - Backend, library, or CLI: exercise the real code path – the relevant test or a scoped repro – not just types.
+   - A UI change: reproduce the specific change live with the `chrome-devtools` MCP server – `navigate_page`, then `take_screenshot` and `list_console_messages` – on the MR's preview or a local server. Without the MCP server or an app to load, fall back to the closest component or e2e test and name the gap. A visual change asked to be compared gets one before/after page: screenshots of the target and the branch side by side, light and dark where the app has both.
+9. **Draft the outward artifacts** in the voice and shapes `writing-for-developers` sets.
+   - **Inline drafts** on the finding's file and line, in its review-comment shape: one per confirmed blocker, major, or minor finding going to the author; nits become at most one summary draft or are dropped; `plausible` findings become Decisions. A `suggestion` block, holding only the changed lines, goes only with a fix left uncommitted. On GitLab, read [`GITLAB.md`](GITLAB.md) first – it sets which lines can carry a draft.
+   - **Replies**, one per human thread that wants one.
+   - Optional: a tightened MR description, only when the current one is thin, verbose, or merely enumerates the diff; a tracker comment (Asana through `asana-formatting`) and a Slack note for the author or the PM, each only when it adds something, with the recipient named.
+10. **Assemble the brief** and stop at the checkpoint.
 
 ## The Brief
 
 ```
-## <noun> <sigil><id> · <source-branch> → <target>
-state: <N behind/ahead/diverged> · local≡remote? · CI <status> · <K> comments (<by-bucket>)
-intent: <✅/⚠️ vs linked ticket, or "no ticket"> – [ticket]
+## <noun> <sigil><id> · <full MR URL>
+verdict: <ready to merge | ready after rebase | blocked by N decisions | waiting on author (N findings)> · mode: <teach | take-over | own>
+what it does: <two plain sentences>
+state: <N behind/ahead/diverged> · local≡remote? · CI <status> · <K> threads (<by bucket>) · worktree <path>
+review: gate <verdict> (<axes>, <R> refuted) · intent <✅ | ⚠️ | no ticket> [ticket] · <gate report dir>
+open: you: <what only the user can do, with links> · waiting on: <CI, author, PM> · next: <the next MR, or the land re-fire>
 
-### Decisions            ← the only things to grill
-1. <judgment call, phrased as a question>. <who flagged it>. Rec: <recommendation>
-   + <one-line evidence/why>. [diff] [comment]
-2. …
+### Decisions
+Q1 <judgment call as a question>. <who flagged it>.
+  a) <option> b) <option> – Rec: <letter>, because <one line>. [diff] [thread]
 
-### Applied (staged locally, not pushed)   ← FYI, auditable, revertable
-- <commit subject> – <file:line>  <verification evidence> [diff]
+### Applied (Staged Locally, Not Pushed)
+- <commit subject> – <file:line> · <verification evidence> · <traced | reproduced | checked>
 
-### Comment replies (drafted, not posted)
-- <author> @<loc> (<bucket>) → reply drafted [show] · <address via decision N / resolve candidate>
+### Ready to Ship – Pick What Posts
+[ ] rebase onto <target> (<N> behind)   [ ] push <P> commits
+[ ] create <K> inline drafts (D<n>–D<m>, unpublished – you submit the review)   [ ] post <M> replies (D<n>…)
+[ ] resolve <T> threads   [ ] resolve <B> bot threads as noise   [ ] ask the bot to re-review after the push
+[ ] update the description (D<n>)   [ ] post the tracker comment (D<n>)   [ ] Slack note (D<n>, copy)
 
-### Ready to ship – pick what posts
-[ ] post <K> replies   [ ] resolve <M> threads   [ ] resolve <B> bot threads as noise
-[ ] push <P> fix commits   [ ] rebase onto <target> (<N> behind)
-[ ] update <noun> description [show]   [ ] post tracker update [show]
+### Drafts
+D<n> <file:line> → <author> (<severity | bucket>) · <address via Q<n> | resolve candidate>
+<full text>
 ```
 
-Two carry conditions gate the tray: rebase or force-push is offered only where the merge-safety check flagged it; the description and tracker updates only where step 9 drafted them.
+`waiting on author` counts the blocker and major findings sent to the author as drafts. The rebase item appears only where the pre-check flagged it; the description, tracker, and Slack items only where step 9 drafted them. Drafts are numbered in order of those present.
 
 ## After Approval
 
-Safe order for this tray: stage/push commits → post replies → resolve threads (defects first, then the bot-noise batch) → update the description → post the tracker update.
+Safe order: rebase → push (after a rebase, with a `git range-diff` summary proving nothing was lost) → create inline drafts → post replies → resolve threads (defects first, then the bot batch) → description → tracker comment → bot re-review request. After a rebase or push, re-derive each draft's line against the new diff before posting it. Inline drafts go up as one pending review: on GitLab through [`GITLAB.md`](GITLAB.md); on GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`. After a push, triage the bot's new threads the same way and report them as a short delta.
 
 ## Degradation
 
-MR not found, the host CLI unauthenticated, the branch won't check out → the brief **states it plainly** and still presents whatever work completed.
+MR not found, the branch won't check out, a gate axis failed → the brief says so plainly and still presents whatever work completed.

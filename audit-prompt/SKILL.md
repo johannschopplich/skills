@@ -12,17 +12,18 @@ Produce a severity-grouped report listing every issue found in a prompt written 
 
 1. **Read** the prompt. Identify the target family:
    - If the user stated a target, use it.
-   - Else scan the prompt for unambiguous markers: `claude-opus`, `claude-sonnet`, `claude-fable`, `Anthropic`, `<thinking>`, `budget_tokens` → Claude; `gpt-5`, `OpenAI`, `developer:`, `response_format`, `Formatting re-enabled` → GPT-5.6.
+   - Else scan the prompt for unambiguous markers: `claude-opus`, `claude-sonnet`, `claude-fable`, `claude-mythos`, `Anthropic`, `<thinking>`, `budget_tokens` → Claude; `gpt-5`, `OpenAI`, `developer:`, `response_format`, `Formatting re-enabled` → GPT-5.6.
    - If exactly one family matches, read that supplement – [`references/claude.md`](references/claude.md) or [`references/gpt.md`](references/gpt.md) – before running the checklist. If zero or both match, run universal-only and note skipped supplements in the summary.
+   - Record the exact target model when stated (e.g. `claude-opus-5-5`). Apply model-scoped supplement items only to their model; when the model is unknown, list them as unverified in the summary.
 2. **Run the universal checklist** below, plus the loaded supplement. Record each violation with a quoted excerpt from the prompt.
-3. **Report** findings using the template below. Prefix supplement findings with the supplement's tag (`[GPT-5.6]` or `[Claude]`); universal findings carry no tag. If the prompt targets a model newer than the supplement's snapshot stamp, note the gap in the summary. The revised prompt must resolve every Blocker and Anti-pattern finding; Clarity, Structure, and Agentic findings should be resolved unless the fix would compromise the prompt's intent (note any intentional skips).
+3. **Report** findings using the template below. Prefix supplement findings with the supplement's tag (`[GPT-5.6]` or `[Claude]`); universal findings carry no tag. If the prompt targets a model newer than the supplement's snapshot stamp, note the gap in the summary. The revised prompt must resolve every Blocker and Anti-Pattern finding; Clarity, Structure, and Agentic findings should be resolved unless the fix would compromise the prompt's intent (note any intentional skips).
 
 <report-template>
 ## Blockers
 - "<quoted excerpt, ≤80 chars, truncate with …>" → <concrete fix>
 - [GPT-5.6] "<excerpt>" → <fix>
 
-## Anti-patterns
+## Anti-Patterns
 - "<excerpt>" → <fix>
 - [Claude] "<excerpt>" → <fix>
 
@@ -37,12 +38,12 @@ Produce a severity-grouped report listing every issue found in a prompt written 
 
 ## Summary
 N blockers, N anti-patterns, N clarity, N structure, N agentic.
-Supplement applied: <GPT-5.6 | Claude | none>. Skipped: <list>.
+Supplement applied: <GPT-5.6 | Claude | none>. Target model: <id | unknown>. Unverified: <model-scoped items not applied, when the model is unknown>. Skipped: <list>.
 </report-template>
 
 Omit any severity heading with zero findings. If nothing is flagged, report `Prompt passes audit.` followed by the summary line and the revised-prompt section (which states `No revisions needed.`).
 
-## Universal checklist
+## Universal Checklist
 
 ### Blockers
 
@@ -52,11 +53,11 @@ Prompt won't produce useful output, or actively burns reasoning tokens.
 - [ ] Flag contradictions – an instruction required in one place and forbidden in another, or hierarchy conflicts without precedence. Reasoning models burn tokens trying to reconcile. Resolve at the prompt level rather than relying on the model to pick.
 - [ ] Verify every constraint has an escape hatch. "Never respond without full confidence" without a fallback causes reasoning spirals; pair every hard constraint with a fallback or stopping rule. Absolutes ("always," "never," "must," "every") need satisfaction criteria – what counts as the constraint being met, and when to stop checking.
 
-### Anti-patterns
+### Anti-Patterns
 
-Reasoning-model-specific mistakes. Highest measured impact – flag first.
+Reasoning-model-specific mistakes.
 
-- [ ] Flag explicit chain-of-thought instructions ("think step by step", "explain your reasoning") when the target runs with thinking or reasoning enabled – the model already reasons internally. When thinking is off, manual CoT with `<thinking>`/`<answer>` tags is the documented fallback, not a violation.
+- [ ] Flag explicit chain-of-thought instructions ("think step by step", "explain your reasoning") when the target runs with thinking or reasoning enabled – the model already reasons internally. When the target runs with thinking off, manual CoT with `<thinking>`/`<answer>` tags is the documented fallback, not a violation; the supplement lists targets where thinking cannot be turned off, so the fallback never applies there.
 - [ ] Flag aggressive directives ("CRITICAL: You MUST…", caps-locked ALWAYS/NEVER). Modern reasoning models overtrigger. Replace with normal language ("Use X when…"). Reserve absolutes for true invariants (safety rules, required output fields); use decision rules for judgment calls.
 - [ ] Flag prescriptive step-by-step plans for tasks the model can plan itself. State the expected outcome, success criteria, allowed side effects, and evidence rules; let the model choose the path. Avoid step-by-step process guidance unless the exact path matters.
 - [ ] Flag blanket defaults ("if in doubt, use [tool]", "default to [tool]"). Causes over-tool-use; replace with "use [tool] when it would enhance understanding."
@@ -70,7 +71,7 @@ Reasoning-model-specific mistakes. Highest measured impact – flag first.
 - [ ] Verify instructions tell what to do, not what to avoid. "Write flowing prose" beats "Don't use bullet points."
 - [ ] Verify sequential steps use numbered lists when order matters. Before adding numbered steps, check that the order is product-required, not just convenient – otherwise this becomes the prescriptive-step-by-step anti-pattern.
 - [ ] Verify action verbs are direct and imperative, not suggestive ("Change X" not "Can you suggest changes to X?").
-- [ ] For quality-sensitive outputs (code, long-form writing, multi-criteria decisions), verify the prompt asks the model to define test criteria or a rubric, then verify its output against them before finishing. More effective than "check your answer".
+- [ ] For quality-sensitive outputs (code, long-form writing, multi-criteria decisions), verify the prompt states test criteria or a rubric up front and asks for a check against them before finishing ("Before you finish, verify your answer against [criteria]"), unless the loaded supplement drops the self-check for the target.
 
 ### Structure
 
@@ -79,7 +80,7 @@ Reasoning-model-specific mistakes. Highest measured impact – flag first.
 - [ ] Verify static prompt content (role, instructions, schemas, examples, long context) precedes dynamic content (per-request input, user query, recent state). Inverted ordering is a cost/latency item, not a quality one – flag but don't block.
 - [ ] For long-context inputs (20k+ tokens), verify documents are placed before the query (up to 30% quality uplift), and the prompt asks the model to quote relevant passages before answering.
 - [ ] Verify a role or persona is set when behavior or tone needs to deviate from default. Personality controls how the assistant sounds; collaboration style controls how it works – set both when the product is conversational.
-- [ ] Verify constraints explain *why* they exist. Models generalize better from explanations than bare rules.
+- [ ] Verify non-obvious constraints carry a one-clause reason. Models generalize from a reason; narrative rationale costs tokens without steering.
 
 ### Agentic
 

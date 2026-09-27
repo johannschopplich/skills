@@ -4,7 +4,7 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
 
 ## Workflows
 
-The three workflow skills below, plus **sevdesk** under Personal, share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
+The three workflow skills below, plus **sevdesk** under Personal and **gate**'s Own Work flow, share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
 
 - **push-right**: Loaded by the workflow skills rather than invoked directly. The shared doctrine they run on: do maximal non-destructive work first, apply only what has a single correct form, verify differentially against a baseline, and hold every irreversible action behind one approval tray.
 
@@ -12,7 +12,7 @@ The three workflow skills below, plus **sevdesk** under Personal, share one doct
   npx skills add johannschopplich/skills/push-right
   ```
 
-- **mr-shepherd**: Take one GitLab MR or GitHub PR to ready-to-ship – review, triage comments, stage safe fixes, draft replies – then stop with a grill-ready brief and an approvable tray. Pushes and posts nothing without sign-off.
+- **mr-shepherd**: Take a GitLab MR or GitHub PR – or a ticket, several related MRs, or a stack – to ready-to-ship: review through **gate**, triage comments, stage fixes or teach through inline review drafts, then stop with a grill-ready brief and an approvable tray. Pushes and posts nothing without sign-off.
 
   ```
   npx skills add johannschopplich/skills/mr-shepherd
@@ -24,7 +24,7 @@ The three workflow skills below, plus **sevdesk** under Personal, share one doct
   npx skills add johannschopplich/skills/ci-triage
   ```
 
-- **dependency-hygiene**: Discover what's drifted, sweep the safe bumps, and land deliberate upgrades or migrations cleanly – breaking changes handled against the installed source, every gate green – then stop with a grill-ready brief and an approvable tray. Pushes and opens nothing without sign-off.
+- **dependency-hygiene**: Discover what's drifted, sweep the safe bumps, and land deliberate upgrades or migrations cleanly – breaking changes handled against the installed source, every check green – then stop with a grill-ready brief and an approvable tray. Pushes and opens nothing without sign-off.
 
   ```
   npx skills add johannschopplich/skills/dependency-hygiene
@@ -32,7 +32,13 @@ The three workflow skills below, plus **sevdesk** under Personal, share one doct
 
 ## Review & Audit
 
-- **audit-prompt**: Review and revise prompts written for modern thinking-capable LLMs, applying current best practices.
+- **gate**: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a verdict: ship, fix, or incomplete. On your own branch it applies the fixes with a single correct form, re-gates once, and stops at the marginal benefit (loads **push-right**); a teammate's MR or PR goes through **mr-shepherd**. Builds on Matt Pocock's `code-review` and `tdd`.
+
+  ```
+  npx skills add johannschopplich/skills/gate
+  ```
+
+- **audit-prompt**: Review and revise prompts written for modern thinking-capable LLMs, applying current best practices. When a new model ships, re-check its version-pinned facts against the live vendor guides with [`scripts/audit-vs-guides.js`](scripts/audit-vs-guides.js), a Claude Code workflow script.
 
   ```
   npx skills add johannschopplich/skills/audit-prompt
@@ -44,15 +50,9 @@ The three workflow skills below, plus **sevdesk** under Personal, share one doct
   npx skills add johannschopplich/skills/audit-skill
   ```
 
-- **peer-audit**: Run a Claude and a GPT worker in parallel on the same artifact, then merge evidence-bearing findings by agreement, divergence, and direct contradiction. Prefers native Claude/Codex CLIs and falls back per model to Copilot CLI.
-
-  ```
-  npx skills add johannschopplich/skills/peer-audit
-  ```
-
 ## Writing
 
-- **writing-for-developers**: Draft, rewrite, or review developer-facing copy in my voice: GitHub/GitLab replies, PR descriptions, commit subjects, READMEs, and doc pages.
+- **writing-for-developers**: Draft, rewrite, or review developer-facing copy in my voice: issue replies, review comments, Slack and tracker notes, PR descriptions, commit subjects, READMEs, and doc pages.
 
   ```
   npx skills add johannschopplich/skills/writing-for-developers
