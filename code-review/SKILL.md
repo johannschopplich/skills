@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a verdict: ship, fix, or incomplete. Use when asked to review, debloat, or gate the user's own changes or a branch, or when another skill needs a review engine; a teammate's MR or PR goes through mr-shepherd.
+description: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a verdict: ship, fix, or incomplete. Use when asked to review or debloat the user's own changes or a branch, or when another skill needs a review engine; a teammate's MR or PR goes through mr-shepherd.
 argument-hint: "[fixed point: sha, branch, or HEAD for uncommitted] [spec: ticket URL or path]"
 ---
 
@@ -50,4 +50,4 @@ When the diff is the user's own branch (commits by `git config user.email`, push
 - Capture the baseline from step 3's checks, then apply every other `confirmed` finding – unpushed commit: fixup (`git commit --fixup=<sha>`, then `git rebase --autosquash <upstream>`, `<upstream>` being the pushed branch head, else the merge-base); pushed commit: new commit on HEAD; uncommitted: edit in place. Invoking code-review names the unpushed commits, so the fold is an explicit exception to push-right's Apply and Boundary Marker rules, and the edit in place to its commit rule.
 - Each fix passes push-right's Verification before it counts as Applied; a failing one becomes a Decision. A folded fix's Applied line names the fixup subject, the commit it folded into, and its proof.
 - Re-review once over the fixes: report dir suffixed `-re-review`, `axes` without `spec`, `compare: 'trees'` from the first review's head with `context` "this diff is only the fixes for the previous review; judge only what it changes"; `HEAD` for edits in place, without that `context`. Then stop; surviving blocker and major findings become Decisions. Say `stop – further passes are past the marginal benefit` and name what another pass would still cover.
-- End on the push-right brief, its report first; when a caller skill assembles the brief (mr-shepherd own mode, implement), return the report, Applied, and Decisions to it instead.
+- End on the push-right brief, the review report first; when a caller skill assembles the brief (mr-shepherd own mode, implement), return the report, Applied, and Decisions to it instead.
