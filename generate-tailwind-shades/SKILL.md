@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 ## Workflow
 
-1. **Set up** – `culori` and `tailwindcss` resolve from the script's folder, so call it by absolute path:
+1. **Set up.** `culori` and `tailwindcss` resolve from the script's folder, so call it by absolute path:
 
    ```bash
    mkdir -p /tmp/tailwind-shades && cd /tmp/tailwind-shades
@@ -24,9 +24,9 @@ disable-model-invocation: true
    node /tmp/tailwind-shades/generate.mjs primary= secondary= --current ~/Projects/johannschopplich.com/src/tokens.ts --ladder even
    ```
 
-3. **Review** – `open /tmp/tailwind-shades/palette.html` (headless: report the path). Judge candidates against the Current row: a shipped ramp changes only on explicit request. Prune candidate inputs, since every extra row makes judging harder.
+3. **Review.** `open /tmp/tailwind-shades/palette.html` (headless: report the path). Judge candidates against the Current row: a shipped ramp changes only on explicit request. Prune candidate inputs, since every extra row makes judging harder.
 
-4. **Bend** – map the user's words to flags, then re-run once:
+4. **Bend.** Map the user's words to flags, then re-run once:
 
    | Wish | Flags |
    |---|---|
@@ -40,7 +40,7 @@ disable-model-invocation: true
 
 5. **Apply** in the project's format; keep the DEFAULT alias line. johannschopplich.com derives hex at build time, so write only OKLCH. kirby.tools: also update the 500 in `THEME_COLORS` (`shared/theme.ts`, l/c/h plus hex); `test/theme-color.test.ts` guards it.
 
-6. **Propagate** – grep sibling repos (hub, byjohann.link), favicon, OG images, and avatar SVGs for the old 500 hex.
+6. **Propagate.** Grep sibling repos (hub, byjohann.link), favicon, OG images, and avatar SVGs for the old 500 hex.
 
 ## Decisions
 
