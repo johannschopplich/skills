@@ -14,7 +14,7 @@ The invoking skill names its irreversible set and success targets; its explicit 
 
 ## Boundary Marker
 
-No state file – the **artifact** is the state (thread, branch, workspace – the invoking skill names it); the one exception is `gate`'s per-branch record. A **re-fire** works only the delta past the **boundary marker**: the point the artifact proves the last run reached.
+No state file – the **artifact** is the state (thread, branch, workspace – the invoking skill names it); the one exception is `code-review`'s per-branch record. A **re-fire** works only the delta past the **boundary marker**: the point the artifact proves the last run reached.
 
 - Artifact unmoved → re-present the staged work rather than re-deriving it.
 - Artifact moved → rebase the unpushed commits the last brief listed onto the new remote head – local and reflog-recoverable, so before the checkpoint: clean → kept once re-verified; conflicted or emptied → dropped, fix re-derived.

@@ -1,7 +1,7 @@
-// Runs the gate's review axes in parallel, then one refute pass per axis, and computes the verdict.
-// Invoked by the `gate` skill through the Workflow tool with `{ scriptPath, args }`; see SKILL.md for `args`.
+// Runs the code review's axes in parallel, then one refute pass per axis, and computes the verdict.
+// Invoked by the `code-review` skill through the Workflow tool with `{ scriptPath, args }`; see SKILL.md for `args`.
 export const meta = {
-  name: 'gate',
+  name: 'code-review',
   description: 'Review a diff along five axes in fresh contexts, refute every finding, and return a verdict',
   phases: [
     { title: 'Review', detail: 'one read-only agent per axis' },
@@ -73,9 +73,9 @@ const {
 const axesToRun = axes.filter(axis => ALL_AXES.includes(axis))
 const unknownAxes = axes.filter(axis => !ALL_AXES.includes(axis))
 if (unknownAxes.length > 0)
-  log(`gate: unknown axes ${unknownAxes.join(', ')} – expected ${ALL_AXES.join(', ')}`)
+  log(`code-review: unknown axes ${unknownAxes.join(', ')} – expected ${ALL_AXES.join(', ')}`)
 
-// `trees` diffs two snapshots directly, which survives the history rewrite of a fold between gates.
+// `trees` diffs two snapshots directly, which survives the history rewrite of a fold between reviews.
 const diffCommand = base === 'HEAD'
   ? `git -C "${repo}" diff HEAD`
   : compare === 'trees' ? `git -C "${repo}" diff ${base} ${head}` : `git -C "${repo}" diff ${base}...${head}`
@@ -95,7 +95,7 @@ function reviewPrompt(axis) {
     spec: `Spec: ${spec ?? 'none'}`,
     comments: commentsFile ? `The added comment lines are listed in ${commentsFile}.` : '',
   }
-  return `You are the ${axis} axis of a code review gate. Read ${skillDir}/axes/${axis}.md and follow it.
+  return `You are the ${axis} axis of a code review. Read ${skillDir}/axes/${axis}.md and follow it.
 
 Repo: ${repo}
 Diff: \`${diffCommand}\`${untrackedLine}
@@ -108,7 +108,7 @@ Findings are numbered ${prefix}1, ${prefix}2, … in the order you return them. 
 }
 
 function refutePrompt(axis, findings) {
-  return `You are the skeptic for the ${axis} axis of a code review gate. Each finding below claims a defect in the diff \`${diffCommand}\` in ${repo}.${untrackedLine}
+  return `You are the skeptic for the ${axis} axis of a code review. Each finding below claims a defect in the diff \`${diffCommand}\` in ${repo}.${untrackedLine}
 The axis's rules are in ${skillDir}/axes/${axis}.md.${contextLine}
 
 ${guardLines}
@@ -169,6 +169,6 @@ const verdict = failedAxes.length > 0
   ? 'incomplete'
   : hardCount > 0 || redChecks.length > 0 ? 'fix' : 'ship'
 
-log(`gate: ${verdict} – ${surviving.length} findings survive, ${hardCount} blocker/major${redChecks.length ? `, red checks: ${redChecks.join(', ')}` : ''}${failedAxes.length ? `, failed axes: ${failedAxes.join(', ')}` : ''}${unrefutedAxes.length ? `, unrefuted axes: ${unrefutedAxes.join(', ')}` : ''}`)
+log(`code-review: ${verdict} – ${surviving.length} findings survive, ${hardCount} blocker/major${redChecks.length ? `, red checks: ${redChecks.join(', ')}` : ''}${failedAxes.length ? `, failed axes: ${failedAxes.join(', ')}` : ''}${unrefutedAxes.length ? `, unrefuted axes: ${unrefutedAxes.join(', ')}` : ''}`)
 
 return { verdict, hardCount, redChecks, failedAxes, unrefutedAxes, reportDir, results }

@@ -2,6 +2,7 @@
 name: ci-triage
 description: Triage one red GitLab or GitHub pipeline to a proven verdict – real regression, flaky, infra, or config – staging a minimal fix where one applies. Use when handed a failing pipeline or job URL, or asked why CI is red.
 argument-hint: "pipeline or job URL, or branch name"
+disable-model-invocation: true
 ---
 
 # CI Triage

@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Implement a spec, a ticket, or the current conversation test-first – a commit per slice, the branch gated, ending on the push-right brief.
+description: Implement a spec, a ticket, or the current conversation test-first – a commit per slice, the branch reviewed, ending on the push-right brief.
 argument-hint: "[spec or ticket path]"
 disable-model-invocation: true
 ---
@@ -31,4 +31,4 @@ Several tickets → one subagent per ticket, one at a time (shared worktree). Br
 ## Finish
 
 1. Full test suite, once. Each red test → rerun it at the start commit: red there too → pre-existing, brief context; green there → this run's regression, fixed under push-right's Verification or carried as a Decision.
-2. Invoke the `gate` skill with `<start commit> <spec>` – a conversation spec first written to `$TMPDIR/implement-spec.md`. Own Work folds the fixes and re-gates once; you assemble the brief, gate's report first, its Applied and Decisions merged with yours. The push stays in the tray.
+2. Invoke the `code-review` skill with `<start commit> <spec>` – a conversation spec first written to `$TMPDIR/implement-spec.md`. Own Work folds the fixes and re-reviews once; you assemble the brief, code-review's report first, its Applied and Decisions merged with yours. The push stays in the tray.

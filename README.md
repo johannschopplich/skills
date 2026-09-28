@@ -4,7 +4,7 @@ Agent skills I use across my consulting and writing work. Each one is small, opi
 
 ## Workflows
 
-The four workflow skills below, plus **sevdesk** under Personal and **gate**'s Own Work flow, share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
+The four workflow skills below, plus **sevdesk** under Personal and **code-review**'s Own Work flow, share one doctrine – work staged behind a single late checkpoint – and load it from **push-right**. Install it alongside any of them.
 
 - **push-right**: Loaded by the workflow skills rather than invoked directly. The shared doctrine they run on: do maximal non-destructive work first, apply only what has a single correct form, verify differentially against a baseline, and hold every irreversible action behind one approval tray.
 
@@ -12,7 +12,7 @@ The four workflow skills below, plus **sevdesk** under Personal and **gate**'s O
   npx skills add johannschopplich/skills/push-right
   ```
 
-- **mr-shepherd**: Take a GitLab MR or GitHub PR – or a ticket, several related MRs, or a stack – to ready-to-ship: review through **gate**, triage comments, stage fixes or teach through inline review drafts, then stop with a grill-ready brief and an approvable tray. Pushes and posts nothing without sign-off.
+- **mr-shepherd**: Take a GitLab MR or GitHub PR – or a ticket, several related MRs, or a stack – to ready-to-ship: review through **code-review**, triage comments, stage fixes or teach through inline review drafts, then stop with a grill-ready brief and an approvable tray. Pushes and posts nothing without sign-off.
 
   ```
   npx skills add johannschopplich/skills/mr-shepherd
@@ -30,7 +30,7 @@ The four workflow skills below, plus **sevdesk** under Personal and **gate**'s O
   npx skills add johannschopplich/skills/dependency-hygiene
   ```
 
-- **implement**: Implement a spec, a ticket, or the current conversation test-first – a commit per slice, the branch reviewed through **gate** – then stop with a grill-ready brief. Pushes nothing without sign-off. Needs Matt Pocock's `tdd`.
+- **implement**: Implement a spec, a ticket, or the current conversation test-first – a commit per slice, the branch reviewed through **code-review** – then stop with a grill-ready brief. Pushes nothing without sign-off. Needs Matt Pocock's `tdd`.
 
   ```
   npx skills add johannschopplich/skills/implement
@@ -38,22 +38,16 @@ The four workflow skills below, plus **sevdesk** under Personal and **gate**'s O
 
 ## Review & Audit
 
-- **gate**: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a verdict: ship, fix, or incomplete. On your own branch it applies the fixes with a single correct form, re-gates once, and stops at the marginal benefit (loads **push-right**); a teammate's MR or PR goes through **mr-shepherd**, which runs it, as does **implement**. Builds on Matt Pocock's `code-review` and `tdd`.
+- **code-review**: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a verdict: ship, fix, or incomplete. On your own branch it applies the fixes with a single correct form, re-reviews once, and stops at the marginal benefit (loads **push-right**); a teammate's MR or PR goes through **mr-shepherd**, which runs it, as does **implement**. Builds on Matt Pocock's `code-review` and `tdd`.
 
   ```
-  npx skills add johannschopplich/skills/gate
+  npx skills add johannschopplich/skills/code-review
   ```
 
-- **audit-prompt**: Audit a prompt an app sends to a Claude or OpenAI model API – severity-grouped findings plus a revised prompt. When a new model ships, re-check its version-pinned facts against the live vendor guides with [`scripts/audit-vs-guides.js`](scripts/audit-vs-guides.js), a Claude Code workflow script.
+- **audit-prompt**: Audit a prompt an app sends to a Claude or OpenAI model API – severity-grouped findings plus a revised prompt.
 
   ```
   npx skills add johannschopplich/skills/audit-prompt
-  ```
-
-- **audit-skill**: Audit a `SKILL.md` against loading, discoverability, and style rules, then produce a severity-grouped report.
-
-  ```
-  npx skills add johannschopplich/skills/audit-skill
   ```
 
 ## Writing
