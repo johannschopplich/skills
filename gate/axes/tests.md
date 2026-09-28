@@ -14,6 +14,6 @@ Read the Anti-patterns section of `~/.agents/skills/tdd/SKILL.md` and its `tests
 
 ## Names
 
-Check every added or renamed test title against `~/.claude/rules/tests.md`. A rename needs a clause the old name breaks – name the clause; between two compliant names, keep the old one. Where `context` names another author, the neighboring specs' style decides anything the rules leave open.
+Check every added or renamed test title against `~/.claude/rules/tests.md`; a rename finding names the clause the old name breaks.
 
 Done when every added or changed test has a Value verdict and every added or renamed title is checked under Names.
