@@ -9,5 +9,3 @@ Report:
 - **Wrong** – a requirement that looks implemented but behaves differently from the spec.
 
 Product and design choices the ticket shows as accepted by a PM or designer are settled: a doubt about one goes in `note` as one line prefixed `PM:`, never as a finding.
-
-With `Spec: none`, return no findings and the note `no spec`.

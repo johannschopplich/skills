@@ -70,7 +70,7 @@ const {
   redChecks = [],
 } = args
 
-const axesToRun = axes.filter(axis => ALL_AXES.includes(axis))
+const axesToRun = axes.filter(axis => ALL_AXES.includes(axis) && (axis !== 'spec' || spec))
 const unknownAxes = axes.filter(axis => !ALL_AXES.includes(axis))
 if (unknownAxes.length > 0)
   log(`code-review: unknown axes ${unknownAxes.join(', ')} – expected ${ALL_AXES.join(', ')}`)
@@ -92,7 +92,7 @@ Stay read-only toward the repo: no edits, commits, checkouts, or index changes. 
 function reviewPrompt(axis) {
   const prefix = AXIS_PREFIXES[axis]
   const axisInputs = {
-    spec: `Spec: ${spec ?? 'none'}`,
+    spec: `Spec: ${spec}`,
     comments: commentsFile ? `The added comment lines are listed in ${commentsFile}.` : '',
   }
   return `You are the ${axis} axis of a code review. Read ${skillDir}/axes/${axis}.md and follow it.
@@ -104,7 +104,7 @@ ${axisInputs[axis] ?? ''}${contextLine}
 
 ${guardLines}
 Report every finding you see, each with its severity and confidence; a separate pass filters them, so include the minor ones.
-Findings are numbered ${prefix}1, ${prefix}2, … in the order you return them. Write your full report as Markdown to ${reportDir}/${axis}.md under those ids, then return the structured findings. Your reply is final and nobody will answer a question: finish the axis before replying.`
+Findings are numbered ${prefix}1, ${prefix}2, … in the order you return them. Write your full report as Markdown to ${reportDir}/${axis}.md under those IDs, then return the structured findings in that order, the ID out of the finding text. Your reply is final and nobody will answer a question: finish the axis before replying.`
 }
 
 function refutePrompt(axis, findings) {
@@ -112,7 +112,7 @@ function refutePrompt(axis, findings) {
 The axis's rules are in ${skillDir}/axes/${axis}.md.${contextLine}
 
 ${guardLines}
-Try to refute each finding: read the cited code, the quoted rule or spec line, and the call sites; run a cheap read-only check where one settles it. Return one verdict per id:
+Try to refute each finding: read the cited code, the quoted rule or spec line, and the call sites; run a cheap read-only check where one settles it. Return one verdict per ID:
 - confirmed – you checked it and it holds.
 - plausible – it may hold, but you could not settle it.
 - refuted – the code, the rule, or a run shows it is wrong; say what shows it.
