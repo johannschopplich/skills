@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 Books of a German Freiberufler: SKR04, Ist-Versteuerung, no UStVA filed (Finanzamt exemption), ZM filed quarterly – every period of the open year is editable. Years with a filed annual return (currently 2025 and earlier) are read-only.
 
-**Invoke the `push-right` skill first.** Where it and this skill differ, this skill wins. Its exceptions: Apply is a sevDesk draft, not a commit; the checks are the `ustva` and `balanceList` reports; an Applied line's proof is `✅ verified` (step 4's match); no Outward Copy; a missing API key is the one stop before the checkpoint. Irreversible: **finalize**, **link a payment**, **correct a finalized voucher**, **delete**, **tag**. `enshrine` (Festschreiben) never runs.
+**Invoke the `push-right` skill first.** Where it and this skill differ, this skill wins. Its exceptions: Apply is a sevDesk draft, not a commit; the checks are the `ustva` and `balanceList` reports; a Done line's proof is `✓ verified` (step 4's match); no Outward Copy; a missing API key is the one stop before the checkpoint. Irreversible: **finalize**, **link a payment**, **correct a finalized voucher**, **delete**, **tag**. `enshrine` (Festschreiben) never runs.
 
 ## API
 
@@ -103,30 +103,26 @@ Audit checks for the unit:
 Rendered in German.
 
 <brief-template>
-## sevDesk · <mode> · <unit>
-state: <N> unlinked bank rows · <D> drafts · <O> open vouchers · baseline <timestamp>
+## sevDesk · <mode> · <unit> – <ready to book | blocked by N decisions | N checks fail>
+<N> unlinked bank rows · <D> drafts · <O> open vouchers · baseline <timestamp>
 
-### Checks                ← audit only
+**Needs you** – `Q1 a, ship 1–<n>`
+**Q1** <voucher / bank row>: <question> a) … · b) … – **<letter>**: <why> · [document]
+1. finalize <N> drafts
+2. link <N> payments
+3. correct <voucher> (P1)
+4. tag <voucher> `akzeptiert`
+5. delete draft <id>
+
+**Done** <supplier> <number> · <sum> · <account> · rule <taxRule> · draft <id> ✓ verified      (a line per draft)
+**Checks** (audit only)
 | Check | Result | Figures |
-
-### Decisions
-Q1 <voucher / bank row>: <question> a) … b) … – Rec: <letter>, <why>. [document]
-
-### Applied (Drafts, Nothing Booked)
-- <supplier> <number> · <sum> · <account> · rule <taxRule> · draft <id>   ✅ verified
-
-### Accepted (Tagged `akzeptiert`)
-- <voucher> · <deviation>
-
-### Expected Deltas
+**Expected deltas**
 | Item | Account / KZ | Delta |
+**Accepted** <voucher> · <deviation>
 
-### Ready to Ship – Pick What Books
-[ ] finalize <N> drafts   [ ] link <N> payments   [ ] correct <voucher> (P1)
-[ ] tag <voucher> `akzeptiert`   [ ] delete draft <id>
-
-### Payloads
-P1 <the correct item's payload chain, in full>
+**Payloads**
+**P1** <the correct item's payload chain, in full>
 </brief-template>
 
 Offer `tag` for a Decision whose recommendation is to accept a deviation that leaves the year's tax payable unchanged, `delete` for a duplicate or failed draft this run created.

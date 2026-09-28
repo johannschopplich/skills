@@ -42,34 +42,28 @@ The **workspace is the state**: version source, lockfile, `node_modules`, and un
 
 ## The Brief
 
-The safe batch is **Applied**, never a Decision.
+The safe batch is **Done**, never a Decision.
 
 <brief-template>
-## Dependency Hygiene · <sweep | dep old → new> · <workspace>
-practice: <discovered – catalog (pnpm-workspace.yaml) · trustPolicy no-downgrade · maturity 7d> · lockfile ✅
-discovered: <N> outdated (taze) – <S> safe (applied) · majors: `eslint` 8→9 assessed (Q1) · `pinia` 2→3 not assessed (name it or re-run `major` to land)
+## Dependency Hygiene · <sweep | dep old → new> · <workspace> – <ready to push | blocked by N decisions>
+<N> outdated · <S> safe bumped · majors: `eslint` 8→9 (Q1), `pinia` 2→3 not assessed (name it or re-run `major` to land)
 
-### Decisions
-Q1 <opted major / great breaking change>: a) proceed now b) pin/defer – Rec: <letter>, <reason>. guide: <URL or node_modules path>
-Q2 adopt rule `<x>`? (fires <K>× – <file:line, …>) a) yes b) no – Rec: a, <tradeoff>.
-Q3 peer `<B>` (`<path>/package.json`) pins an older major: a) align b) keep – Rec: <letter>, <reason>.
+**Needs you** – `Q1 a, Q2 a, ship 1–<n>`
+**Q1** <opted major / great breaking change>: proceed now? a) proceed · b) pin/defer – **<letter>**: <reason> · [guide]
+**Q2** Adopt rule `<x>`? fires <K>× a) yes · b) no – **a**: <tradeoff>
+**Q3** Peer `<B>` pins an older major: a) align · b) keep – **<letter>**: <reason>
+1. push commits
+2. open the MR (D<n>)
+3. post the tracker update or ticket (D<n>)
 
-### Applied (Staged Locally, Not Pushed)
-- chore(deps): bump <S> safe deps in catalog · <sha>      lockfile ✅ · vite 5.2→5.4, … · <traced | reproduced | checked>
-- refactor: migrate `<API>` call sites (`<K>` files) · <sha>      compiles ✅ · <traced | reproduced | checked>
+**Done** <S> safe deps bumped in the catalog (vite 5.2→5.4, …; <proof>) · `<API>` migrated in <K> files (<proof>) · <N> aligned via catalog
+**Verification** <install | lint | typecheck | build | tests> ✗ <what failed>
 
-### Alignment
-aligned `<N>` via catalog · `<M>` flagged (Q<n>)
+**Drafts**
+**D<n>** → <MR description | tracker update | follow-up ticket>
+> <full text>
 
-### Verification
-install ✅ · lint ✅ · typecheck ✅ · build ✅ · tests ✅    (or ⚠️ <what failed>)
-
-### Ready to Ship – Pick What Posts
-[ ] push commits   [ ] open MR (D<n>)   [ ] post tracker / ticket (D<n>)
-
-### Drafts
-D<n> <MR description, in full>
-D<n> <tracker update or follow-up ticket, in full>
+Practice discovered, versions, call sites, guide paths: `<report dir>/brief.md`
 </brief-template>
 
 ## After Approval

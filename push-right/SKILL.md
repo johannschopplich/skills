@@ -31,9 +31,9 @@ No state file – the **artifact** is the state (thread, branch, workspace – t
 ## Verification – Differential
 
 - **Baseline** – the repo's checks (lint, typecheck, build, tests; from package scripts or CI config) before this run's commits. Pre-existing failures are brief context, never a blocker.
-- **Applied** only if its own target passes **and** it adds **no new failures vs. baseline**; otherwise it goes where the invoking skill says (discarded, a Decision, reverted).
+- **Done** only if its own target passes **and** it adds **no new failures vs. baseline**; otherwise it goes where the invoking skill says (discarded, a Decision, reverted).
 - **Disprove before asserting** a behavior change: run its original repro and one neighboring path it touches – observed, never reasoned from the diff.
-- Each Applied line names its proof: `traced` (followed through the code at file:line) or `reproduced` (failing before, passing after) for a behavior change; `checked` (repo checks green) only for a mechanical one – typo, formatting, import. Short of its proof → proposed.
+- Each Done line names its proof: `traced` (followed through the code at file:line) or `reproduced` (failing before, passing after) for a behavior change; `checked` (repo checks green) only for a mechanical one – typo, formatting, import. Short of its proof → proposed.
 - A check that can't run here (secrets, no local env) is named in the brief, unattributed to the change.
 
 ## Outward Copy
@@ -44,12 +44,14 @@ Invoke the `writing-for-developers` skill before the first commit subject, draft
 
 One artifact, in this order:
 
-- **Decisions** – judgment calls only; a fact the run could observe gets run and reported instead. `Q1`, `Q2`, … with lettered options and a recommendation each, so the user answers `Q1 a, Q2 b`.
-- **Applied** – FYI.
-- **Tray** – a `Ready to Ship` checklist; an item whose carry condition never fired is never offered.
-- **Drafts** – every outward draft in full after the tray, numbered `D1`…`Dn`, referenced from the tray item that posts it (one item may post several).
+- **Title** – the verdict, at most one state line under it.
+- **Needs you** – a reply line taking every recommendation (`Q1 a, Q2 a, ship 1–6`); the Decisions – judgment calls only, a fact the run can observe gets observed – as `Q<n>` with lettered options and a recommendation; the tray as a numbered ship list, offering only items whose carry condition fired.
+- **Done** – each applied fix once, with its proof.
+- **Waiting on**, **Next**.
+- **Drafts** – every outward draft in full, `D1`…`Dn`, referenced from the ship item that posts it.
+- **Detail** – the path to a file in the run's report dir (default `$TMPDIR/<skill>-<unit>/`) holding full paths, evidence, nits, and refutations.
 
-Render every section even when empty; a clean run still reports its state line and a one-line verdict. Degradation: what couldn't be established and the cheapest next step, in place of an unproven cause.
+Each fact shows once. Green checks, zero counts, and empty sections are silent; a clean run is its title and state line. Glyphs `✓` done · `✗` failed · `?` unproven · `–` not run, `·` between fields, no emoji. Degradation: what couldn't be established and the cheapest next step, in place of an unproven cause.
 
 ## After the Checkpoint
 

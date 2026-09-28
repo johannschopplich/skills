@@ -54,39 +54,32 @@ The **branch is the state**; retries add attempts to the same pipeline, and only
 
 ## Fix vs. Revert
 
-Default: **minimal fix**. **Revert** when the breaking commit is someone else's recent one and no clean fix is small, a shared branch is blocking others, it reverts cleanly without collateral, or the proper fix needs more judgment than a red pipeline can wait for. Stage the recommended one (an exception to Apply vs. Propose – a red branch needs a ready answer) and offer the other as Q1 b; picking Q1 b means leaving the push unchecked and re-firing with the alternative named.
+Default: **minimal fix**. **Revert** when the breaking commit is someone else's recent one and no clean fix is small, a shared branch is blocking others, it reverts cleanly without collateral, or the proper fix needs more judgment than a red pipeline can wait for. Stage the recommended one (an exception to Apply vs. Propose – a red branch needs a ready answer) and offer the other as Q1 b; picking Q1 b means leaving the push unpicked and re-firing with the alternative named.
 
 ## The Brief
 
-FLAKY / INFRA / INCONCLUSIVE **collapse** to verdict + evidence + "recommend retry".
+FLAKY / INFRA / INCONCLUSIVE **collapse** to the root line plus "recommend retry".
 
 <brief-template>
-## <noun> #<id> · <branch> · <K> failing root(s) ❌
+## <noun> #<id> <branch> – <K> failing roots, <fix | revert | retry> staged
+**<stage/job>** <REAL REGRESSION | CONFIG | FLAKY | INFRA-DEPLOY | INCONCLUSIVE> · <sha · file:line> · reproduced <local | container | by bisect> · ruled out <the obvious cause> (<how>) · <N> cascaded      (a line per root)
 
-### <stage/job> – REAL REGRESSION        (FLAKY / INFRA-DEPLOY / CONFIG / INCONCLUSIVE)
-evidence: last green <run@commit> → first red <commit> · reproduced <local|container> ✅ deterministic
-log: <the failing line(s), verbatim>
-ruled out: <the obvious hypothesis> – <how it was disproven>
-root cause: <traced to <sha> · file:line, one line>
-cascade: also failed <N> downstream jobs from this root        (omit if none)
+**Needs you** – `Q1 a, Q2 a, ship 1–<n>`
+**Q1** <fix | revert <sha>> (staged), or <the alternative>? a) staged · b) alternative – **a**: <reason>
+**Q2** Keep the repro test `<file>`? (borderline) a) keep · b) drop – **a**: guards <X>
+1. push the staged <fix | revert>
+2. retry every failed job
+3. push the quarantine
+4. open the tracking issue (D<n>)
+5. comment cause and fix on the MR/PR or the <noun> (D<n>)
 
-### Decisions
-Q1 a) <fix | revert <sha>> (staged) b) <the alternative, one line> – Rec: a, <reason>.
-Q2 keep the repro test `<file>`? (borderline) a) keep b) drop – Rec: a, guards <X>.
+**Done** <fix | revert> <subject> (repro red→green, <traced | reproduced | checked>) · repro test (if kept) · quarantine <test> (if flapping)
 
-### Applied (Staged Locally, Not Pushed)
-- <fix | revert>: <subject> · <sha> – <file:line>   repro red→green ✅ · no new failures vs. baseline ✅ · <traced | reproduced | checked>
-- test: <repro> · <sha> · <traced | reproduced | checked>            (only if kept)
-- test: quarantine <test> · <sha> · <traced | reproduced | checked>   (only if flapping)
+**Drafts**
+**D<n>** → <tracking issue | comment>
+> <full text>
 
-### Ready to Ship – Pick What Posts
-[ ] push the staged <fix | revert>   [ ] retry every failed job
-[ ] push the quarantine   [ ] open tracking issue (D<n>)
-[ ] comment cause+fix on the MR/PR or the <noun> (D<n>)
-
-### Drafts
-D<n> <tracking issue, in full>
-D<n> <comment, in full>
+Last green → first red, the failing log lines, the cascade: `<report dir>/brief.md`
 </brief-template>
 
 ## After Approval

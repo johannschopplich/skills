@@ -19,7 +19,7 @@ disable-model-invocation: true
 
 1. Invoke the `tdd` skill at the agreed seam.
 2. Every cycle: typecheck plus the touched test file only.
-3. Commit the slice, `git add <paths>` explicitly. Its Applied proof is `reproduced`: the test red before, green after.
+3. Commit the slice, `git add <paths>` explicitly. Its proof is `reproduced`: the test red before, green after.
 4. Ticket file: tick its criteria, set `Status: done`.
 
 A slice still red after three fix attempts → `git stash push -u -m "implement: <ticket> red" -- <paths>`, name the failing test in the brief, continue with the tickets it doesn't block.
@@ -31,4 +31,4 @@ Several tickets → one subagent per ticket, one at a time (shared worktree). Br
 ## Finish
 
 1. Full test suite, once. Each red test → rerun it at the start commit: red there too → pre-existing, brief context; green there → this run's regression, fixed under push-right's Verification or carried as a Decision.
-2. Invoke the `code-review` skill with `<start commit> <spec>` – a conversation spec first written to `$TMPDIR/implement-spec.md`. Own Work folds the fixes and re-reviews once; you assemble the brief, code-review's report first, its Applied and Decisions merged with yours. The push stays in the tray.
+2. Invoke the `code-review` skill with `<start commit> <spec>` – a conversation spec first written to `$TMPDIR/implement-spec.md`. Own Work folds the fixes and re-reviews once; you assemble the brief: its Review line, its Done lines and Decisions merged with yours. The push stays in the tray.

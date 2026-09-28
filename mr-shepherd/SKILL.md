@@ -14,7 +14,7 @@ Merging stays the user's or CI's call. **Invoke the `push-right` skill first.** 
 - **Mode.**
   - **teach** (default, someone else's MR) – findings become inline drafts that imply the fix; commit only a single-form fix the author wouldn't learn from – a typo, a missing import.
   - **take-over** (the invocation says the author is away, sick, or handing over) – commit fixes on top of the author's commits, each with a short draft saying what changed and why.
-  - **own** (the authenticated user wrote it) – `code-review`'s Own Work flow applies and re-reviews, then returns its report, Applied, and Decisions into this brief; nothing is drafted to the author.
+  - **own** (the authenticated user wrote it) – `code-review`'s Own Work flow applies and re-reviews, then returns its Review line, Done lines, and Decisions into this brief; nothing is drafted to the author.
 - **Inputs.** A ticket resolves to its MRs via its merge-request field. Several MRs: jointly when they share lineage or files (one review each, one cross-MR section), else separately – say which. A stack: bottom-up, one section per MR, one tray.
 
 ## Boundary Marker
@@ -25,15 +25,15 @@ The **thread is the state**. The marker is the authenticated account's newest no
 
 ## Run – in Order
 
-1. **Preflight** – the hard failures: `glab api user` / `gh api user` and one cheap tracker call; failure, here or later, ends the run with the fix (`! glab auth login`, `/mcp`). A missing MR or failed checkout goes in the brief; the rest still runs.
+1. **Check auth.** `glab api user` / `gh api user` and one cheap tracker call; a failure, here or later, ends the run with the fix (`! glab auth login`, `/mcp`). A missing MR or failed checkout goes in the brief; the rest still runs.
 2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket: the forward link, else one tracker search for the MR URL (Asana: an exact `.value` match of the full URL on the **Merge request** field – text search and `.contains` miss custom fields); no hit, no ticket.
-3. **Merge-safety pre-check.** Read-only, after `git fetch`: behind, diverged, CI on the latest push, conflicts – for the state line. Conflicts are surfaced, never resolved silently.
-4. **Worktree** at `../<repo>-mr-<id>`, reused on re-fire, never the user's checkout.
-5. **Review** – invoke the `code-review` skill from the worktree: fixed point the target's merge-base, spec the ticket URL, context the mode (own → Own Work; else report only), author, and product or design decisions the ticket shows as accepted. Triage:
+3. **Pre-check merge safety.** Read-only, after `git fetch`: behind, diverged, CI on the latest push, conflicts – for the state line. Conflicts are surfaced, never resolved silently.
+4. **Add a worktree** at `../<repo>-mr-<id>`, reused on re-fire, never the user's checkout.
+5. **Review.** Invoke the `code-review` skill from the worktree: fixed point the target's merge-base, spec the ticket URL, context the mode (own → Own Work; else report only), author, and product or design decisions the ticket shows as accepted. Triage:
    - **Intent** – MR differs from what the ticket asked: leads the Decisions.
    - **Prevention** – a finding class recurring in the MR or the thread gets one Decision on where to stop it: lint rule, repo skill or `AGENTS.md` line, CodeRabbit path instruction.
    - **Product scope** – visual and product-value doubts on work a PM or designer accepted (`PM:` lines) → one line for them, never an author comment.
-6. **Triage every thread** – **blocker**, **nit**, **idea**, **question**, **noise** (false positive, handled, out of scope). A bot's concrete defect gets the mode's treatment and a short reply; the rest → one batch-resolve tray item, unreplied.
+6. **Triage every thread.** Buckets: **blocker**, **nit**, **idea**, **question**, **noise** (false positive, handled, out of scope). A bot's concrete defect gets the mode's treatment and a short reply; the rest → one batch-resolve tray item, unreplied.
 7. **Stage fixes by mode** (not own). Control flow – guards, early returns, error handling, defaults – is proposed, unless the sole fix for a reproduced crash. Subjects unscoped (`fix:`, not `fix(ui):`); stack on the author's HEAD, never rewrite their commits.
 8. **Verify.** A fix that reddens anything else is discarded, its finding → Decision. UI: reproduce live via `chrome-devtools` MCP (`navigate_page`, `take_screenshot`, `list_console_messages`) on the preview or a local server; else the closest component or e2e test, gap named. Asked to compare visuals: one before/after page, target and branch side by side, light and dark where both exist.
 9. **Draft.**
@@ -44,29 +44,32 @@ The **thread is the state**. The marker is the authenticated account's newest no
 ## The Brief
 
 <brief-template>
-## <noun> <sigil><id> · <full MR URL>
-verdict: <ready to merge | ready after rebase | blocked by N decisions | waiting on author (N findings)> · mode: <teach | take-over | own>
-what it does: <two plain sentences>
-state: <N behind/ahead/diverged> · local≡remote? · CI <status> · <K> threads (<by bucket>) · worktree <path>
-review: code-review <verdict> (<axes>, <R> refuted) · intent <✅ | ⚠️ | no ticket> [ticket] · <code-review report dir>
-open: you: <what only the user can do, with links> · waiting on: <CI, author, PM> · next: <the next MR, or the land re-fire>
+## <noun> [<sigil><id>](<url>) <short title> – <ready to merge | ready after rebase | blocked by N decisions | waiting on author (N findings)>
+<N behind | diverged> · <P> unpushed · CI <✓ | ✗> · <K> threads (<by bucket>) · <no ticket> · <teach | take-over | own>
 
-### Decisions
-Q1 <judgment call as a question>. <who flagged it>.
-  a) <option> b) <option> – Rec: <letter>, because <one line>. [diff] [thread]
+**Needs you** – `Q1 a, Q2 a, ship 1–<n>`
+**Q1** <judgment call as a question> *<who flagged it>*
+a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
+1. rebase onto <target> (<N> behind)
+2. push <P> commits
+3. create <K> inline drafts (D<n>–D<m>, unpublished – you submit the review)
+4. post <M> replies (D<n>…)
+5. resolve <T> threads
+6. resolve <B> bot threads as noise
+7. ask the bot to re-review after the push
+8. update the description (D<n>)
+9. post the tracker comment (D<n>)
+10. Slack note (D<n>, copy)
 
-### Applied (Staged Locally, Not Pushed)
-- <commit subject> – <file:line> · <verification evidence> · <traced | reproduced | checked>
+**Done** <fix> (<traced | reproduced | checked>) · …
+**Waiting on** <CI, author, PM>
+**Next** <the next MR, or the land re-fire>
 
-### Ready to Ship – Pick What Posts
-[ ] rebase onto <target> (<N> behind)   [ ] push <P> commits
-[ ] create <K> inline drafts (D<n>–D<m>, unpublished – you submit the review)   [ ] post <M> replies (D<n>…)
-[ ] resolve <T> threads   [ ] resolve <B> bot threads as noise   [ ] ask the bot to re-review after the push
-[ ] update the description (D<n>)   [ ] post the tracker comment (D<n>)   [ ] Slack note (D<n>, copy)
+**Drafts**
+**D<n>** → <author> on `<file:line>` (<severity | bucket>), <via Q<n> | resolve candidate>
+> <full text>
 
-### Drafts
-D<n> <file:line> → <author> (<severity | bucket>) · <address via Q<n> | resolve candidate>
-<full text>
+**Review** <code-review's line, with its report path>
 </brief-template>
 
 `waiting on author` counts blocker and major drafts.
