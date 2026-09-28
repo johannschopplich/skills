@@ -6,7 +6,7 @@ Name a missing source in `note` and carry on. Done when every standard the diff 
 
 - The repo's own: `AGENTS.md`/`CLAUDE.md` at the root and beside every touched file, `CODING_STANDARDS.md`, `CONTRIBUTING.md`, lint and format config, and every repo skill under `.claude/skills/` or `.agents/skills/` whose description matches the touched code.
 - The **Naming** section of `~/.claude/rules/code-style.md` – its Comments section and `~/.claude/rules/tests.md` belong to other axes.
-- The smell baseline under *Identify the standards sources* in `~/.agents/skills/code-review/SKILL.md`.
+- The smell baseline in `smells.md` beside this file.
 
 **Precedence.** A documented repo standard beats a global rule. Where `context` names another author, the dominant idiom of the neighboring files beats a global rule on anything no rule marks as wrong: a nit; the rename stays with the author.
 
