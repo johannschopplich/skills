@@ -1,9 +1,9 @@
 # Smell Baseline
 
-Fowler's code smells (_Refactoring_, ch. 3), taken from Matt Pocock's `code-review`. They apply even when a repo documents nothing.
+Fowler's code smells (_Refactoring_, ch. 3). They apply even when a repo documents nothing.
 
 - **The repo overrides.** A documented repo standard always wins; where it endorses something the baseline would flag, suppress the smell.
-- **Always a judgement call.** Each smell is a labelled heuristic ("possible Feature Envy"), never a hard violation – a `choice`. Skip anything tooling already enforces.
+- **Always a judgement call.** Each smell is a labelled heuristic ("possible Feature Envy"), never a hard violation – a `choice`, minor at most. Skip anything tooling already enforces.
 
 Each smell reads *what it is* → *how to fix*; match it against the diff:
 

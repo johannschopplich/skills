@@ -13,8 +13,8 @@ Name a missing source in `note` and carry on. Done when every standard the diff 
 ## Lenses
 
 - **Platform before hand-rolled.** Check each new mechanism – a DOM query, a global listener, an effect with side effects, a custom deferred or queue, URL or date parsing, a mock server – against the framework, an installed library (read its source in `node_modules`), and in-repo utilities. The finding questions whether the approach should exist at all; narrowing a fragile mechanism only patches the symptom.
-- **Duplication.** The same shape in two hunks or beside an existing helper. Centralizing is a `choice`.
+- **Duplication.** A new shape beside an existing helper; centralizing is a `choice`.
 - **Fit on the touched path.** A half-applied change, leftovers the diff abandoned, a sibling file the change should have reached.
-- **Naming.** Only wrong or misleading names; taste stays with the author.
+- **Naming.** Wrong or misleading names, plus Mysterious Name as a `choice`; other taste stays with the author.
 
-Skip whatever lint or typecheck already enforces.
+Skip whatever format, lint, or typecheck already enforces.
