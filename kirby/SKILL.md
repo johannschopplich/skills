@@ -37,7 +37,7 @@ Kirby 6 work sits on each package's `feat/kirby-6` (kirbyup: `feat/vue-3`). A ch
 
 ## Plugins
 
-- **Playground** – runs on the Kirby 5 in `vendor/`. Before a smoke test, `pnpm build` in place – no asking, `index.js` stays uncommitted – and name the commit it was built from. A leftover `index.dev.mjs` wins over `index.js`. A playground-only feature (`__PLAYGROUND__`, a build-time constant) takes `pnpm build:playground`.
+- **Playground** – runs on the Kirby 5 in `vendor/`. Before a [smoke test](panel-smoke.md), `pnpm build` in place – no asking, `index.js` stays uncommitted – and name the commit it was built from. A leftover `index.dev.mjs` wins over `index.js`. A playground-only feature (`__PLAYGROUND__`, a build-time constant) takes `pnpm build:playground`.
 - **Shared files** – the `kirby-*` plugins share `.gitignore`, `.gitattributes`, `tsconfig.json`, and `playground/site/plugins/playground/`, shaped after `kirby-copilot`; the ones with Panel tests share `tests/panel/helpers/mock-kirbyuse.ts` byte for byte. Change every sibling or none; never prune a line one repo doesn't use.
 - **UnoCSS** – `presetWind3` with a prefix per plugin (`uno.config.ts`: `kai-`, `kct-`, `ksr-`, …). Kirby tokens take the bracket form, `kai-mt-[var(--spacing-4)]`; Tailwind v4's `mt-(--spacing-4)` generates nothing. Sibling spacing is `[&>*+*]:kai-mt-[var(--spacing-N)]`, never `space-y-*` – Wind3 and the Tailwind v4 mocks in kirby.tools compile it differently.
 
