@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a verdict: ship, fix, or incomplete. Use when asked to review or debloat the user's own changes or a branch, or when another skill needs a review engine; a teammate's MR or PR goes through mr-shepherd.
+description: Review a diff or branch in fresh contexts along five axes – standards, spec, comments, tests, correctness – refute every finding, and end on a ship, fix, or incomplete verdict. Use when asked to review or debloat the user's own changes or a branch, or when another skill needs a review engine; a teammate's MR or PR goes through mr-shepherd.
 argument-hint: "[fixed point: sha, branch, or HEAD for uncommitted] [spec: ticket URL or path]"
 ---
 
