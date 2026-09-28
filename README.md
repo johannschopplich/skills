@@ -74,7 +74,7 @@ The four workflow skills below, plus **sevdesk** under Personal and **gate**'s O
 
 ## Integrations
 
-- **asana-formatting**: Stops Asana MCP writes from coming out as plain text or 400ing. Forces the HTML field, the `<body>` wrapper, and the schema's tag whitelist.
+- **asana-formatting**: Stop Asana MCP writes from coming out as plain text or 400ing. Force the HTML field, the `<body>` wrapper, and the schema's tag whitelist.
 
   ```
   npx skills add johannschopplich/skills/asana-formatting
@@ -84,6 +84,6 @@ The four workflow skills below, plus **sevdesk** under Personal and **gate**'s O
 
 Built for my own machine and archive layout. Published as a reference rather than something to install: it assumes specific hardware and my folder conventions, so it will misfire elsewhere.
 
-- **footage-ingest**: Ingest a camera card into a multi-drive footage archive. Finds material that exists in only one place and copies that first, settles every routing decision with the human before writing, then gates each copy on file count and total bytes.
+- **footage-ingest**: Ingest a camera card into a multi-drive footage archive. Finds material that exists in only one place and copies that first, settles every routing decision with the user before writing, then gates each copy on file count and total bytes.
 
 - **sevdesk**: Book, correct, and audit sevDesk vouchers through the API behind one approval tray (loads **push-right**). Carries the German VAT rules for selling via merchants of record and buying software abroad, plus what the sevDesk OpenAPI spec leaves out: the report endpoints, payment signs, and the refund booking that keeps the payables account balanced.

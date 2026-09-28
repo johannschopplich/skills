@@ -44,7 +44,7 @@ Verdict: `incomplete` when an axis returned nothing or was unknown – name it; 
 
 ## Own Work
 
-When the diff is the user's own branch (commits by `git config user.email`, pushed or not) and nobody asked for the report alone, carry on after the verdict under `push-right` (invoke it); its hard failures here are step 1's bad ref and empty diff.
+When the diff is the user's own branch (commits by `git config user.email`, pushed or not) and nobody asked for the report alone, invoke the `push-right` skill and carry on after the verdict under it; its hard failures here are step 1's bad ref and empty diff.
 
 - Decisions: every `plausible` finding, every `choice` finding, and every behavior change with `proof: said`.
 - Capture the baseline from step 3's checks, then apply every other `confirmed` finding – unpushed commit: fixup (`git commit --fixup=<sha>`, then `GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash <upstream>`, `<upstream>` being the pushed branch head, else the merge-base); pushed commit: new commit on HEAD; uncommitted: edit in place. Invoking gate names the unpushed commits, so the fold is an explicit exception to push-right's Apply and Boundary Marker rules, and the edit in place to its commit rule.

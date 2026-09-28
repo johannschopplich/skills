@@ -47,7 +47,7 @@ Omit empty headings. Nothing flagged → `Prompt passes audit.`, the summary, an
 ### Anti-Patterns
 
 - **Aggressive directives** – "CRITICAL: You MUST…", caps-locked ALWAYS/NEVER → normal language; absolutes only for true invariants.
-- **Reasoning in the response** ("think step by step", "explain your reasoning") on reasoning targets → remove it; the model reasons in its thinking.
+- **Reasoning in the response** – "think step by step", "explain your reasoning" on reasoning targets → remove it; the model reasons in its thinking.
 
 ### Clarity
 
@@ -64,7 +64,7 @@ Only for tool-using or autonomous prompts.
 
 - **Stop rules and budgets** – when to stop, hand back, or ask; tool budgets with stop-when-sufficient.
 - **Safe vs. unsafe actions** – destructive or shared-state actions confirm; local reversible ones proceed.
-- **Scope guardrails** for code changes – no unrequested files, features, or abstractions; no test gaming or claims about unread files.
-- **Prescriptive step plans** for tasks the model can plan → outcome, success criteria, allowed side effects.
+- **Scope guardrails for code changes** – no unrequested files, features, or abstractions; no test gaming or claims about unread files.
+- **Prescriptive step plans** – for tasks the model can plan → outcome, success criteria, allowed side effects.
 - **Blanket tool defaults** – "if in doubt, use [tool]" → "use [tool] when it would enhance understanding".
 - **Thoroughness prose** ("be thorough") → success criteria and stop rules; raise effort for depth.

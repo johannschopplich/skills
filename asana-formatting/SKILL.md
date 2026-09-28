@@ -1,6 +1,6 @@
 ---
 name: asana-formatting
-description: Writes rich text into Asana tasks, projects, status updates, and comments through the Asana MCP's HTML fields. Use when an Asana write carries formatting, links, or @-mentions.
+description: Write rich text into Asana tasks, projects, status updates, and comments through the Asana MCP's HTML fields. Use when an Asana write carries formatting, links, or @-mentions.
 ---
 
 Asana renders no Markdown: `**bold**` or `- item` in `notes` or `text` shows up literally. Put formatted content in the tool's HTML field (`html_notes`, `html_text`) as XML.

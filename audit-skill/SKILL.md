@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Process
 
-1. **Read** the skill's SKILL.md, every file it links, and every script it runs; list its folder tree. Load `writing-for-agents` with its SKILL-MECHANICS.md.
+1. **Read** the skill's SKILL.md, every file it links, and every script it runs; list its folder tree. Invoke the `writing-for-agents` skill, then read its SKILL-MECHANICS.md.
 2. **Run the checklist** below – every rule against the entire skill, each yielding a pass or a violation with evidence: file, line number, and the actual value or quoted text.
 3. **Report** the findings using this template.
 
@@ -61,7 +61,7 @@ Triggers, but steers weakly.
 - Every writing-for-agents lever holds: flag no-ops, bare prohibitions, duplication, vague completion criteria, scattered concepts, sprawl, and restatements a leading word would retire.
 - Alternatives are one default plus an escape hatch; flag a menu with no default.
 - Emphasis: flag ALL-CAPS, `CRITICAL`, `IMPORTANT`, `MUST` used for volume; the fix is a plain conditional (`Use X when…`) plus a one-clause reason. Absolutes only for real invariants, with a satisfaction criterion or fallback.
-- Self-verification: flag re-checks of the agent's own work (`double-check`, a final re-check step, a subagent dispatched to verify it). Passing: a designed writer–verifier split, a pass filtering reported findings, scripts and tests.
+- Self-verification: flag re-checks of the agent's own work (`double-check`, a final re-check step, a subagent dispatched to verify it). Passing: a designed writer–verifier split, a pass filtering reported findings, scripts, and tests.
 - Subagents: flag delegating what a handful of tool calls finishes; large, independent, parallel tracks pass.
 - Finding skills ask for every finding with severity (and confidence) and filter downstream; flag `only report high-severity`, `be conservative`, `don't nitpick`.
 - Narrow skills state their scope (`deliver what was asked; name a better approach in a sentence and continue as asked`).

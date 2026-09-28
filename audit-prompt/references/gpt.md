@@ -15,8 +15,8 @@ Tag findings `[GPT]`. Snapshot 2026-09-27 – GPT-6 Astra/Sol/Luna, GPT-5.6 Sol/
 ## Parameters
 
 - **Effort** – default `medium`; flag effort raised to cover a vague goal or missing output contract, and `xhigh`/`max` without eval evidence. GPT-6 mid-conversation change: a `configuration_update` input item keeps the cache (single-agent, not with automatic compaction).
-- **`text.verbosity`** over "be concise" prose; GPT-5.6 is concise by default.
-- **`reasoning.mode: "pro"`** only with a stated reason.
+- **`text.verbosity`** – over "be concise" prose; GPT-5.6 is concise by default.
+- **`reasoning.mode: "pro"`** – only with a stated reason.
 - **`reasoning.context`** – `all_turns` for stable goals, `current_turn` when earlier reasoning is stale.
 
 ## Prompt

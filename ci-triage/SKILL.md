@@ -6,14 +6,14 @@ argument-hint: "pipeline or job URL, or branch name"
 
 # CI Triage
 
-**Load the doctrine first: invoke the `push-right` skill.** Irreversible here: **push a commit** (fix, revert, or quarantine), **retry CI**, **open an issue**, **post a comment**. Hard failures: an unauthenticated `glab` or `gh`; a pipeline, run, or job ID that doesn't resolve.
+**Invoke the `push-right` skill first.** Irreversible here: **push a commit** (fix, revert, or quarantine), **retry CI**, **open an issue**, **post a comment**. Hard failures: an unauthenticated `glab` or `gh`; a pipeline, run, or job ID that doesn't resolve.
 
 ## Host Detection
 
 Detect the host from the URL or the local remote and bind:
 
 | bound verb | GitLab | GitHub |
-| --- | --- | --- |
+|---|---|---|
 | `get` | `glab ci get -p <pipeline-id>` | `gh run view <run-id>` |
 | `list` | `glab ci list --ref <branch>` | `gh run list --branch <branch> --workflow <failing workflow>` |
 | `trace` | `glab ci trace <job-id>` | `gh run view <run-id> --log-failed` |
@@ -34,7 +34,7 @@ The **branch is the state**; retries add attempts to the same pipeline, and only
 
 ## Run – in Order
 
-1. **Resolve the failures** (`get`, then `trace`). **Collapse cascades**: a job red only because an upstream job failed folds into that root. Triage each root.
+1. **Resolve the failures** (`get`, then `trace`). **Collapse cascades** – a job red only because an upstream job failed folds into that root. Triage each root.
 2. **Disprove first against the last green run** (`list`). Same or near commit was green → lean flaky/infra. Failure starts at a specific commit (bisect green→red) → regression at that change.
 3. **Reproduce up the ladder – a cause comes from a reproduction, never from logs alone.** Reuse the repo's own test setup, not a parallel harness.
    - **Bare-local** first. Deterministic → *real*, whatever the logs say.
@@ -47,7 +47,7 @@ The **branch is the state**; retries add attempts to the same pipeline, and only
    - **INFRA / DEPLOY** – an unambiguous environmental signature (deploy key, runner, registry, auth) *plus* a comparison showing the code didn't touch that surface.
    - Ambiguous, or no bar can be met (no container runtime, CI-only secrets, no comparison and no repro, truncated logs) → **INCONCLUSIVE**; the cheapest next step (often a `retry`) goes on the tray. A bar met by other evidence keeps its verdict.
 5. **Act.**
-   - **Regression / Config** → a repro that fails on the bug (Config: `lint`, no test file), then the **minimal fix** per Apply vs. Propose. Target: the repro goes **red→green** – never whole-pipeline green. A fix adding new failures vs baseline is discarded for the revert. Keep the repro if it's a durable guard, else brief-only evidence; borderline → a Decision.
+   - **Regression / Config** → a repro that fails on the bug (Config: `lint`, no test file), then the **minimal fix** per Apply vs. Propose. Target: the repro goes **red→green** – never whole-pipeline green. A fix adding new failures vs. baseline is discarded for the revert. Keep the repro if it's a durable guard, else brief-only evidence; borderline → a Decision.
    - **Flaky** → no code fix; retry on the tray; name the test. **Repeatedly flapping** in the branch history → offer a staged quarantine commit and/or a drafted tracking issue; a single sighting gets named only.
    - **Infra / Deploy** → no code fix; recommend retry or escalate.
 
@@ -59,7 +59,7 @@ Default: **minimal fix**. **Revert** when the breaking commit is someone else's 
 
 FLAKY / INFRA / INCONCLUSIVE **collapse** to verdict + evidence + "recommend retry".
 
-```
+<brief-template>
 ## <noun> #<id> · <branch> · <K> failing root(s) ❌
 
 ### <stage/job> – REAL REGRESSION        (FLAKY / INFRA-DEPLOY / CONFIG / INCONCLUSIVE)
@@ -74,7 +74,7 @@ Q1 a) <fix | revert <sha>> (staged) b) <the alternative, one line> – Rec: a, <
 Q2 keep the repro test `<file>`? (borderline) a) keep b) drop – Rec: a, guards <X>.
 
 ### Applied (Staged Locally, Not Pushed)
-- <fix | revert>: <subject> · <sha> – <file:line>   repro red→green ✅ · no new failures vs baseline ✅ · <traced | reproduced | checked>
+- <fix | revert>: <subject> · <sha> – <file:line>   repro red→green ✅ · no new failures vs. baseline ✅ · <traced | reproduced | checked>
 - test: <repro> · <sha> · <traced | reproduced | checked>            (only if kept)
 - test: quarantine <test> · <sha> · <traced | reproduced | checked>   (only if flapping)
 
@@ -86,7 +86,7 @@ Q2 keep the repro test `<file>`? (borderline) a) keep b) drop – Rec: a, guards
 ### Drafts
 D<n> <tracking issue, in full>
 D<n> <comment, in full>
-```
+</brief-template>
 
 ## After Approval
 

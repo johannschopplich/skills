@@ -7,17 +7,17 @@ disable-model-invocation: true
 
 # Implement
 
-Runs under `push-right` – invoke it first. Irreversible set: the push and anything posted to a tracker. The artifact is the branch plus the ticket files.
+**Invoke the `push-right` skill first.** Irreversible set: the push and anything posted to a tracker. The artifact is the branch plus the ticket files.
 
 ## Start
 
-- **Input**: the argument – a spec, a ticket, or a `.scratch/<feature>/` dir; a spec with an `issues/` sibling means its tickets, worked on the frontier: any ticket whose blockers are all done. No argument → the current conversation is the spec.
-- **Seams**: the spec's Testing Decisions are the agreed seams, which settles `tdd`'s confirm-with-the-user step. None named → the highest existing public seam, carried as a Decision.
-- **Baseline**: note `HEAD` as the start commit; run typecheck and lint.
+- **Input** – the argument – a spec, a ticket, or a `.scratch/<feature>/` dir; a spec with an `issues/` sibling means its tickets, worked on the frontier: any ticket whose blockers are all done. No argument → the current conversation is the spec.
+- **Seams** – the spec's Testing Decisions are the agreed seams, which settles `tdd`'s confirm-with-the-user step. None named → the highest existing public seam, carried as a Decision.
+- **Baseline** – note `HEAD` as the start commit; run typecheck and lint.
 
 ## Per Slice
 
-1. `tdd` at the agreed seam.
+1. Invoke the `tdd` skill at the agreed seam.
 2. Every cycle: typecheck plus the touched test file only.
 3. Commit the slice, `git add <paths>` explicitly. Its Applied proof is `reproduced`: the test red before, green after.
 4. Ticket file: tick its criteria, set `Status: done`.
@@ -31,4 +31,4 @@ Several tickets → one subagent per ticket, one at a time (shared worktree). Br
 ## Finish
 
 1. Full test suite, once. Each red test → rerun it at the start commit: red there too → pre-existing, brief context; green there → this run's regression, fixed under push-right's Verification or carried as a Decision.
-2. `gate <start commit> <spec>` – a conversation spec first written to `$TMPDIR/implement-spec.md`. Own Work folds the fixes and re-gates once; you assemble the brief, gate's report first, its Applied and Decisions merged with yours. The push stays in the tray.
+2. Invoke the `gate` skill with `<start commit> <spec>` – a conversation spec first written to `$TMPDIR/implement-spec.md`. Own Work folds the fixes and re-gates once; you assemble the brief, gate's report first, its Applied and Decisions merged with yours. The push stays in the tray.

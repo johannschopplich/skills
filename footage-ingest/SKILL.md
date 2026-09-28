@@ -16,21 +16,21 @@ Get every clip off the card and onto every archive drive it belongs on.
 Reach a state where **every clip on the card is accounted for, per destination drive, in exactly one bucket**: already archived there, queued to copy there, or discarded by name.
 
 - **Name-match → verify by size.** Two camera bodies share a counter range, so a size mismatch on a name-match is a collision, not a duplicate.
-- **Mixed shoot day:** read the camera model from each day's XML sidecars, per day. Two models → camera subfolders; one → none.
-- **Free space:** sum the bytes actually queued per destination against each drive's free space before proposing anything.
+- **Mixed shoot day** – read the camera model from each day's XML sidecars, per day. Two models → camera subfolders; one → none.
+- **Free space** – sum the bytes actually queued per destination against each drive's free space before proposing anything.
 
 ## Orphans
 
 An **orphan** exists in exactly one place. Once the decisions are settled, copy orphans to every drive first, then the rest of the queue. Two hiding places:
 
 - **Gaps in the clip counter.** Cameras number clips consecutively across shoot days, so a jump on the card (`C0531, C0533` then `C0623`) means clips were deleted from it. If those numbers turn up in a staging folder on an internal disk, that folder holds the only copy.
-- **Curated staging folders.** Material already pulled to an internal disk and culled by hand carries the human's keep/discard decision. Take those days from the staging folder and exclude them from the card pass entirely.
+- **Curated staging folders.** Material already pulled to an internal disk and culled by hand carries the user's keep/discard decision. Take those days from the staging folder and exclude them from the card pass entirely.
 
 XML sidecars deleted alongside culled clips are gone; say so.
 
 ## Settle the Decisions
 
-Ingest decisions are the human's: which folder tree, whether XML sidecars and stills come along, what happens to culled clips, whether a nearly-full working drive gets this batch.
+Ingest decisions are the user's: which folder tree, whether XML sidecars and stills come along, what happens to culled clips, whether a nearly-full working drive gets this batch.
 
 Invoke the `grilling` skill (fallback: ask in rounds, waiting for each), every question carrying your recommendation and built from an inventory finding – an orphan, a collision, a drive that ends the run at 8% free. Done when **every decision the inventory surfaced has an answer you did not supply**.
 
@@ -43,17 +43,17 @@ Invoke the `grilling` skill (fallback: ask in rounds, waiting for each), every q
   "<source clip folder>/" "<destination day folder>/"
 ```
 
-- **Homebrew rsync 3.x**: macOS ships openrsync (2.6.9-compatible).
-- **`-rt`, not `-a`**: exFAT has no POSIX owners, permissions, or symlinks.
-- **`--modify-window=2`**: exFAT timestamps are 2-second granular; without it every rerun re-copies the APFS-sourced set.
-- **`--partial-dir`, not `--partial`**: an interrupted transfer never leaves a truncated file under the real name.
-- **Counter-named clips** (`C0531.MP4`): no prefix selects a day, so write that day's bare file names to a list and pass `--files-from=<list>` in place of the `--include`/`--exclude='*'` pair.
-- **Sidecars** the human chose: their own `--include` before `--exclude='*'` (first match wins), or their own lines in the list.
-- **One flat folder per stage**: `--exclude='*'` blocks recursion. Stills live in a separate card folder (`DCIM` on Sony), so they are their own stage.
+- **Homebrew rsync 3.x** – macOS ships openrsync (2.6.9-compatible).
+- **`-rt`, not `-a`** – exFAT has no POSIX owners, permissions, or symlinks.
+- **`--modify-window=2`** – exFAT timestamps are 2-second granular; without it every rerun re-copies the APFS-sourced set.
+- **`--partial-dir`, not `--partial`** – an interrupted transfer never leaves a truncated file under the real name.
+- **Counter-named clips** (`C0531.MP4`) – no prefix selects a day, so write that day's bare file names to a list and pass `--files-from=<list>` in place of the `--include`/`--exclude='*'` pair.
+- **Sidecars** the user chose – their own `--include` before `--exclude='*'` (first match wins), or their own lines in the list.
+- **One flat folder per stage** – `--exclude='*'` blocks recursion. Stills live in a separate card folder (`DCIM` on Sony), so they are their own stage.
 
 Run each stage in the background with output logged and wait for its exit status; a card copy outlasts the foreground timeout. A copy in progress is not a stopping point: keep going until the gate passes or a stage fails.
 
-**Additive only.** `--delete` belongs in no invocation: archive drives hold deliberate subsets of each other. Deletion is a separate operation, dry-run first, on files the human named.
+**Additive only.** `--delete` belongs in no invocation: archive drives hold deliberate subsets of each other. Deletion is a separate operation, dry-run first, on files the user named.
 
 **Source → each destination**, never archive drive to archive drive, so a silent read error can't propagate into every copy.
 
@@ -74,4 +74,4 @@ Silent false failures:
 
 Write a protocol next to the previous ones, matching their format and length: starting state, decisions with their reasoning, commands run, gate results with real numbers, ending free space, and open items.
 
-Leave the card mounted and unformatted until the human has reviewed the footage – culled clips still live only there. Formatting happens in the camera, which keeps the vendor folder structure.
+Leave the card mounted and unformatted until the user has reviewed the footage – culled clips still live only there. Formatting happens in the camera, which keeps the vendor folder structure.

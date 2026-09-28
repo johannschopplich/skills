@@ -68,7 +68,7 @@ Ja, genau – gilt gleichermaßen. Hab ich gelöscht. ✅
 ## PR/MR Descriptions
 
 1. **Intent first.** One or two prose sentences on what and why.
-2. **Only what the diff can't show:** consequences, migration steps. Verification notes, follow-ups, and links to other commits stay out.
+2. **Only what the diff can't show.** Consequences, migration steps. Verification notes, follow-ups, and links to other commits stay out.
 3. **Prose by default.** Bullets for several units – per package, concern, or surface, never per file – about five at most.
 
 ## Commit Messages
