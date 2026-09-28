@@ -1,0 +1,46 @@
+---
+name: kirby
+description: Kirby source checkouts, Kirby 5 vs 6, the plugin playgrounds and UnoCSS, and the kirby.tools docs a release waits on. Use when working in a Kirby CMS plugin, Kirby core, a Kirby site, or the kirby.tools repos.
+---
+
+# Kirby
+
+Check every claim about Kirby – a prop, a default, a CSS rule, a PHP signature, a "since" version – against the source, never from memory.
+
+## Source
+
+| Checkout | Kirby | Panel |
+|---|---|---|
+| `~/Projects/kirby` | 5, `main`; its `composer.json` has the version | Vue 2.7 |
+| `~/Projects/kirby-v6` | 6, a worktree of the above, detached at the ref `kirby.tools/layers/kirby-panel/kirby.json` pins | Vue 3, TypeScript |
+
+- **Panel** – `panel/src/` in a checkout. A project's `vendor/getkirby/cms` has the PHP `src/` but only `panel/dist`: read the Panel from a checkout's `panel/src/`.
+- **Shallow** – both checkouts are shallow: `git log -S` and `git tag --contains` report wrong "since" versions. Read the file per tag (`git show 5.1.0:panel/src/panel/modal.js`), or find the PR with `gh`.
+- **Kirby 6** – `~/Projects/MIGRATION-K6.md` tracks what waits for it across plugins, licensing, and site. Read it before a Vue 3 or Kirby 6 change; record new items there.
+- **Kirby 4** – supported as is: new guards, tests, options, and docs target Kirby 5 and 6 only.
+
+## Helper Packages
+
+- **kirby-types** – `~/Projects/kirby-types`, types for `window.panel` and headless use. Panel type audits: its user-invoked `/audit-panel-types` skill.
+- **kirbyuse** – `~/Projects/kirbyuse`, Panel composables (`usePanel`, `useApi`, `useDialog`, …), typed by kirby-types.
+- **kirbyup** – `~/Projects/kirbyup`, the plugins' build tool.
+
+Kirby 6 work sits on each package's `feat/kirby-6` (kirbyup: `feat/vue-3`). A change across them releases in order: kirby-types, kirbyuse, then kirbyup or the plugin.
+
+## Gotchas
+
+- **`panel.api` resets the loader** – `api.request()` sets `panel.isLoading = false` when its last request ends, `silent` or not (`panel/src/api/index.js`, K6 `index.ts`). A run mixing `panel.api` calls with long local work shows its own loading state.
+- **Runtime markup** – the Panel adds classes no `.vue` file holds (`k-text` on the writer's ProseMirror node, from `Editor`). Props and defaults come from the source; markup and computed styles from a running Panel: a playground for Kirby 5, [kirby-6-panel.md](kirby-6-panel.md) for Kirby 6.
+
+## Plugins
+
+- **Playground** – `composer dev` serves `playground/public` on `localhost:8000` with the Kirby 5 in `vendor/`; `pnpm dev` runs `kirbyup serve` (in Copilot and Content Translator, both via mprocs). Before a smoke test, `pnpm build` in place – no asking, `index.js` stays uncommitted – and name the commit it was built from. A leftover `index.dev.mjs` wins over `index.js`. A smoke test of a playground-only feature (`__PLAYGROUND__`, a build-time constant) takes `pnpm build:playground`.
+- **Shared files** – the `kirby-*` plugins share `.gitignore`, `.gitattributes`, `tsconfig.json`, and `playground/site/plugins/playground/`, shaped after `kirby-copilot`. Change every sibling or none; never prune a line one repo doesn't use.
+- **UnoCSS** – `presetWind3` with a prefix per plugin (`uno.config.ts`: `kai-`, `kct-`, `ksr-`, …). Kirby tokens take the bracket form, `kai-mt-[var(--spacing-4)]`; Tailwind v4's `mt-(--spacing-4)` generates nothing. Sibling spacing is `[&>*+*]:kai-mt-[var(--spacing-N)]`, never `space-y-*` – Wind3 and the Tailwind v4 mocks in kirby.tools compile it differently.
+
+## Docs
+
+The Kirby Tools plugins document in `~/Projects/kirby.tools`: `content/1.docs/<n>.<product>/`, the website changelog in `content/<n>.<product>/changelog/`, the agent skill in `server/assets/skills/kirby-<product>/SKILL.md`. A feature or release is done once its docs edit is there. Read `kirby.tools/.claude/skills/kirby-tools-content/SKILL.md` before writing.
+
+- **Editor-first** – keep the gotcha a reader trips over; drop every Kirby 4 mention.
+- **Changelog** – what an editor notices in the Panel; changelogen writes the technical one on GitHub.

@@ -86,4 +86,6 @@ Built for my own machine and archive layout. Published as a reference rather tha
 
 - **footage-ingest**: Ingest a camera card into a multi-drive footage archive. Finds material that exists in only one place and copies that first, settles every routing decision with the user before writing, then gates each copy on file count and total bytes.
 
+- **kirby**: Work on my Kirby CMS plugins, Kirby core, and the kirby.tools docs from local source checkouts: Kirby 5 vs 6, the plugin playgrounds and UnoCSS, Panel gotchas, and the docs edit a release waits on.
+
 - **sevdesk**: Book, correct, and audit sevDesk vouchers through the API behind one approval tray (loads **push-right**). Carries the German VAT rules for selling via merchants of record and buying software abroad, plus what the sevDesk OpenAPI spec leaves out: the report endpoints, payment signs, and the refund booking that keeps the payables account balanced.
