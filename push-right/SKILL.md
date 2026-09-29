@@ -45,7 +45,10 @@ Invoke the `writing-for-developers` skill before the first commit subject, draft
 One artifact, in this order:
 
 - **Title** – the verdict, at most one state line under it.
-- **Needs you** – a reply line taking every recommendation (`Q1 a, Q2 a, ship 1–6`); the Decisions – judgment calls only, a fact the run can observe gets observed – as `Q<n>` with lettered options and a recommendation; the tray as a numbered ship list, offering only items whose carry condition fired.
+- **Needs you**
+  - a reply line taking every recommendation: `Q1 a, Q2 a, ship 1–6`
+  - the Decisions as `Q<n>` with lettered options and a recommendation, for judgment calls only – a fact the run can observe gets observed
+  - the tray as a numbered ship list, offering only items whose carry condition fired
 - **Done** – each applied fix once, with its proof.
 - **Waiting on**, **Next**.
 - **Drafts** – every outward draft in full, `D1`…`Dn`, referenced from the ship item that posts it.
