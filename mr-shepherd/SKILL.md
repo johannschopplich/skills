@@ -61,7 +61,7 @@ a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
 9. post the tracker comment (D<n>)
 10. Slack note (D<n>, copy)
 
-**Done** <fix> (<traced | reproduced | checked>) · …
+**Done** <fix> (<traced | reproduced | checked | mutated>) · …
 **Waiting on** <CI, author, PM>
 **Next** <the next MR, or the land re-fire>
 

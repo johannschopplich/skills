@@ -33,7 +33,7 @@ No state file – the **artifact** is the state (thread, branch, workspace – t
 - **Baseline** – the repo's checks (lint, typecheck, build, tests; from package scripts or CI config) before this run's commits. Pre-existing failures are brief context, never a blocker.
 - **Done** only if its own target passes **and** it adds **no new failures vs. baseline**; otherwise it goes where the invoking skill says (discarded, a Decision, reverted).
 - **Disprove before asserting** a behavior change: run its original repro and one neighboring path it touches – observed, never reasoned from the diff.
-- Each Done line names its proof: `traced` (followed through the code at file:line) or `reproduced` (failing before, passing after) for a behavior change; `checked` (repo checks green) only for a mechanical one – typo, formatting, import. Short of its proof → proposed.
+- Each Done line names its proof: `traced` (followed through the code at file:line) or `reproduced` (failing before, passing after) for a behavior change; `checked` (repo checks green) only for a mechanical one – typo, formatting, import; `mutated` for a removed test – the path it covered broken and another test red, or, for a tautological or hollow one, itself still green. Short of its proof → proposed.
 - A check that can't run here (secrets, no local env) is named in the brief, unattributed to the change.
 
 ## Outward Copy
