@@ -19,6 +19,7 @@ They stage work behind one approval tray and load **push-right** – install it 
 
 ## Standalone
 
+- **grilling** – a relentless interview in rounds: the design tree mapped first, facts looked up, the user's decisions asked at most six at a time, settled assumptions listed for veto. Replaces Matt Pocock's `grilling`, `grill-me`, and `grill-with-docs`; `docs` adds his `domain-modeling`.
 - **audit-prompt** – audit a prompt an app sends to a Claude or OpenAI model.
 - **writing-for-developers** – issue replies, review comments, PR descriptions, and commit subjects in my voice.
 - **generate-tailwind-shades** – Tailwind v4 OKLCH palettes anchored at shade 500.
