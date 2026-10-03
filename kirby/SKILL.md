@@ -20,7 +20,7 @@ Pull the clone in `/tmp`, or clone it there shallow from `https://github.com/get
 - **Shallow** – a "since" version needs the tag or the full history; the shallow clone gives wrong answers.
 - **Pinned ref** – `kirby.tools/layers/kirby-panel/kirby/` holds the Kirby 6 source at the commit its `kirby.json` pins (`pnpm kirby-panel:fetch`): read it for work on that layer.
 - **Kirby 6** – `~/Projects/MIGRATION-K6.md` tracks what waits for it across plugins, licensing, and site. Read it before a Vue 3 or Kirby 6 change; record new items there.
-- **Kirby 4** – supported as is: new guards, tests, options, and docs target Kirby 5 and 6 only.
+- **Kirby 4** – supported as is until Kirby 6 ships: new guards, tests, and options target Kirby 5 and 6 only.
 
 ## Helper Packages
 
@@ -45,5 +45,6 @@ Kirby 6 work sits on each package's `feat/kirby-6` (kirbyup: `feat/vue-3`). A ch
 
 The Kirby Tools plugins document in `~/Projects/kirby.tools`: `content/1.docs/<n>.<product>/`, the website changelog in `content/<n>.<product>/changelog/`, the agent skill in `server/assets/skills/kirby-<product>/SKILL.md`. A feature or release is done once its docs edit is there. Read `kirby.tools/.claude/skills/kirby-tools-content/SKILL.md` before writing.
 
-- **Editor-first** – keep the gotcha a reader trips over; drop every Kirby 4 mention.
+- **Editor-first** – keep the gotcha a reader trips over; drop implementation detail an editor never meets.
+- **One Kirby version** – the docs describe the current major the plugins support, Kirby 5 until they move to 6, without naming it; no other major or minor version appears, not even as a caveat for a feature Kirby 4 lacks.
 - **Changelog** – what an editor notices in the Panel; changelogithub writes the technical one on GitHub.
