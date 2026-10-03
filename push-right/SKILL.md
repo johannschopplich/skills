@@ -17,7 +17,7 @@ The invoking skill names its irreversible set and success targets; its explicit 
 No state file – the **artifact** is the state (thread, branch, workspace – the invoking skill names it); the one exception is `code-review`'s per-branch record. A **re-fire** works only the delta past the **boundary marker**: the point the artifact proves the last run reached.
 
 - Artifact unmoved → re-present the staged work rather than re-deriving it.
-- Artifact moved → rebase the unpushed commits the last brief listed onto the new remote head – local and reflog-recoverable, so before the checkpoint: clean → kept once re-verified; conflicted or emptied → dropped, fix re-derived.
+- Artifact moved → rebase the unpushed commits the last brief listed onto the new remote head – local and reflog-recoverable, so before the checkpoint: clean → kept once re-verified; conflicted or emptied → dropped, fix re-derived. With unlisted unpushed commits beneath them, the rebase is a tray item.
 - Unpushed commits the last brief didn't list – or any, in a new session with no brief – are the user's unless they name them: untouched, named in the brief.
 - A decision the artifact shows answered stays answered.
 

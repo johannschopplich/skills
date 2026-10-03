@@ -50,16 +50,17 @@ The **thread is the state**. The marker is the authenticated account's newest no
 **Needs you** – `Q1 a, Q2 a, ship 1–<n>`
 **Q1** <judgment call as a question> *<who flagged it>*
 a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
-1. rebase onto <target> (<N> behind)
-2. push <P> commits
-3. create <K> inline drafts (D<n>–D<m>, unpublished – you submit the review)
-4. post <M> replies (D<n>…)
-5. resolve <T> threads
-6. resolve <B> bot threads as noise
-7. ask the bot to re-review after the push
-8. update the description (D<n>)
-9. post the tracker comment (D<n>)
-10. Slack note (D<n>, copy)
+1. fold <F> fixups (`git rebase --autosquash <upstream sha>`)
+2. rebase onto <target> (<N> behind)
+3. push <P> commits
+4. create <K> inline drafts (D<n>–D<m>, unpublished – you submit the review)
+5. post <M> replies (D<n>…)
+6. resolve <T> threads
+7. resolve <B> bot threads as noise
+8. ask the bot to re-review after the push
+9. update the description (D<n>)
+10. post the tracker comment (D<n>)
+11. Slack note (D<n>, copy)
 
 **Done** <fix> (<traced | reproduced | checked | mutated>) · …
 **Waiting on** <CI, author, PM>
@@ -76,4 +77,4 @@ a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
 
 ## After Approval
 
-Safe order: rebase → push (after a rebase, with a `git range-diff` summary proving nothing was lost) → inline drafts → replies → resolve threads (defects first, then the bot batch) → description → tracker comment → bot re-review request. After a rebase or push, re-derive each draft's line. Inline drafts go up as one pending review: GitLab via [`GITLAB.md`](GITLAB.md); GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`. After a push, triage the bot's new threads and report a short delta.
+Safe order: fold → rebase → push (after a rebase, with a `git range-diff` summary proving nothing was lost) → inline drafts → replies → resolve threads (defects first, then the bot batch) → description → tracker comment → bot re-review request. After a rebase or push, re-derive each draft's line. Inline drafts go up as one pending review: GitLab via [`GITLAB.md`](GITLAB.md); GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`. After a push, triage the bot's new threads and report a short delta.

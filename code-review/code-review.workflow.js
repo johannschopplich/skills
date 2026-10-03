@@ -75,7 +75,7 @@ const unknownAxes = axes.filter(axis => !ALL_AXES.includes(axis))
 if (unknownAxes.length > 0)
   log(`code-review: unknown axes ${unknownAxes.join(', ')} – expected ${ALL_AXES.join(', ')}`)
 
-// `trees` diffs two snapshots directly, which survives the history rewrite of a fold between reviews.
+// `trees` diffs two snapshots directly, which survives a rebase between reviews.
 const diffCommand = base === 'HEAD'
   ? `git -C "${repo}" diff HEAD`
   : compare === 'trees' ? `git -C "${repo}" diff ${base} ${head}` : `git -C "${repo}" diff ${base}...${head}`
