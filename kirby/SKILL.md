@@ -1,6 +1,6 @@
 ---
 name: kirby
-description: Kirby source clones, Kirby 5 vs 6, the plugin playgrounds and UnoCSS, and the kirby.tools docs a release waits on. Use when working in a Kirby CMS plugin, Kirby core, a Kirby site, or the kirby.tools repos.
+description: Kirby source clones, Kirby 5 vs 6, the plugin playgrounds, and UnoCSS. Use when working in a Kirby CMS plugin, Kirby core, a Kirby site, the helper packages (kirby-types, kirbyuse, kirbyup), or the kirby.tools repos.
 ---
 
 # Kirby
