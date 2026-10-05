@@ -12,7 +12,7 @@ They stage work behind one approval tray and load **push-right** – install it 
 
 - **push-right** – the shared doctrine: non-destructive work first, verify against a baseline, every irreversible step behind one tray.
 - **implement** – a spec, ticket, or conversation, built test-first, a commit per slice, reviewed by **code-review**. Needs Matt Pocock's `tdd`.
-- **code-review** – five axes in fresh contexts, every finding refuted, a verdict: ship, fix, or incomplete. On your own branch it applies the fixes and re-reviews once. Replaces Matt Pocock's `code-review`, carries his 12 smells verbatim, and needs his `tdd`.
+- **code-review** – five axes in fresh contexts, every finding refuted, a verdict: ship, fix, or incomplete. On your own branch it applies the fixes and re-reviews once. Replaces Matt Pocock's `code-review`, carries his 12 smells verbatim, and needs his `tdd` and `writing-for-agents`.
 - **mr-shepherd** – a teammate's MR or PR, ticket, or stack to ready-to-ship: review, thread triage, fixes or inline drafts.
 - **ci-triage** – one red pipeline to a proven verdict: regression, flaky, infra, or config.
 - **dependency-hygiene** – safe bumps swept, upgrades and migrations landed with every check green.
