@@ -68,8 +68,10 @@ Ja, genau – gilt gleichermaßen. Hab ich gelöscht. ✅
 ## PR/MR Descriptions
 
 1. **Intent first.** One or two prose sentences on what and why.
-2. **Only what the diff can't show.** Consequences, migration steps. Verification notes, follow-ups, and links to other commits stay out.
-3. **Prose by default.** Bullets for several units – per package, concern, or surface, never per file – about five at most.
+2. **Only what the diff can't show.** Consequences, migration steps. Check results ("lint passes"), follow-ups, and links to other commits stay out.
+3. **Evidence for what users see.** Before and after, as screenshots or preview links.
+4. **One-way door.** One line names what a revert can't undo: stored data, sent mail, a published API.
+5. **Prose by default.** Bullets for several units – per package, concern, or surface, never per file – about five at most.
 
 ## Commit Messages
 
