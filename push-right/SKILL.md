@@ -17,7 +17,7 @@ The invoking skill names its irreversible set and success targets; its explicit 
 The **artifact** is the state (thread, branch, workspace; the invoking skill names it). No state file, except `code-review`'s per-branch record. A **re-fire** works only the delta past the **boundary marker**: the point the artifact proves the last run reached.
 
 - Artifact unmoved → re-present the staged work rather than re-deriving it.
-- Artifact moved → before the checkpoint, print `git rev-parse HEAD` and `git status --short`, then rebase the unpushed commits the last brief listed onto the new remote head; the rebase is local and reflog-recoverable. A clean commit is kept once re-verified; a conflicted or emptied one is dropped and its fix re-derived. With unlisted unpushed commits beneath them, the rebase is a tray item.
+- Artifact moved → before the checkpoint, rebase the unpushed commits the last brief listed onto the new remote head; the rebase is local and reflog-recoverable. A clean commit is kept once re-verified; a conflicted or emptied one is dropped and its fix re-derived. With unlisted unpushed commits beneath them, the rebase is a tray item.
 - Unpushed commits the last brief didn't list are the user's unless they name them; in a new session with no brief, so are any. Leave them untouched and name them in the brief.
 - A decision the artifact shows answered stays answered.
 
@@ -30,7 +30,7 @@ The **artifact** is the state (thread, branch, workspace; the invoking skill nam
 
 ## Verification – Differential
 
-- **Baseline** – the repo's checks (lint, typecheck, build, tests; from package scripts or CI config) before this run's commits. Pre-existing failures are brief context, never a blocker.
+- **Baseline** – the repo's checks (lint, typecheck, build, tests; from package scripts or CI config) before this run's commits. Pre-existing failures are brief context, never a blocker. A project's own rule on which checks run locally wins over this list.
 - **Done** only if its own target passes **and** it adds **no new failures vs. baseline**; otherwise it goes where the invoking skill says (discarded, a Decision, reverted).
 - **Disprove before asserting** a behavior change: run its original repro and one neighboring path it touches – observed, never reasoned from the diff.
 - Each Done line names its proof; short of it, the item is proposed.
@@ -41,7 +41,7 @@ The **artifact** is the state (thread, branch, workspace; the invoking skill nam
 
 ## Outward Copy
 
-Invoke the `writing-for-developers` skill before the first commit subject, draft, or brief. Commit subjects in English; drafts and briefs in the thread's language per comment, else its dominant one, else the repo's working language.
+Invoke the `writing-for-developers` skill before the first commit subject, draft, or brief.
 
 ## The Brief
 
