@@ -34,6 +34,8 @@ Kirby 6 work sits on each package's `feat/kirby-6` (kirbyup: `feat/vue-3`). A ch
 
 - **`panel.api` resets the loader** – `api.request()` sets `panel.isLoading = false` when its last request ends, `silent` or not (`panel/src/api/index.js`, K6 `index.ts`). A run mixing `panel.api` calls with long local work shows its own loading state.
 - **Runtime markup** – the Panel adds classes no `.vue` file holds (`k-text` on the writer's ProseMirror node, from `Editor`). Props and defaults come from the source; markup and computed styles from a running Panel: a playground for Kirby 5, [kirby-6-panel.md](kirby-6-panel.md) for Kirby 6.
+- **Prerelease notes** – changelogithub starts them at the newest tag reachable from the branch. After a stable release, merge `main` into `feat/kirby-6`, never rebase: a rebase drops the tagged commit, and the next beta's notes start at the stable tag before it.
+- **Bumping a helper** – `pnpm dedupe` after `pnpm add`: a dependent that also reaches the package through kirbyuse keeps a second copy otherwise.
 
 ## Plugins
 
