@@ -26,7 +26,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 ## Run – in Order
 
 1. **Check auth.** `glab api user` / `gh api user` and one cheap tracker call; a failure, here or later, ends the run with the fix (`! glab auth login`, `/mcp`). A missing MR or failed checkout goes in the brief; the rest still runs.
-2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by one tracker search for the MR URL; no hit, no ticket. In Asana, search for an exact `.value` match of the full URL on the **Merge request** field; text search and `.contains` miss custom fields.
+2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by one tracker search for the MR URL; no hit, no ticket. In Asana, search for an exact `.value` match of the full URL on the **Merge request** field; text search and `.contains` miss custom fields. A field holding several URLs defeats `.value`: scan `display_value` across the board's tasks via `get_tasks`.
 3. **Pre-check merge safety.** Read-only, after `git fetch`: behind, diverged, CI on the latest push, conflicts – for the state line. Conflicts are surfaced, never resolved silently.
 4. **Add a worktree** at `../<repo>-mr-<id>`, reused on re-fire, never the user's checkout.
 5. **Review.** Invoke the `code-review` skill from the worktree. Fixed point: the target's merge-base. Spec: the ticket URL. Context: the mode (own → Own Work; else report only), the author, and product or design decisions the ticket shows as accepted. Triage:
@@ -34,7 +34,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
    - **Prevention** – a finding class recurring in the MR or the thread gets one Decision on where to stop it: lint rule, repo skill or `AGENTS.md` line, CodeRabbit path instruction.
    - **Product scope** – visual and product-value doubts on work a PM or designer accepted (`PM:` lines) → one line for them, never an author comment.
 6. **Triage every thread.** Buckets: **blocker**, **nit**, **idea**, **question**, **noise** (false positive, handled, out of scope). A bot's concrete defect gets the mode's treatment and a short reply; the rest → one batch-resolve tray item, unreplied.
-7. **Stage fixes by mode** (not own). Control flow – guards, early returns, error handling, defaults – is proposed, unless the sole fix for a reproduced crash. Subjects unscoped (`fix:`, not `fix(ui):`); stack on the author's HEAD, never rewrite their commits.
+7. **Stage fixes by mode** (not own). Control flow – guards, early returns, error handling, defaults – is proposed, unless the sole fix for a reproduced crash. Stack on the author's HEAD, never rewrite their commits.
 8. **Verify.** A fix that reddens anything else is discarded, its finding → Decision. UI: reproduce live via `chrome-devtools` MCP (`navigate_page`, `take_screenshot`, `list_console_messages`) on the preview or a local server; else the closest component or e2e test, gap named. Asked to compare visuals: one before/after page, target and branch side by side, light and dark where both exist.
 9. **Draft.**
    - **Inline drafts** on the finding's line, in `writing-for-developers`' review-comment shape: one per confirmed blocker, major, or minor; nits → at most one summary draft; `plausible` → Decisions. A `suggestion` block, holding only the changed lines, only with an uncommitted fix. GitLab: read [`GITLAB.md`](GITLAB.md) first.

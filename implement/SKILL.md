@@ -19,7 +19,7 @@ disable-model-invocation: true
 
 1. Invoke the `tdd` skill at the agreed seam.
 2. Every cycle: typecheck plus the touched test file only.
-3. Commit the slice, `git add <paths>` explicitly. Its proof is `reproduced`: the test red before, green after.
+3. Commit the slice, `git add <paths>` explicitly. Its proof is `reproduced`.
 4. Ticket file: tick its criteria, set `Status: done`.
 
 A slice still red after three fix attempts → `git stash push -u -m "implement: <ticket> red" -- <paths>`, name the failing test in the brief, continue with the tickets it doesn't block.

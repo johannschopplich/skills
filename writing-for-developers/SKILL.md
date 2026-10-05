@@ -74,7 +74,7 @@ Ja, genau – gilt gleichermaßen. Hab ich gelöscht. ✅
 
 ## Commit Messages
 
-Conventional Commits, subject only: short, high-level, noun phrases fine. The subject is the changelog line and stands alone; longer context goes in the MR description, never a body. `fix` is for code; data and prose changes are `chore` or `docs`. One subject; variants only when asked.
+Conventional Commits, subject only: short, high-level, noun phrases fine. The subject is the changelog line and stands alone; longer context goes in the MR description, never a body. `fix` is for code; data and prose changes are `chore` or `docs`. A scope only where the repo's history uses scopes. One subject; variants only when asked.
 
 ```
 feat(api): add `/scalar` and `/swagger` docs routes
