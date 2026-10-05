@@ -10,7 +10,7 @@ Reader: a domain peer – issue filer, code author, maintainer – sometimes a P
 ## Voice
 
 - **Peer level, no explaining down.** State the fact; the reader infers. Keep the claim; cut the gloss on a term they already used, a step they'd infer, a question nobody asked. Replies and MR descriptions: statements, not imperatives.
-- **Reader's altitude.** Diff open: intent and consequence. Never opens it: the outcome they'd notice.
+- **Reader's altitude.** Reader with the diff open: intent and consequence. Reader who never opens it: the outcome they'd notice.
 - **Open on the fact.** Key facts and consequence, not the path or a recap. Not shallow: a shorter version that needs rereading got worse. Make the rhetorical move, don't announce it. Substantive acknowledge-and-pivot is fine: "Great idea overall, but …"
 - **Number, symbol, or link** on every technical claim for a reader who opens the code; real symbols, history checked before calling anything new. "A column rename fails the build", not "schema changes can cause issues".
 - **Machine tells.** The reveal against a framing nobody held ("not as a product, but as an experiment"); the fact-free sentence ("version 4 came from the issue tracker, not from my head"); the quotable phrase; a run of same-length short sentences. A rule that worsens a sentence yields.

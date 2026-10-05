@@ -22,6 +22,6 @@ A comment that guards the code – `keep in sync with …`, `do not remove`, a s
 
 ## Prose Files
 
-A touched `README`, doc page, `AGENTS.md`, `CONTEXT.md`, or `SKILL.md`: every sentence earns its place for that page's reader. Machinery-only file, script, and loader names, history, superseded facts, and counts that go stale are deletions. A rewrite that drops a fact the reader needs got worse.
+A touched `README`, doc page, `AGENTS.md`, `CONTEXT.md`, or `SKILL.md`: every sentence earns its place for that page's reader. Machinery-only file, script, and loader names; history; superseded facts; and counts that go stale are deletions. A rewrite that drops a fact the reader needs got worse.
 
 Done when every touched paragraph has **keep**, **cut**, or **rewrite**, with every fact a cut would lose named.

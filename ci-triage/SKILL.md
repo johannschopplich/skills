@@ -54,7 +54,14 @@ The **branch is the state**; retries add attempts to the same pipeline, and only
 
 ## Fix vs. Revert
 
-Default: **minimal fix**. **Revert** when the breaking commit is someone else's recent one and no clean fix is small, a shared branch is blocking others, it reverts cleanly without collateral, or the proper fix needs more judgment than a red pipeline can wait for. Stage the recommended one (an exception to Apply vs. Propose – a red branch needs a ready answer) and offer the other as Q1 b; picking Q1 b means leaving the push unpicked and re-firing with the alternative named.
+Default: **minimal fix**. **Revert** when any of these holds:
+
+- the breaking commit is someone else's recent one and no clean fix is small;
+- a shared branch is blocking others;
+- it reverts cleanly without collateral;
+- the proper fix needs more judgment than a red pipeline can wait for.
+
+Stage the recommended one (an exception to Apply vs. Propose – a red branch needs a ready answer) and offer the other as Q1 b; picking Q1 b means leaving the push unpicked and re-firing with the alternative named.
 
 ## The Brief
 

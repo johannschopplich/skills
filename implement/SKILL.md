@@ -11,7 +11,7 @@ disable-model-invocation: true
 
 ## Start
 
-- **Input** – the argument – a spec, a ticket, or a `.scratch/<feature>/` dir; a spec with an `issues/` sibling means its tickets, worked on the frontier: any ticket whose blockers are all done. No argument → the current conversation is the spec.
+- **Input** – the argument: a spec, a ticket, or a `.scratch/<feature>/` dir. A spec with an `issues/` sibling means its tickets, worked on the frontier (any ticket whose blockers are all done). No argument → the current conversation is the spec.
 - **Seams** – the spec's Testing Decisions are the agreed seams, which settles `tdd`'s confirm-with-the-user step. None named → the highest existing public seam, carried as a Decision.
 - **Baseline** – note `HEAD` as the start commit; run typecheck and lint.
 
@@ -30,5 +30,5 @@ Several tickets → one subagent per ticket, one at a time (shared worktree). Br
 
 ## Finish
 
-1. Full test suite, once. Each red test → rerun it at the start commit: red there too → pre-existing, brief context; green there → this run's regression, fixed under push-right's Verification or carried as a Decision.
+1. Full test suite, once. Rerun each red test at the start commit. Red there too → pre-existing, brief context. Green there → this run's regression, fixed under push-right's Verification or carried as a Decision.
 2. Invoke the `code-review` skill with `<start commit> <spec>` – a conversation spec first written to `$TMPDIR/implement-spec.md`. Own Work lands the fixes and re-reviews once; you assemble the brief: its Review line, its Done lines and Decisions merged with yours. The fold and the push stay in the tray.

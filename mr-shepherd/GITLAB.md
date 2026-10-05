@@ -13,5 +13,5 @@ The script fails, and deletes the draft again, unless GitLab anchored it to a li
 - Added line: `new line` only. Context line: both. Removed line: `-` then `old line`. Lines outside the hunks can't anchor – use the nearest changed line.
 - `suggestion` block (```` ```suggestion:-0+0 ````, offsets relative to the anchored line): an empty one deletes the lines. Name anything else the fix removes in the text.
 - Changing a draft's text: delete and repost. Editing in place drops the position while `line_code` still reads as set.
-- Record each `draft <id>` the script prints and list them in the checkpoint confirmation. After the author pushes, anchors go stale: delete this skill's drafts by id – in a new session, those whose text matches a finding being drafted again – and repost against the new `diff_refs`. Every other draft is the user's; leave it.
+- Record each `draft <id>` the script prints and list them in the checkpoint confirmation. After the author pushes, anchors go stale: delete this skill's drafts by id and repost against the new `diff_refs`. In a new session, this skill's drafts are those whose text matches a finding being drafted again. Every other draft is the user's; leave it.
 - `glab mr note` and `-f position[...]` both create a lineless general comment.

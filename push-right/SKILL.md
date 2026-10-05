@@ -14,11 +14,11 @@ The invoking skill names its irreversible set and success targets; its explicit 
 
 ## Boundary Marker
 
-No state file – the **artifact** is the state (thread, branch, workspace – the invoking skill names it); the one exception is `code-review`'s per-branch record. A **re-fire** works only the delta past the **boundary marker**: the point the artifact proves the last run reached.
+The **artifact** is the state (thread, branch, workspace; the invoking skill names it). No state file, except `code-review`'s per-branch record. A **re-fire** works only the delta past the **boundary marker**: the point the artifact proves the last run reached.
 
 - Artifact unmoved → re-present the staged work rather than re-deriving it.
-- Artifact moved → rebase the unpushed commits the last brief listed onto the new remote head – local and reflog-recoverable, so before the checkpoint: clean → kept once re-verified; conflicted or emptied → dropped, fix re-derived. With unlisted unpushed commits beneath them, the rebase is a tray item.
-- Unpushed commits the last brief didn't list – or any, in a new session with no brief – are the user's unless they name them: untouched, named in the brief.
+- Artifact moved → before the checkpoint, rebase the unpushed commits the last brief listed onto the new remote head; the rebase is local and reflog-recoverable. A clean commit is kept once re-verified; a conflicted or emptied one is dropped and its fix re-derived. With unlisted unpushed commits beneath them, the rebase is a tray item.
+- Unpushed commits the last brief didn't list are the user's unless they name them; in a new session with no brief, so are any. Leave them untouched and name them in the brief.
 - A decision the artifact shows answered stays answered.
 
 ## Apply vs. Propose
@@ -33,7 +33,10 @@ No state file – the **artifact** is the state (thread, branch, workspace – t
 - **Baseline** – the repo's checks (lint, typecheck, build, tests; from package scripts or CI config) before this run's commits. Pre-existing failures are brief context, never a blocker.
 - **Done** only if its own target passes **and** it adds **no new failures vs. baseline**; otherwise it goes where the invoking skill says (discarded, a Decision, reverted).
 - **Disprove before asserting** a behavior change: run its original repro and one neighboring path it touches – observed, never reasoned from the diff.
-- Each Done line names its proof: `traced` (followed through the code at file:line) or `reproduced` (failing before, passing after) for a behavior change; `checked` (repo checks green) only for a mechanical one – typo, formatting, import; `mutated` for a removed test – the path it covered broken and another test red, or, for a tautological or hollow one, itself still green. Short of its proof → proposed.
+- Each Done line names its proof; short of it, the item is proposed.
+  - `traced` (followed through the code at file:line) or `reproduced` (failing before, passing after) – a behavior change.
+  - `checked` (repo checks green) – only a mechanical change: typo, formatting, import.
+  - `mutated` – a removed test: the path it covered broken and another test red; for a tautological or hollow one, itself still green.
 - A check that can't run here (secrets, no local env) is named in the brief, unattributed to the change.
 
 ## Outward Copy

@@ -12,7 +12,7 @@ Before your first message to the user, write the whole tree to `$TMPDIR/grill-<t
 
 - `fact` – the environment holds the answer or a run shows it: files, docs, a command, a probe, a throwaway prototype.
 - `assume` – one answer is right whatever the user's taste: implementation inside an agreed design, test design, cleanup, keeping or cutting a comment, commit splitting, verification setup, your own orchestration.
-- `ask` – scope and any new artifact, behavior a user of the product sees, taste and voice, people and ticket-owned calls, the timing of a push, merge, release, or anything posted, and facts only the user holds.
+- `ask` – scope and any new artifact; behavior a user of the product sees; taste and voice; people and ticket-owned calls; the timing of a push, merge, release, or anything posted; facts only the user holds.
 
 Mapped when every leaf carries a tag. The file is the session's record: write each answer into it as it lands, and reread it after a compaction.
 

@@ -15,7 +15,7 @@ disable-model-invocation: true
 
 The **workspace is the state**: version source, lockfile, `node_modules`, and unpushed commits. Each run re-discovers the sweep's target via taze; a named target stays fixed.
 
-- Upstream moved (new releases, a teammate's catalog bump on the base) → an unpushed safe bump is **re-derived at the newer latest-allowed, not rebased** (a lockfile doesn't rebase cleanly; an exception to push-right's Boundary Marker); skip it when the diff is identical. Fresh drift folds in; open decisions re-present.
+- Upstream moved (new releases, a teammate's catalog bump on the base) → an unpushed safe bump is **re-derived at the newer latest-allowed, not rebased** (a lockfile doesn't rebase cleanly). This is an exception to push-right's Boundary Marker. Skip it when the diff is identical. Fresh drift folds in; open decisions re-present.
 - At latest-allowed as of this run, checks green, no open decisions → closed. Later drift is the next invocation's work.
 
 ## Run – in Order
@@ -31,8 +31,12 @@ The **workspace is the state**: version source, lockfile, `node_modules`, and un
 5. **Assess each deep landing – installed source first.** Code, types, `CHANGELOG`, and migration guide in `node_modules` are ground truth; then context7 (`resolve-library-id`, `query-docs`); then the upstream repo via `gh`. Read the new major's **`peerDependencies`**: a coupled peer-major must land with it, and pnpm only warns on a mismatch (unless `strictPeerDependencies`). Pull it into the same landing, or present the bundle as one Decision.
 6. **Migrate** per the tiers below until the workspace compiles.
 7. **Align** (monorepo): a centralized catalog entry is bumped once, never forked per package. Existing divergence – an older-major pin, a local `override`/patch, an opt-out – is intentional: flag it as a Decision, never force-align.
-8. **Optional config adoptions** (rules, presets, defaults a major offers but doesn't force) – the few that **fire on this codebase or change behavior/output** → individual Decisions, each with a one-line tradeoff; the rest → one batched default-yes "adopt the recommended set (`N`): <names>". A changed default that alters behavior or output is always surfaced.
-9. **Verify – the repo's own checks, unscoped.** Run build/`prepare` before typecheck and tests when they resolve generated or built artifacts. **Install is a check** – `ERR_PNPM_TRUST_DOWNGRADE` (a transitive lost provenance under `trustPolicy: no-downgrade`) → Decision: add it to `trustPolicyExclude` (the repo's or a sibling's list is precedent) vs. drop the bump. A safe-batch bump that turns a check red **drops into a Decision**; a deep landing's red → fix, or recommend pin/defer.
+8. **Optional config adoptions** (rules, presets, defaults a major offers but doesn't force):
+   - The few that **fire on this codebase or change behavior/output** → individual Decisions, each with a one-line tradeoff.
+   - The rest → one batched default-yes "adopt the recommended set (`N`): <names>".
+
+   A changed default that alters behavior or output is always surfaced.
+9. **Verify – the repo's own checks, unscoped.** Run build/`prepare` before typecheck and tests when they resolve generated or built artifacts. **Install is a check.** `ERR_PNPM_TRUST_DOWNGRADE` (a transitive lost provenance under `trustPolicy: no-downgrade`) → a Decision between adding it to `trustPolicyExclude` (the repo's or a sibling's list is precedent) and dropping the bump. A safe-batch bump that turns a check red **drops into a Decision**; a deep landing's red → fix, or recommend pin/defer.
 
 ## Forced Migration – Three Tiers
 

@@ -10,7 +10,7 @@ Read the Anti-patterns section of `~/.agents/skills/tdd/SKILL.md` and its `tests
 - **Hollow** – it would still pass if every function it imports returned `undefined`: a weak assertion, a mock-only or absence-only check, a pinned constant.
 - **Redundant** – an existing test, often an E2E spec, already covers the behavior; or the cases differ only in data and belong in one `it.each` over real input/output pairs.
 - **Not worth a test** – a one-line helper, framework behavior, a type shape, a leftover debugging test.
-- **Lost** – a deleted test was the only one telling two cases apart; name the test that still does, else report it.
+- **Lost** – a deleted test was the only one telling two cases apart. Where another test still does, name it instead of reporting.
 - **Missing** – a changed behavior no test observes, when a cheap seam exists.
 
 ## Names

@@ -26,10 +26,10 @@ The **thread is the state**. The marker is the authenticated account's newest no
 ## Run – in Order
 
 1. **Check auth.** `glab api user` / `gh api user` and one cheap tracker call; a failure, here or later, ends the run with the fix (`! glab auth login`, `/mcp`). A missing MR or failed checkout goes in the brief; the rest still runs.
-2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket: the forward link, else one tracker search for the MR URL (Asana: an exact `.value` match of the full URL on the **Merge request** field – text search and `.contains` miss custom fields); no hit, no ticket.
+2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by one tracker search for the MR URL; no hit, no ticket. In Asana, search for an exact `.value` match of the full URL on the **Merge request** field; text search and `.contains` miss custom fields.
 3. **Pre-check merge safety.** Read-only, after `git fetch`: behind, diverged, CI on the latest push, conflicts – for the state line. Conflicts are surfaced, never resolved silently.
 4. **Add a worktree** at `../<repo>-mr-<id>`, reused on re-fire, never the user's checkout.
-5. **Review.** Invoke the `code-review` skill from the worktree: fixed point the target's merge-base, spec the ticket URL, context the mode (own → Own Work; else report only), author, and product or design decisions the ticket shows as accepted. Triage:
+5. **Review.** Invoke the `code-review` skill from the worktree. Fixed point: the target's merge-base. Spec: the ticket URL. Context: the mode (own → Own Work; else report only), the author, and product or design decisions the ticket shows as accepted. Triage:
    - **Intent** – MR differs from what the ticket asked: leads the Decisions.
    - **Prevention** – a finding class recurring in the MR or the thread gets one Decision on where to stop it: lint rule, repo skill or `AGENTS.md` line, CodeRabbit path instruction.
    - **Product scope** – visual and product-value doubts on work a PM or designer accepted (`PM:` lines) → one line for them, never an author comment.
