@@ -7,4 +7,4 @@ Red-team the diff: try to break the changed code on every path it reaches. Done 
 - **Edges.** Empty, missing, and malformed input; concurrent and repeated calls; cleanup, teardown, and error paths; locale, timezone, and platform differences.
 - **Integration.** Where the change leans on library or framework behavior, read the installed source in `node_modules` or the vendor directory before trusting it.
 
-Run what is cheap and read-only toward the repo: an existing test, a scoped script in `scratch-correctness/` under the report dir, a request against a local server already running. Where `context` names an external author, read instead of running – their code is untrusted. Push each finding's `proof` as far as that allows.
+Run what is cheap and read-only toward the repo: an existing test, a scoped script in `scratch-correctness/` under the report dir, a request against a local server already running. Where `context` names an external author, read instead of running. Push each finding's `proof` as far as that allows.

@@ -21,7 +21,7 @@ Detect the host from the URL or the local remote and bind:
 | `retry` | `glab ci retry <job-id>` for every failed job | `gh run rerun <run-id> --failed` |
 | `lint` | `glab ci lint` | none – use `actionlint` where available, otherwise skip that check |
 
-Always pass the ID: without one, `glab` prompts or falls back to the current branch, and `gh` errors outside a terminal. Noun: GitLab → *pipeline*, GitHub → *workflow run*.
+Always pass the ID. Noun: GitLab → *pipeline*, GitHub → *workflow run*.
 
 ## Boundary Marker
 
@@ -61,7 +61,7 @@ Default: **minimal fix**. **Revert** when any of these holds:
 - it reverts cleanly without collateral;
 - the proper fix needs more judgment than a red pipeline can wait for.
 
-Stage the recommended one (an exception to Apply vs. Propose – a red branch needs a ready answer) and offer the other as Q1 b; picking Q1 b means leaving the push unpicked and re-firing with the alternative named.
+Stage the recommended one (an exception to Apply vs. Propose) and offer the other as Q1 b; picking Q1 b means leaving the push unpicked and re-firing with the alternative named.
 
 ## The Brief
 

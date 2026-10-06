@@ -18,7 +18,7 @@ Fable 5 also rejects per-message effort.
 ## All Models
 
 - **Effort** – default `medium` on Opus 5.5, `high` elsewhere. Flag `xhigh`/`max` on Opus 5.5 without a measured gain. Lower effort before adding prose that asks for less thinking.
-- **Reasoning in the response** – Opus 5.5 and Fable 5.x can refuse it as `reasoning_extraction`. Remove it and read `thinking.display: "summarized"` (default `"omitted"` returns empty text). Remove "don't think" rules too – they increase tag leakage. Sonnet 5 with thinking disabled: `<thinking>`/`<answer>` tags are the fallback, not a finding.
+- **Reasoning in the response** – Opus 5.5 and Fable 5.x can refuse it as `reasoning_extraction`. Remove it and read `thinking.display: "summarized"` (default `"omitted"` returns empty text). Remove "don't think" rules too. Sonnet 5 with thinking disabled: `<thinking>`/`<answer>` tags are the fallback, not a finding.
 - **Review filters** – "only report high-severity", "don't nitpick" are followed literally and cut findings. Report all with confidence and severity; filter downstream.
 - **Frontend** – "avoid a generic AI look" → name the patterns.
 - **`max_tokens`** – thinking counts toward it: at least 64k at `xhigh`/`max`, 128k for long Opus 5.5 agent turns. Sonnet 5 uses ~30% more tokens than Sonnet 4.6.

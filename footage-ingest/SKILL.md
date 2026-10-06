@@ -74,4 +74,4 @@ Silent false failures:
 
 Write a protocol next to the previous ones, matching their format and length: starting state, decisions with their reasoning, commands run, gate results with real numbers, ending free space, and open items.
 
-Leave the card mounted and unformatted until the user has reviewed the footage – culled clips still live only there. Formatting happens in the camera, which keeps the vendor folder structure.
+Leave the card mounted and unformatted until the user has reviewed the footage – culled clips still live only there. Formatting happens in the camera.

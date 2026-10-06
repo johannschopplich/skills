@@ -24,7 +24,7 @@ disable-model-invocation: true
    node /tmp/tailwind-shades/generate.mjs primary= secondary= --current ~/Projects/johannschopplich.com/src/tokens.ts --ladder even
    ```
 
-3. **Review.** `open /tmp/tailwind-shades/palette.html` (headless: report the path). Judge candidates against the Current row: a shipped ramp changes only on explicit request. Prune candidate inputs, since every extra row makes judging harder.
+3. **Review.** `open /tmp/tailwind-shades/palette.html` (headless: report the path). Judge candidates against the Current row: a shipped ramp changes only on explicit request. Prune candidate inputs.
 
 4. **Bend.** Map the user's words to flags, then re-run once:
 

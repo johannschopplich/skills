@@ -47,7 +47,7 @@ Omit empty headings. Nothing flagged → `Prompt passes audit.`, the summary, an
 ### Anti-Patterns
 
 - **Aggressive directives** – "CRITICAL: You MUST…", caps-locked ALWAYS/NEVER → normal language; absolutes only for true invariants.
-- **Reasoning in the response** – "think step by step", "explain your reasoning" on reasoning targets → remove it; the model reasons in its thinking.
+- **Reasoning in the response** – "think step by step", "explain your reasoning" on reasoning targets → remove it.
 
 ### Clarity
 

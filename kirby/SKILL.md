@@ -17,7 +17,7 @@ Pull the clone in `/tmp`, or clone it there shallow from `https://github.com/get
 | `/tmp/kirby-v6` | 6, `v6/develop` | Vue 3, TypeScript |
 
 - **Panel** – a project's `vendor/getkirby/cms` has the PHP `src/` but only `panel/dist`: read the Panel from a clone's `panel/src/`.
-- **Shallow** – a "since" version needs the tag or the full history; the shallow clone gives wrong answers.
+- **Shallow** – a "since" version needs the tag or the full history.
 - **Pinned ref** – `kirby.tools/layers/kirby-panel/kirby/` holds the Kirby 6 source at the commit its `kirby.json` pins (`pnpm kirby-panel:fetch`): read it for work on that layer.
 - **Kirby 6** – `~/Projects/MIGRATION-K6.md` tracks what waits for it across plugins, licensing, and site. Read it before a Vue 3 or Kirby 6 change; record new items there.
 - **Kirby 4** – supported as is until Kirby 6 ships: new guards, tests, and options target Kirby 5 and 6 only.

@@ -15,20 +15,20 @@ disable-model-invocation: true
 
 The **workspace is the state**: version source, lockfile, `node_modules`, and unpushed commits. Each run re-discovers the sweep's target via taze; a named target stays fixed.
 
-- Upstream moved (new releases, a teammate's catalog bump on the base) → an unpushed safe bump is **re-derived at the newer latest-allowed, not rebased** (a lockfile doesn't rebase cleanly). This is an exception to push-right's Boundary Marker. Skip it when the diff is identical. Fresh drift folds in; open decisions re-present.
+- Upstream moved (new releases, a teammate's catalog bump on the base) → an unpushed safe bump is **re-derived at the newer latest-allowed, not rebased**. This is an exception to push-right's Boundary Marker. Skip it when the diff is identical. Fresh drift folds in; open decisions re-present.
 - At latest-allowed as of this run, checks green, no open decisions → closed. Later drift is the next invocation's work.
 
 ## Run – in Order
 
 1. **Discover the practice.** Version source (`package.json`, pnpm `catalog`), package manager, `overrides`, `patchedDependencies`, pinning convention, renovate/dependabot config – fresh per repo. The `*Exclude` lists of `trustPolicy` and `minimumReleaseAge` are **pre-vetted**, never re-surfaced as decisions.
-2. **Discover the drift – taze, read-only.** Via the repo's runner (`pnpm dlx`, `npx`, `bunx`). One flag set `<flags>` for every call, reads and writes: `-r --no-github-actions --no-node-version`, plus `-l` when the repo pins exact versions (taze skips exact pins without it). taze applies the maturity policy itself (`minimumReleaseAge` and `minimumReleaseAgeExclude` from `pnpm-workspace.yaml`, `npmMinimalAgeGate` and `npmPreapprovedPackages` from `.yarnrc.yml`); add `--maturity-period <days>` and `--maturity-period-exclude <deps>` only for a policy defined elsewhere. **Run both reads:**
+2. **Discover the drift – taze, read-only.** Via the repo's runner (`pnpm dlx`, `npx`, `bunx`). One flag set `<flags>` for every call, reads and writes: `-r --no-github-actions --no-node-version`, plus `-l` when the repo pins exact versions. taze applies the maturity policy itself (`minimumReleaseAge` and `minimumReleaseAgeExclude` from `pnpm-workspace.yaml`, `npmMinimalAgeGate` and `npmPreapprovedPackages` from `.yarnrc.yml`); add `--maturity-period <days>` and `--maturity-period-exclude <deps>` only for a policy defined elsewhere. **Run both reads:**
    - `taze minor <flags>` → the **safe batch** (within-major bumps).
    - `taze major <flags>` → deps with a **new major**; a dep whose only drift is a major shows up only here. A dep in both gets its minor now, its major listed.
 
    The range argument sets what's *acted on*: `minor` (default) sweeps the safe batch, `major`/`latest` also deep-assesses each major, `patch` narrows the batch to patches. A **named target** (`eslint 9`) is a forced deep landing whatever the ceiling – honor it, flag any policy it crosses. Versions only move forward; a named older version is flagged, not performed.
 3. **Branch first.** Sweep → the open `chore/deps-sweep` (fresh off the base once the prior one merged). Named or opted major → `chore/deps-<dep>-<target>`. A re-fire continues the matching open branch. One invocation = one branch = one MR; the safe batch rides along.
 4. **Apply – taze writes, never a hand-edit.** `taze <minor|patch> <flags> -w` for the batch, `taze major <flags> -w --include <dep>` per opted major – both write the repo's own version source, YAML-preserving – then install once via the package manager. Only these write flags: `-I` is a raw-mode TUI, `-i`/`-u` install per call, and `pnpm up --latest` or `ncu` corrupt catalog refs.
-5. **Assess each deep landing – installed source first.** Code, types, `CHANGELOG`, and migration guide in `node_modules` are ground truth; then context7 (`resolve-library-id`, `query-docs`); then the upstream repo via `gh`. Read the new major's **`peerDependencies`**: a coupled peer-major must land with it, and pnpm only warns on a mismatch (unless `strictPeerDependencies`). Pull it into the same landing, or present the bundle as one Decision.
+5. **Assess each deep landing – installed source first.** Code, types, `CHANGELOG`, and migration guide in `node_modules` are ground truth; then context7; then the upstream repo via `gh`. Read the new major's **`peerDependencies`**: a coupled peer-major must land with it, and pnpm only warns on a mismatch (unless `strictPeerDependencies`). Pull it into the same landing, or present the bundle as one Decision.
 6. **Migrate** per the tiers below until the workspace compiles.
 7. **Align** (monorepo): a centralized catalog entry is bumped once, never forked per package. Existing divergence – an older-major pin, a local `override`/patch, an opt-out – is intentional: flag it as a Decision, never force-align.
 8. **Optional config adoptions** (rules, presets, defaults a major offers but doesn't force):
@@ -41,7 +41,7 @@ The **workspace is the state**: version source, lockfile, `node_modules`, and un
 ## Forced Migration – Three Tiers
 
 - **Mechanical** – one correct form (renamed or moved API, config-key rename) → apply.
-- **A choice** – several valid forms → apply the **conservative, behavior-preserving** one and surface the choice as a Decision (an exception to Apply vs. Propose – a workspace that doesn't compile can't be verified).
+- **A choice** – several valid forms → apply the **conservative, behavior-preserving** one and surface the choice as a Decision (an exception to Apply vs. Propose).
 - **A great breaking change** – large blast radius, a consequential API choice, a risky major, or no conservative path → leads Decisions as **proceed vs. pin/defer**. Deferring pins the current version and drafts a follow-up ticket.
 
 ## The Brief
