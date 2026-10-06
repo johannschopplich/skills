@@ -7,7 +7,7 @@ Name a missing source in `note` and carry on. Done when every standard the diff 
 - The repo's own: `AGENTS.md`/`CLAUDE.md` at the root and beside every touched file, `CODING_STANDARDS.md`, `CONTRIBUTING.md`, lint and format config, and every repo skill under `.claude/skills/` or `.agents/skills/` whose description matches the touched code.
 - The **Naming** section of `~/.claude/rules/code-style.md` – its Comments section and `~/.claude/rules/tests.md` belong to other axes.
 - The smell baseline in `smells.md` beside this file.
-- For a touched `SKILL.md`, `AGENTS.md`, `CLAUDE.md`, or `CONTEXT.md`: `~/.agents/skills/writing-for-agents/SKILL.md` and `~/.claude/rules/agent-docs.md`.
+- For a touched `SKILL.md`, `AGENTS.md`, `CLAUDE.md`, or `CONTEXT.md`: `~/.agents/skills/writing-for-agents/SKILL.md` and `~/.claude/rules/agent-docs.md`. Every touched paragraph gets **keep**, **cut**, or **rewrite**; a rewrite that drops a fact the agent needs got worse.
 
 **Precedence.** A documented repo standard beats a global rule. Where `context` names another author, the dominant idiom of the neighboring files beats a global rule on anything no rule marks as wrong. A finding there is a nit, and the rename stays with the author.
 
