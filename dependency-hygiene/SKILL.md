@@ -56,7 +56,7 @@ The safe batch is **Done**, never a Decision.
 **Q1** <opted major / great breaking change>: proceed now? a) proceed · b) pin/defer – **<letter>**: <reason> · [guide]
 **Q2** Adopt rule `<x>`? fires <K>× a) yes · b) no – **a**: <tradeoff>
 **Q3** Peer `<B>` pins an older major: a) align · b) keep – **<letter>**: <reason>
-1. push commits
+1. push commits to <branch>
 2. open the MR (D<n>)
 3. post the tracker update or ticket (D<n>)
 

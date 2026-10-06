@@ -52,7 +52,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
 1. fold <F> fixups (`git rebase --autosquash <upstream sha>`)
 2. rebase onto <target> (<N> behind)
-3. push <P> commits
+3. push <P> commits to <branch>
 4. create <K> inline drafts (D<n>–D<m>, unpublished – you submit the review)
 5. post <M> replies (D<n>…)
 6. resolve <T> threads

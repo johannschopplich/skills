@@ -74,9 +74,9 @@ FLAKY / INFRA / INCONCLUSIVE **collapse** to the root line plus "recommend retry
 **Needs you** – `Q1 a, Q2 a, ship 1–<n>`
 **Q1** <fix | revert <sha>> (staged), or <the alternative>? a) staged · b) alternative – **a**: <reason>
 **Q2** Keep the repro test `<file>`? (borderline) a) keep · b) drop – **a**: guards <X>
-1. push the staged <fix | revert>
+1. push the staged <fix | revert> to <branch>
 2. retry every failed job
-3. push the quarantine
+3. push the quarantine to <branch>
 4. open the tracking issue (D<n>)
 5. comment cause and fix on the MR/PR or the <noun> (D<n>)
 

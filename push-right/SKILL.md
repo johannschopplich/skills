@@ -51,7 +51,7 @@ One artifact, in this order:
 - **Needs you**
   - a reply line taking every recommendation: `Q1 a, Q2 a, ship 1–6`
   - the Decisions as `Q<n>` with lettered options and a recommendation, for judgment calls only – a fact the run can observe gets observed
-  - the tray as a numbered ship list, offering only items whose carry condition fired; a push item names its branch (`push 3 commits to feat/x`) and whether `code-review` ran over the commits since the last review
+  - the tray as a numbered ship list, offering only items whose carry condition fired; a push item names its branch (`push 3 commits to feat/x`) and whether `code-review` covered every commit it pushes
 - **Done** – each applied fix once, with its proof.
 - **Waiting on**, **Next**.
 - **Drafts** – every outward draft in full, `D1`…`Dn`, referenced from the ship item that posts it.
