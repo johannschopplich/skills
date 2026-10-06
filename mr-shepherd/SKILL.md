@@ -26,7 +26,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 ## Run – in Order
 
 1. **Check auth.** `glab api user` / `gh api user` and one cheap tracker call; a failure, here or later, ends the run with the fix (`! glab auth login`, `/mcp`). A missing MR or failed checkout goes in the brief; the rest still runs.
-2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by one tracker search for the MR URL; no hit, no ticket. In Asana, search for an exact `.value` match of the full URL on the **Merge request** field; text search and `.contains` miss custom fields. A field holding several URLs defeats `.value`: scan `display_value` across the board's tasks via `get_tasks`.
+2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by a tracker search for the MR URL. In Asana, search for an exact `.value` match of the full URL on the **Merge request** field; text search and `.contains` miss custom fields. On a `.value` miss, scan `display_value` across the board's tasks via `get_tasks`. No hit, no ticket.
 3. **Pre-check merge safety.** Read-only, after `git fetch`: behind, diverged, CI on the latest push, conflicts – for the state line.
 4. **Add a worktree** at `../<repo>-mr-<id>`, reused on re-fire, never the user's checkout.
 5. **Review.** Invoke the `code-review` skill from the worktree. Fixed point: the target's merge-base. Spec: the ticket URL. Context: the mode (own → Own Work; else report only), the author, and product or design decisions the ticket shows as accepted. Triage:
