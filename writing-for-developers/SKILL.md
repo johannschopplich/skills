@@ -5,7 +5,7 @@ description: Draft and rewrite developer-facing copy in the user's voice. Use wh
 
 # Writing for Developers
 
-Reader: a domain peer – issue filer, code author, maintainer – sometimes a PM who never opens the code. Write in the recipient's language; the German examples had German recipients.
+Reader: a domain peer – issue filer, code author, maintainer – sometimes a PM who never opens the code. Write in the recipient's language, else the repo's. The German examples had German recipients.
 
 ## Voice
 
