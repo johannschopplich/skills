@@ -1,5 +1,4 @@
 // Runs the code review's axes in parallel, then one refute pass per axis, and computes the verdict.
-// Invoked by the `code-review` skill through the Workflow tool with `{ scriptPath, args }`; see SKILL.md for `args`.
 export const meta = {
   name: 'code-review',
   description: 'Review a diff along five axes in fresh contexts, refute every finding, and return a verdict',
