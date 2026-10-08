@@ -34,7 +34,7 @@ The **artifact** is the state (thread, branch, workspace; the invoking skill nam
 - **Done** only if its own target passes **and** it adds **no new failures vs. baseline**; otherwise it goes where the invoking skill says (discarded, a Decision, reverted).
 - **Disprove before asserting** a behavior change: run its original repro and one neighboring path it touches – observed, never reasoned from the diff.
 - Each Done line names its proof; short of it, the item is proposed.
-  - `traced` (followed through the code at file:line) or `reproduced` (failing before, passing after) – a behavior change; either is enough, so no test is written just to earn `reproduced`.
+  - `traced` (followed through the code at file:line) or `reproduced` (failing before, passing after) – a behavior change. A scratch repro earns `reproduced` too.
   - `checked` (repo checks green) – only a mechanical change: typo, formatting, import.
   - `mutated` – a removed test: the path it covered broken and another test red; for a tautological, hollow, or vacuous one, itself still green.
 - A check that can't run here (secrets, no local env) is named in the brief, unattributed to the change.
