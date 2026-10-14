@@ -11,6 +11,8 @@ Reader: a domain peer – issue filer, code author, maintainer – sometimes a P
 
 - **Peer level, no explaining down.** State the fact; the reader infers. Keep the claim; cut the gloss on a term they already used, a step they'd infer, a question nobody asked. Replies and MR descriptions: statements, not imperatives.
 - **Reader's altitude.** Reader with the diff open: intent and consequence. Reader who never opens it: the outcome they'd notice.
+- **Only what the reader can't see.** The trap, the reason behind a choice, the consequence. What the diff, the line, or the thread already shows stays out, and so do the mechanism and how you found it.
+- **Their vocabulary, your framing.** Use the terms the recipient uses. State the fix in your own terms, not their snippet or framing.
 - **Open on the fact.** Key facts and consequence, not the path or a recap. Not shallow: a shorter version that needs rereading got worse. Make the rhetorical move, don't announce it. Substantive acknowledge-and-pivot is fine: "Great idea overall, but …"
 - **Number, symbol, or link** on every technical claim for a reader who opens the code; real symbols, history checked before calling anything new. "A column rename fails the build", not "schema changes can cause issues".
 - **Machine tells.** The reveal against a framing nobody held ("not as a product, but as an experiment"); the fact-free sentence ("version 4 came from the issue tracker, not from my head"); the quotable phrase; a run of same-length short sentences. A rule that worsens a sentence yields.
@@ -35,7 +37,7 @@ A sentence that translates back into German word for word was written in German.
 
 ## Replies and Notes
 
-Calibrate by effort × correctness; thank substantive work specifically. Declining a feature: redirect to userland, with the reason. Correcting a reporter: link the commit or spec that proves it; write the fix in your own terms, not their snippet or framing.
+Calibrate by effort × correctness; thank substantive work specifically. Declining a feature: redirect to userland, with the reason.
 
 **Low-effort report.** Close with the reason; no thanks.
 
@@ -49,7 +51,7 @@ Closing this, as no minimal reproducible example provided.
 Actually, the library returns the raw response body already. The `{ data: ... }` wrapping must be coming from your backend – can you check your server's response shape?
 ```
 
-**Review comment or reply to a teammate.** One plain sentence: what is better and where, in the recipient's vocabulary; the line it sits on is its link. Mechanism and how you found it stay out. Imply the fix and share code only when it adds value, unless the caller decides otherwise.
+**Review comment or reply to a teammate.** One sentence; the line it sits on is its link. Code only when it adds value.
 
 Review comment:
 
@@ -63,14 +65,15 @@ Reply to a teammate's comment:
 Ja, genau – gilt gleichermaßen. Hab ich gelöscht. ✅
 ```
 
-**Chat note for Slack or a tracker.** Three lines at most, at the recipient's altitude and in their vocabulary.
+**Chat note for Slack or a tracker.** Three lines at most.
 
 ## PR/MR Descriptions
 
-1. **Intent first.** One or two prose sentences on what and why.
-2. **Only what the diff can't show.** Consequences, migration steps. Follow-ups and links to other commits stay out.
-3. **Evidence.** Before and after for what users see, as screenshots or preview links; what was checked beyond CI, and what couldn't be.
-4. **One-way door.** One line names what a revert can't undo: stored data, sent mail, a published API.
+1. **Intent.** One or two prose sentences on what and why open it.
+2. **Evidence.** Before and after for what users see, as screenshots or preview links; what was checked beyond CI, and what couldn't be.
+3. **One-way door.** One line names what a revert can't undo: stored data, sent mail, a published API.
+
+Migration steps when there are any. Follow-ups and links to other commits stay out.
 
 ## Commit Messages
 
@@ -87,4 +90,4 @@ feat!: rename `OpenAPI` to `OpenAPIBuilder`
 
 - **One Diátaxis mode per document.**
 - **Status quo.** What is true now, no history – changelogs and migration guides excepted. A file count, path list, or tree only when the reader needs it, with the command that regenerates it.
-- **Name the gotcha.** What the code won't tell: the trap, the reason behind a choice; a step that takes three tries says so.
+- **A step that takes three tries says so.**
