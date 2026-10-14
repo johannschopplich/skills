@@ -5,7 +5,7 @@ description: Draft and rewrite developer-facing copy in the user's voice. Use wh
 
 # Writing for Developers
 
-Reader: a domain peer – issue filer, code author, maintainer – sometimes a PM who never opens the code. Write in the recipient's language, else the repo's. The German examples had German recipients.
+Reader: a domain peer – issue filer, code author, maintainer – sometimes a PM who never opens the code. Write in the recipient's language, else the repo's.
 
 ## Voice
 
@@ -17,16 +17,7 @@ Reader: a domain peer – issue filer, code author, maintainer – sometimes a P
 - **Number, symbol, or link** on every technical claim for a reader who opens the code; real symbols, history checked before calling anything new. "A column rename fails the build", not "schema changes can cause issues".
 - **Machine tells.** The reveal against a framing nobody held ("not as a product, but as an experiment"); the fact-free sentence ("version 4 came from the issue tracker, not from my head"); the quotable phrase; a run of same-length short sentences. A rule that worsens a sentence yields.
 - **One name per thing.** Across edits, unchanged sentences stay unchanged.
-
-## Calques
-
-A sentence that translates back into German word for word was written in German. Rewrite from the meaning:
-
-- a verb where German takes a noun: "activating the license", not "the license activation"
-- the thing named again instead of "the latter"
-- noun stacks broken up: "the script that checks the proto-import budget", not "the proto import budget check script"
-- _sobald_ → "whenever", _mitlesen_ → "follow the thread", _mitkommen_ → "comes with it", _melden_ → "report a bug or request a feature", _schreib mir_ → "drop me a line"
-- "too" at the end of the clause it belongs to
+- **No calques.** An English sentence that translates back into German word for word was written in German. Rewrite it from the meaning.
 
 ## Typography
 
@@ -42,13 +33,13 @@ Calibrate by effort × correctness; thank substantive work specifically. Declini
 **Low-effort report.** Close with the reason; no thanks.
 
 ```
-Closing this, as no minimal reproducible example provided.
+Closing this. Please provide a reproducible example for the next issue.
 ```
 
 **Wrong-but-trying reporter.** Correct the misdiagnosis, door open.
 
 ```
-Actually, the library returns the raw response body already. The `{ data: ... }` wrapping must be coming from your backend – can you check your server's response shape?
+Actually, the library returns the raw response body already. The `{ data: ... }` wrapper appears to be coming from your backend. Can you check your server's response shape?
 ```
 
 **Review comment or reply to a teammate.** One or two sentences. The line they sit on is their link. Mechanism and how you found it stay out. Code only when it adds value.
@@ -56,7 +47,7 @@ Actually, the library returns the raw response body already. The `{ data: ... }`
 Review comment:
 
 ```
-Root override liefert das schon für jeden Button mit.
+Der Root-Override liefert das schon für jeden Button mit.
 ```
 
 Review comment on a likely bug:
