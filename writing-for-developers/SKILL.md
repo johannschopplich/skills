@@ -9,7 +9,7 @@ Reader: a domain peer, sometimes a PM who never opens the code. Write in the rec
 
 ## Voice
 
-- **Peer level, no explaining down.** State the fact; the reader infers. Replies and MR descriptions: statements, not imperatives.
+- **Peer level, no explaining down.** State the fact; the reader infers.
 - **Reader's altitude.** Reader with the diff open: intent and consequence. Reader who never opens it: the outcome they'd notice.
 - **Only what the reader can't see.** The trap, the reason behind a choice, the consequence. What the diff, the line, or the thread already shows stays out.
 - **Their vocabulary, your framing.** Use the terms the recipient uses. State the fix in your own framing, not their snippet's.
