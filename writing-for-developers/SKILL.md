@@ -5,16 +5,16 @@ description: Draft and rewrite developer-facing copy in the user's voice. Use wh
 
 # Writing for Developers
 
-Reader: a domain peer – issue filer, code author, maintainer – sometimes a PM who never opens the code. Write in the recipient's language, else the repo's.
+Reader: a domain peer, sometimes a PM who never opens the code. Write in the recipient's language, else the repo's.
 
 ## Voice
 
-- **Peer level, no explaining down.** State the fact; the reader infers. Keep the claim; cut the gloss on a term they already used, a step they'd infer, a question nobody asked. Replies and MR descriptions: statements, not imperatives.
+- **Peer level, no explaining down.** State the fact; the reader infers. Replies and MR descriptions: statements, not imperatives.
 - **Reader's altitude.** Reader with the diff open: intent and consequence. Reader who never opens it: the outcome they'd notice.
 - **Only what the reader can't see.** The trap, the reason behind a choice, the consequence. What the diff, the line, or the thread already shows stays out.
 - **Their vocabulary, your framing.** Use the terms the recipient uses. State the fix in your own framing, not their snippet's.
-- **Open on the fact.** Key facts and consequence, not the path or a recap. Not shallow: a shorter version that needs rereading got worse. Make the rhetorical move, don't announce it. Substantive acknowledge-and-pivot is fine: "Great idea overall, but …"
-- **Number, symbol, or link** on every technical claim for a reader who opens the code; real symbols, history checked before calling anything new. "A column rename fails the build", not "schema changes can cause issues".
+- **Open on the fact.** Key facts and consequence, not the path or a recap. Not shallow: a shorter version that needs rereading got worse. Substantive acknowledge-and-pivot is fine: "Great idea overall, but …"
+- **Number, symbol, or link** on every technical claim: "A column rename fails the build", not "schema changes can cause issues".
 - **Machine tells.** The reveal against a framing nobody held ("not as a product, but as an experiment"); the fact-free sentence ("version 4 came from the issue tracker, not from my head"); the quotable phrase; a run of same-length short sentences. A rule that worsens a sentence yields.
 - **One name per thing.** Across edits, unchanged sentences stay unchanged.
 - **No calques.** An English sentence that translates back into German word for word was written in German. Rewrite it from the meaning.
@@ -42,7 +42,7 @@ Closing this. Please provide a reproducible example for the next issue.
 Actually, the library returns the raw response body already. The `{ data: ... }` wrapper appears to be coming from your backend. Can you check your server's response shape?
 ```
 
-**Review comment or reply to a teammate.** One or two sentences. The line they sit on is their link. Mechanism and how you found it stay out. Code only when it adds value.
+**Review comment or reply to a teammate.** One or two sentences. The line they sit on is their link. Mechanism and how you found it stay out.
 
 Review comment:
 
@@ -67,9 +67,9 @@ Ja, genau – gilt gleichermaßen. Hab ich gelöscht. ✅
 ## PR/MR Descriptions
 
 1. **Intent.** One or two prose sentences open it: what and why.
-2. **Evidence.** Before and after for what users see, as screenshots or preview links; what was checked beyond CI, and what couldn't be.
+2. **Evidence.** Before and after for what users see; what was checked beyond CI, and what couldn't be.
 3. **Cause.** A fix whose cause the diff doesn't show gets sections for cause and fix, with the proof: the warning, a diagram.
-4. **One-way door.** One line names what a revert can't undo: stored data, sent mail, a published API.
+4. **One-way door.** One line names what a revert can't undo.
 
 Migration steps when there are any. Follow-ups and links to other commits stay out.
 
@@ -87,5 +87,5 @@ feat!: rename `OpenAPI` to `OpenAPIBuilder`
 ## Docs and READMEs
 
 - **One Diátaxis mode per document.**
-- **Status quo.** What is true now, no history – changelogs and migration guides excepted. A file count, path list, or tree only when the reader needs it, with the command that regenerates it.
+- **Status quo.** What is true now, no history. A file count, path list, or tree only when the reader needs it, with the command that regenerates it.
 - **A step that takes three tries says so.**
