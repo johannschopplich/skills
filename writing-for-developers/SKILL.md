@@ -11,8 +11,8 @@ Reader: a domain peer – issue filer, code author, maintainer – sometimes a P
 
 - **Peer level, no explaining down.** State the fact; the reader infers. Keep the claim; cut the gloss on a term they already used, a step they'd infer, a question nobody asked. Replies and MR descriptions: statements, not imperatives.
 - **Reader's altitude.** Reader with the diff open: intent and consequence. Reader who never opens it: the outcome they'd notice.
-- **Only what the reader can't see.** The trap, the reason behind a choice, the consequence. What the diff, the line, or the thread already shows stays out, and so do the mechanism and how you found it.
-- **Their vocabulary, your framing.** Use the terms the recipient uses. State the fix in your own terms, not their snippet or framing.
+- **Only what the reader can't see.** The trap, the reason behind a choice, the consequence. What the diff, the line, or the thread already shows stays out.
+- **Their vocabulary, your framing.** Use the terms the recipient uses. State the fix in your own framing, not their snippet's.
 - **Open on the fact.** Key facts and consequence, not the path or a recap. Not shallow: a shorter version that needs rereading got worse. Make the rhetorical move, don't announce it. Substantive acknowledge-and-pivot is fine: "Great idea overall, but …"
 - **Number, symbol, or link** on every technical claim for a reader who opens the code; real symbols, history checked before calling anything new. "A column rename fails the build", not "schema changes can cause issues".
 - **Machine tells.** The reveal against a framing nobody held ("not as a product, but as an experiment"); the fact-free sentence ("version 4 came from the issue tracker, not from my head"); the quotable phrase; a run of same-length short sentences. A rule that worsens a sentence yields.
@@ -51,7 +51,7 @@ Closing this, as no minimal reproducible example provided.
 Actually, the library returns the raw response body already. The `{ data: ... }` wrapping must be coming from your backend – can you check your server's response shape?
 ```
 
-**Review comment or reply to a teammate.** One or two sentences; the line it sits on is its link. Code only when it adds value.
+**Review comment or reply to a teammate.** One or two sentences. The line they sit on is their link. Mechanism and how you found it stay out. Code only when it adds value.
 
 Review comment:
 
@@ -75,7 +75,7 @@ Ja, genau – gilt gleichermaßen. Hab ich gelöscht. ✅
 
 ## PR/MR Descriptions
 
-1. **Intent.** One or two prose sentences on what and why open it.
+1. **Intent.** One or two prose sentences open it: what and why.
 2. **Evidence.** Before and after for what users see, as screenshots or preview links; what was checked beyond CI, and what couldn't be.
 3. **Cause.** A fix whose cause the diff doesn't show gets sections for cause and fix, with the proof: the warning, a diagram.
 4. **One-way door.** One line names what a revert can't undo: stored data, sent mail, a published API.
