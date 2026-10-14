@@ -37,7 +37,7 @@ A sentence that translates back into German word for word was written in German.
 
 ## Replies and Notes
 
-Calibrate by effort × correctness; thank substantive work specifically. Declining a feature: redirect to userland, with the reason.
+Calibrate by effort × correctness; thank substantive work specifically. Declining a feature: redirect to userland, with the reason. A report on intended behavior gets that behavior in one line and the workaround as a ready snippet, without the version history behind it.
 
 **Low-effort report.** Close with the reason; no thanks.
 
@@ -51,12 +51,18 @@ Closing this, as no minimal reproducible example provided.
 Actually, the library returns the raw response body already. The `{ data: ... }` wrapping must be coming from your backend – can you check your server's response shape?
 ```
 
-**Review comment or reply to a teammate.** One sentence; the line it sits on is its link. Code only when it adds value.
+**Review comment or reply to a teammate.** One or two sentences; the line it sits on is its link. Code only when it adds value.
 
 Review comment:
 
 ```
 Root override liefert das schon für jeden Button mit.
+```
+
+Review comment on a likely bug:
+
+```
+Ich glaub, hier hat sich ein Fehler eingeschlichen. `0 && …` ist immer falsy, also greift das `v-if` nie, oder?
 ```
 
 Reply to a teammate's comment:
@@ -71,7 +77,8 @@ Ja, genau – gilt gleichermaßen. Hab ich gelöscht. ✅
 
 1. **Intent.** One or two prose sentences on what and why open it.
 2. **Evidence.** Before and after for what users see, as screenshots or preview links; what was checked beyond CI, and what couldn't be.
-3. **One-way door.** One line names what a revert can't undo: stored data, sent mail, a published API.
+3. **Cause.** A fix whose cause the diff doesn't show gets sections for cause and fix, with the proof: the warning, a diagram.
+4. **One-way door.** One line names what a revert can't undo: stored data, sent mail, a published API.
 
 Migration steps when there are any. Follow-ups and links to other commits stay out.
 
