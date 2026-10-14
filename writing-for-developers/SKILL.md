@@ -23,7 +23,6 @@ Reader: a domain peer, sometimes a PM who never opens the code. Write in the rec
 
 - Spaced en dash ( – ) for the parenthetical break; never an em dash.
 - Backticks on every identifier where code renders, commit subjects included.
-- Bold bullet lead-ins in docs and MR descriptions; none in chat notes.
 - Headings in APA title case, carrying the point: "Pick the Mode First", not "Modes".
 
 ## Replies and Notes
@@ -75,7 +74,7 @@ Migration steps when there are any. Follow-ups and links to other commits stay o
 
 ## Commit Messages
 
-Conventional Commits in English, subject only: short, high-level, noun phrases fine. The subject is the changelog line and stands alone; longer context goes in the MR description, never a body. `fix` is for code; data and prose changes are `chore` or `docs`. A scope only where the repo's history uses scopes. One subject; variants only when asked.
+Conventional Commits in English, subject only: short, high-level. The subject is the changelog line and stands alone; longer context goes in the MR description, never a body. `fix` is for code; data and prose changes are `chore` or `docs`. A scope only where the repo's history uses scopes.
 
 ```
 feat(api): add `/scalar` and `/swagger` docs routes
