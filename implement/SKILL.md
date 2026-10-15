@@ -31,4 +31,4 @@ Several tickets → one subagent per ticket, one at a time (shared worktree). A 
 ## Finish
 
 1. Full test suite, once. Rerun each red test at the start commit. Red there too → pre-existing, brief context. Green there → this run's regression, fixed under push-right's Verification or carried as a Decision.
-2. Invoke the `code-review` skill with `<start commit> <spec>`. You assemble the brief: its Review line and fold item, plus its Done lines and Decisions merged with yours.
+2. Invoke the `code-review` skill with `<start commit> <spec>`. You assemble the brief: its Review line and any fold item, plus its Done lines and Decisions merged with yours.

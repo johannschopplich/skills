@@ -12,7 +12,7 @@ The review reports; fixing belongs to the caller, except in Own Work.
 
 Every command runs in the repo or worktree root.
 
-1. **Pin the diff.** `head` is `git rev-parse HEAD`; report dir: `$TMPDIR/code-review-<short head sha>/`. The fixed point is the argument; `HEAD` reviews uncommitted changes, untracked files included, index untouched. Without an argument, `git fetch` and take the merge-base with the default branch's remote. When the branch's record (step 5) holds the current merge-base, the recorded head is the fixed point instead, with `compare: 'trees'`. If there is also no spec argument, drop `spec` from `axes` and say in `context` that the diff is only the delta since the recorded review. A bad ref or an empty diff ends the run with one line.
+1. **Pin the diff.** `head` is `git rev-parse HEAD`; report dir: `$TMPDIR/code-review-<short head sha>/`. The fixed point is the argument; `HEAD` reviews uncommitted changes, untracked files included, index untouched. Without an argument, `git fetch` and take the merge-base with the default branch's remote. When the branch's record (step 5) holds the current merge-base and its head still resolves, the recorded head is the fixed point instead, with `compare: 'trees'`. If there is also no spec argument, drop `spec` from `axes` and say in `context` that the diff is only the delta since the recorded review. A bad ref or an empty diff ends the run with one line.
 2. **Find the spec.** The argument; else a ticket linked from the commits, the branch name, or the MR; else a spec file under `.scratch/`, `docs/`, or `specs/` matching the branch or feature; else none. Fetch a tracker ticket with its comments into `<report dir>/ticket.md` and pass that path. A failed fetch is no spec; carry on.
 3. **Run the deterministic checks.** Run the repo's format check, lint, typecheck, and test scripts, with full output to `<report dir>/checks.txt`. Mark each check `✓`, `✗`, or `–` (no script); the axes never see them. Then `node <this skill's dir>/scripts/added-comments.mjs <fixed point> [--trees] > <report dir>/added-comments.txt`.
 4. **Run the axes.** Workflow tool with `script` set to the text of `<this skill's dir>/code-review.workflow.js`; it refuses the file as `scriptPath`. Its `args`: `skillDir`, `repo` (absolute root), `base` (the fixed point), `head`, `spec`, `commentsFile`, `reportDir`, and:
@@ -58,14 +58,15 @@ When the diff is the user's own branch (commits by `git config user.email`, push
 
 - Decisions: every `plausible` finding, every `choice` finding, and every behavior change with `proof: said`.
 - Capture the baseline from step 3's checks, then apply every other `confirmed` finding:
-  - **Unpushed commit** – a fixup on top: `git commit --fixup=<sha>`. The fold is a tray item: `git rebase --autosquash <upstream>`, `<upstream>` being the pushed branch head, else the fixed point. A commit the user called settled gets a new commit on HEAD instead.
+  - **Unpushed commit** – a fixup on top: `git commit --fixup=<sha>`. A commit the user called settled gets a new commit on HEAD instead.
   - **Pushed commit** – a new commit on HEAD.
   - **Uncommitted** – an edit in place.
 - The edit in place is an explicit exception to push-right's commit rule.
-- Each fix passes push-right's Verification before it counts as Done; a failing one becomes a Decision. Copy taken from a finding's fix is Done once its claim is `traced` to the code and, when not English, read back for grammar. A fixup's Done line names the commit it targets.
+- Each fix passes push-right's Verification before it counts as Done; a failing one becomes a Decision. Copy taken from a finding's fix is Done once its claim is `traced` to the code and, when not English, read back for grammar. A fixup's Done line names the subject of the commit it targets.
 - Re-review once over the fixes: report dir suffixed `-re-review`, `axes` without `spec`, `compare: 'trees'` from the first review's head with `context` "this diff is only the fixes for the previous review; judge only what it changes, and report a hunk that leaves the code worse than its old side even when it is right on its own"; `HEAD` for edits in place, without that `context`.
 - Then stop:
   - A fix the re-review finds worse than the reviewed side is undone the way it landed: another fixup of the same commit, a new commit, or the edit reverted in place. Its finding becomes a Decision, whatever the severity.
+  - Fold the fixups: `git rebase --autosquash --keep-base <upstream>`, `<upstream>` being the pushed branch head, else the fixed point. A dirty tree, a commit past the first review's head this run didn't make, or a conflict (`git rebase --abort`) leaves the fold as a tray item.
   - Surviving blocker and major findings become Decisions.
   - Name what another pass would still cover.
-- End on the push-right brief; when a caller assembles it (mr-shepherd own mode, implement), return the Review line, Done lines, Decisions, and the fold item instead.
+- End on the push-right brief; when a caller assembles it (mr-shepherd own mode, implement), return the Review line, Done lines, Decisions, and any fold item instead.
