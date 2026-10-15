@@ -25,7 +25,7 @@ The **artifact** is the state (thread, branch, workspace; the invoking skill nam
 
 **Single correct form, not merely verified** – one correct change → apply; a *choice* → propose.
 
-- **Apply** – a local commit once its verification is green. One logical change per commit, comments only where the code is non-obvious.
+- **Apply** – a local commit once its verification is green. One theme per commit, comments only where the code is non-obvious.
 - **Propose** – in the brief, off disk: behavior, API or interface shape, naming, centralization tradeoffs, scope expansion.
 
 ## Verification – Differential

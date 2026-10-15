@@ -66,7 +66,7 @@ When the diff is the user's own branch (commits by `git config user.email`, push
 - Re-review once over the fixes: report dir suffixed `-re-review`, `axes` without `spec`, `compare: 'trees'` from the first review's head with `context` "this diff is only the fixes for the previous review; judge only what it changes, and report a hunk that leaves the code worse than its old side even when it is right on its own"; `HEAD` for edits in place, without that `context`.
 - Then stop:
   - A fix the re-review finds worse than the reviewed side is undone the way it landed: another fixup of the same commit, a new commit, or the edit reverted in place. Its finding becomes a Decision, whatever the severity.
-  - Fold the fixups: `git rebase --autosquash --keep-base <upstream>`, `<upstream>` being the pushed branch head, else the fixed point. A dirty tree, a commit past the first review's head this run didn't make, or a conflict (`git rebase --abort`) leaves the fold as a tray item.
+  - Fold the fixups: `git rebase --autosquash --autostash --keep-base <upstream>`, `<upstream>` being the pushed branch head, else the fixed point. Staged changes, a commit past the first review's head this run didn't make, or a conflict (`git rebase --abort`) leaves the fold as a tray item.
   - Surviving blocker and major findings become Decisions.
   - Name what another pass would still cover.
-- End on the push-right brief; when a caller assembles it (mr-shepherd own mode, implement), return the Review line, Done lines, Decisions, and any fold item instead.
+- End on the push-right brief; when a skill that loaded `push-right` invoked it, return the Review line, Done lines, Decisions, and any fold item instead.

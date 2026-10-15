@@ -13,7 +13,7 @@ Merging stays the user's or CI's call. **Invoke the `push-right` skill first.** 
 - **Host** from the URL or the local remote: GitLab → `glab` · `!` · *MR*; GitHub → `gh` · `#` · *PR*.
 - **Mode.**
   - **teach** (default, someone else's MR) – findings become inline drafts that imply the fix; commit only a single-form fix the author wouldn't learn from – a typo, a missing import.
-  - **take-over** (the invocation says the author is away, sick, or handing over) – commit fixes on top of the author's commits, each with a short draft saying what changed and why.
+  - **take-over** (the author is away, sick, handing over, or doesn't code) – commit fixes on top of the author's commits, each with a short draft saying what changed and why.
   - **own** (the authenticated user wrote it) – `code-review`'s Own Work; nothing is drafted to the author.
 - **Inputs.** A ticket resolves to its MRs via its merge-request field. Several MRs: jointly when they share lineage or files (one review each, one cross-MR section), else separately – say which. A stack: bottom-up, one section per MR, one tray.
 
@@ -50,7 +50,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 **Needs you** – `Q1 a, Q2 a, ship 1–<n>`
 **Q1** <judgment call as a question> *<who flagged it>*
 a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
-1. fold <F> fixups (`git rebase --autosquash --keep-base <upstream sha>`)
+1. fold <F> fixups (`git rebase --autosquash --autostash --keep-base <upstream sha>`)
 2. rebase onto <target> (<N> behind)
 3. push <P> commits to <branch>
 4. create <K> inline drafts (D<n>–D<m>, unpublished – you submit the review)
@@ -72,6 +72,8 @@ a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
 
 **Review** <code-review's line, with its report path>
 </brief-template>
+
+`<P> unpushed` shows at zero too.
 
 `waiting on author` counts blocker and major drafts.
 
