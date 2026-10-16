@@ -28,11 +28,11 @@ Beyond the spec:
 |---|---|
 | Bookkeeping 2.0 | `taxRule` + `accountDatev` on every voucher and position; `taxType` and `taxSet` are dead. `GET /ReceiptGuidance/forAccountNumber?accountNumber=` resolves an SKR04 number. |
 | Reports | `GET /AccountingReports/ustva?startMonth=YYYY-MM&endMonth=YYYY-MM&taxationType=IST` takes a month, a quarter, or a whole year (other ranges answer 500); each KZ is a nested object (`fieldNumber` like `"84 / 85"`, `taxableBaseAmountPrecise`, `taxAmountPrecise`, contributing documents in `objects[]`): collect them with `.. | objects | select(has("fieldNumber"))`. A KZ with a base takes its tax as the quarter's base × its rate, rounded once; KZ 66 and 67 add the vouchers' tax. Its expected delta is that tax after the new items minus that tax at baseline. `/AccountingReports/balanceList?startDate=YYYY-MM&endDate=YYYY-MM` and `/AccountingReports/accountSheet?…&skr04AccountNumber=NNNN&sortColumn=date&sortDirection=ASC` return German-formatted strings (`"913,47 €"`, side `(S)`/`(H)`). |
-| Periods | KZ 81 counts by payment date, input tax (KZ 66, 67, and §13b) by `voucherDate`, accounts post by `deliveryDate`. KZ 21 and the ZM follow the service period (§ 18b UStG): an EU invoice paid in a later quarter than its service is a Decision. |
+| Periods | KZ 81 counts by payment date. Revenue vouchers in KZ 45 and input tax (KZ 66, 67, and §13b) count by `voucherDate`. Accounts post by `deliveryDate`. KZ 21 and the ZM follow the service period (§ 18b UStG): an EU invoice paid in a later quarter than its service is a Decision. |
 | Lists | `status=` also filters `/CheckAccountTransaction`; `startDate`/`endDate` take Unix timestamps. Send `countAll=true` and page with `offset` when `total` exceeds the `limit`. `GET /VoucherPos?embed=accountDatev` returns every position in one call, keyed by `voucher.id`. |
 | Documents | `GET /Document/{voucher.document.id}/download` returns the file as base64 in `objects.content`. Upload: `POST /Voucher/Factory/uploadTempFile` (multipart `file=@x.pdf;type=application/pdf`). |
-| Save | `saveVoucher` creates with the `status` it is sent; JSON bodies need `-H 'Content-Type: application/json'`. With `voucher.id` it updates that draft: a position carrying its `id` is updated, one without is added, `voucherPosDelete: [{id, objectName: "VoucherPos"}]` removes one, and `voucherPosSave: null` with `filename: null` keeps positions and document. Finalizing is that update with `status: 100`. A finalized voucher changes through `PUT /Voucher/{id}/resetToOpen` → `resetToDraft` → update → finalize → re-link. |
-| Payment | `PUT /Voucher/{id}/bookAmount` with `date` the bank row's `valueDate`, `type` `FULL_PAYMENT` (`N` for each partial row before the last), `checkAccount` the bank row's `checkAccount`, `checkAccountTransaction: {id, objectName: "CheckAccountTransaction"}`, and `createFeed: true`. `amount` carries the bank row's sign: negative for an expense (`C`), positive for a revenue (`D`). Existing links: one `GET /CheckAccountTransactionLog?limit=1000&countAll=true`, mapped locally by `checkAccountTransaction` and `object` (the voucher), the amount in `amountPaid`; a filter by `object` is silently ignored. |
+| Save | `saveVoucher` creates with the `status` it is sent. JSON bodies need `-H 'Content-Type: application/json'`. With `voucher.id` it updates that draft: a position carrying its `id` is updated, one without is added, `voucherPosDelete: [{id, objectName: "VoucherPos"}]` removes one, and `voucherPosSave: null` with `filename: null` keeps positions and document. Finalizing is that update with `status: 100`. A revenue voucher with a negative total answers 500 on finalize. A finalized voucher changes through `PUT /Voucher/{id}/resetToOpen` → `resetToDraft` → update → finalize → re-link. |
+| Payment | `PUT /Voucher/{id}/bookAmount` with `date` the bank row's `valueDate`, `type` `FULL_PAYMENT` (`N` for each partial row before the last), `checkAccount` the bank row's `checkAccount`, `checkAccountTransaction: {id, objectName: "CheckAccountTransaction"}`, and `createFeed: true`. `amount` carries the bank row's sign: negative for an expense (`C`), positive for a revenue (`D`). A row paying several vouchers links each with `FULL_PAYMENT` and that voucher's amount. Existing links: one `GET /CheckAccountTransactionLog?limit=1000&countAll=true`, mapped locally by `checkAccountTransaction` and `object` (the voucher), the amount in `amountPaid`. A filter by `object` is silently ignored. |
 | Foreign currency | `sum*ForeignCurrency` is the document amount, `sum*` EUR at the document rate, `sum*Accounting` EUR as paid. Every save, finalizing included, sends `currency`, `propertyForeignCurrencyDeadline`, and each position in document currency. The deadline is the document date as `dd.mm.yyyy`. A position that exists is sent by its `id`. A save without positions, a `resetToOpen`, and a `resetToDraft` each convert the stored EUR sums again: check `sumGrossForeignCurrency` after every save. A payment that differs from `sumGross` links with `type: "MTC"`, the difference landing on 6855 (`FULL_PAYMENT` and `CF` answer 422, `O` books it against the expense account). |
 
 Not yet proven through the API, so each is a Decision: goods bought from an EU seller and an asset. An asset is a durable item above 250 € net, import duty and courier fee included (GWG up to 800 € net if self-contained, otherwise AfA).
@@ -66,14 +66,18 @@ Sales:
 
 - **At 0 % the gross is the document total** – any "VAT" or "Tax" a foreign supplier printed is cost.
 - `voucherDate`, `deliveryDate`, and `paymentDeadline` take the document date, `description` the invoice number, `supplierName` the supplier as free text (`supplier: null`).
-- A bank that invoices its fees gets a voucher on 6855, linked to the fee rows it covers. A reverse-charge note takes the rule its prefix picks; a printed VAT exemption takes rule 9 at 0 %; an invoice with neither note is a Decision.
+- A bank that invoices its fees gets a voucher on 6855, linked to the fee rows it covers. The invoice's rule follows its note:
+  - a reverse-charge note – the rule the bank's prefix picks
+  - a printed VAT exemption – rule 9 at 0 %
+  - neither note – a Decision
 - **Imports** – the courier's invoice carries customs duty on 5840 at 0 %, import VAT (EUSt) on 1433 at 0 % (KZ 62), and its own fee (Auslagenpauschale, Vorlageprovision) on 5840 at the printed rate.
 - **Privately paid** – a reimbursement transfer in the same month, naming the receipt and matching its amount, links to the voucher as its payment. A later, partial, or collective reimbursement, or none by year-end, is a Decision recommending payment via 2180 Privateinlagen on the private payment date and the transfer on 2100.
 - **Refund without credit note** (§ 17 UStG) – the original voucher stays as invoiced, linked to the charge. A revenue voucher (`creditDebit: "D"`) links to each refund row. It carries the original's `accountDatev`, `taxRule`, and rate, one position per returned item, and the return confirmation attached.
+- **Negative payout statement** – books as a negative position in the positive voucher of the same payout. That voucher's document becomes both statements merged into one PDF, and its `description` names both. A payout without a positive statement is a Decision.
 
 ## Apply vs. Propose
 
-**Apply** – a draft (status 50) with its document attached, wherever the precedent or the purchase table gives the document a single form and, once paid, a bank row matches its amount. A match is exact in EUR, and within the card's FX difference for a foreign-currency document.
+**Apply** – a draft (status 50) with its document attached, wherever the precedent or the purchase table gives the document a single form and, once paid, a bank row matches its amount or the total of one payout's statements. A match is exact in EUR, and within the card's FX difference for a foreign-currency document.
 
 **Propose** where a choice exists: a document that departs from its precedent, an amount difference outside FX, a refund, a document dated in a filed year, anything on the not-yet-proven list, and every correction of a finalized voucher.
 
@@ -108,7 +112,7 @@ Rendered in German: finalize reads „speichern“ (Entwurf → offen), never �
 <N> unlinked bank rows · <D> drafts · <O> open vouchers · baseline <timestamp>
 
 **Needs you** – `Q1 a, ship 1–<n>`
-**Q1** <voucher / bank row>: <question> a) … · b) … – **<letter>**: <why> · [document]
+**Q1** <voucher / bank row>: <question> a) … · b) … – **<letter>**: <why, and for a tax question the § and each option's effect on the year's tax payable> · [document]
 1. finalize <N> drafts
 2. link <N> payments
 3. correct <voucher> (P1)
