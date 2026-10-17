@@ -18,22 +18,22 @@ Each box is the output of its idempotent `provision.sh`. A change to a box is an
 
 **Provision or apply a change:** `rsync -a --delete <skill>/web/ web:/root/servers/ && ssh web bash /root/servers/provision.sh` – it re-renders every vhost from `web/nginx/site-*.conf`.
 
-- **Site** – `/home/johann/<domain>`, a checkout of `main`. `ssh web site` prints its commands. The Mac's content sync reaches it as `johann@web`. A push to any site repo's `main` runs code as `johann` over every site – dev's gh token, with its default `repo` scope, reaches that.
+- **Site** – `/home/johann/<domain>`, a checkout of `main`. `ssh web site` prints its commands.
 - **Box-only data** – `.env` and `storage/` (Panel content, accounts) exist only on the box. Hetzner Backups, 7 daily, are their only copy: no `git clean` in a site. Restore one site: in the Console, create a temporary server from a backup, rsync that site's `storage/` (or `.env`) back to web, then delete the temporary server. Rebuilding web from a backup rolls back every site. Deleting web deletes its backups – convert the one to keep into a snapshot first.
-- **PHP** – every version in `PHP_VERSIONS` (`web/provision.sh`) runs its own PHP-FPM; a new site gets the newest. `ssh web site php <domain> <version>` switches one site, for nginx and for its deploys' composer. `site list` shows each site's version.
+- **PHP** – every version in `PHP_VERSIONS` (`web/provision.sh`) runs its own PHP-FPM; a new site gets the newest, `site php` switches one.
 - **Logs** – PHP and nginx errors: `/var/log/nginx/<domain>.error.log`; PHP-FPM pool warnings: `/var/log/php<version>-fpm.log`.
 
 ### Add a Site
 
 1. `<skill>/web/add-site.sh <domain> <owner/repo> [web-root]` – the plugin playgrounds pass `playground/public`. Its deploy keys belong to the gh token: revoking the GitHub CLI's authorization deletes them all.
-2. Add `.github/workflows/deploy.yml` from `web/repo/` if the repo lacks it. Every site builds with `web/build`; a build it doesn't cover is an edit there. The commit and push wait for the user's go; the push runs the first deploy. Done when `gh run watch -R <owner/repo> --exit-status "$(gh run list -R <owner/repo> -w Deploy -L 1 --json databaseId -q '.[0].databaseId')"` ends green.
+2. Add `.github/workflows/deploy.yml` from `web/repo/` if the repo lacks it. Every site builds with `web/build`; a build it doesn't cover is an edit there. The commit and push wait for the user's go; the push runs the first deploy. Done when that Deploy run is green.
 3. Smoke test before DNS: `ssh web site test <domain>`, then `ssh web site test <domain> /panel`. `Status:` absent or 200/30x, no PHP error in the body. A failure that names PHP: `site php <domain> <older version>`, then test again.
 4. The user points DNS at `web`: apex and `www` at IONOS, subdomains in Cloudflare, a proxied record set to DNS only – an edge forcing HTTPS sends the challenge to an origin without a certificate. Done when `dig +short <domain>` – and `www.<domain>` for an apex – answers with web's IP.
-5. `ssh web site cert <domain>`, then a Cloudflare record goes back to proxied; renewals pass through the proxy, since the HTTPS server answers the challenge too.
+5. `ssh web site cert <domain>`, then a Cloudflare record goes back to proxied.
 
 ### Deploy
 
-A push to `main` deploys. By hand, or to read a red run's output: `ssh web deploy <domain>`. A red deploy restores the previous commit; fix forward or revert on GitHub.
+A push to `main` deploys. By hand, or to read a red run's output: `ssh web deploy <domain>`. A red deploy restores the previous commit.
 
 ### Patch
 
@@ -49,7 +49,7 @@ A full disk: `ssh web 'du -sh /home/johann/.local/share/pnpm /home/johann/.cache
 
 **Provision:** `scp <skill>/dev/provision.sh dev:/tmp/ && ssh dev sudo bash /tmp/provision.sh`. The first run goes in as root – `-o User=root` on both commands, no `sudo` – and closes root login.
 
-After the first run, the user completes each login in their own terminal, inside `ssh dev` – a one-off `ssh dev '<command>'` misses nvm and `~/.local/bin`:
+After the first run, the user completes each login in their own terminal, inside `ssh dev`:
 
 1. Once the tailnet's access controls hold [`dev/tailnet-policy.hujson`](dev/tailnet-policy.hujson) and its DNS settings have MagicDNS and HTTPS Certificates on: `sudo tailscale up --advertise-tags=tag:dev`, then set the alias's `Hostname` to the tailnet name `dev` and rerun provision, which closes public SSH.
 2. `gh auth login`, then `git config --global user.name '<name>'` and `git config --global user.email '<email>'`
@@ -57,7 +57,7 @@ After the first run, the user completes each login in their own terminal, inside
 4. `t3 service install`, then `t3 pair --tailscale` – the pairing link or QR code goes to the phone's T3 app.
 
 - **Credentials** – GitHub and Claude only. Work accounts stay on the Mac. A lost phone: remove it in the Tailscale admin console, then on dev `t3 auth session list` and `t3 auth session revoke <id>`.
-- **T3 Code** – permission mode stays off Auto (t3code #15353, #15503). Skills are invoked as `$name`.
+- **T3 Code** – permission mode stays off Auto (t3code #15353, #15503).
 - **PHP** – the CLI runs the newest of `PHP_VERSIONS`; `sudo update-alternatives --set php /usr/bin/php<version>` switches it.
 - **Docker** – published ports bind to localhost; reach them through `tailscale serve` or an SSH tunnel.
 - **Reboots** – manual: `ssh dev 'cat /var/run/reboot-required'`, then `sudo reboot` once no session runs.

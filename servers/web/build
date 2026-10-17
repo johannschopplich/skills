@@ -6,7 +6,8 @@ set -euo pipefail
 export CI=true
 
 if [[ ! -f .env && -f .env.production.example ]]; then
-  cp .env.production.example .env
+  # nginx shares johann's group.
+  install -m 600 .env.production.example .env
 fi
 
 # A plugin playground runs Kirby from require-dev.
