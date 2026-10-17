@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Resets a site to origin/main and runs `build` on it; a failed build restores the previous commit.
+# GitHub Actions reach it as the forced command of a `site action-key` key.
+set -euo pipefail
+
+SITE_USER=johann
+SITE_DOMAIN=${1:-}
+
+[[ $SITE_DOMAIN =~ ^[a-z0-9.-]+$ ]] || { echo "unknown site: $SITE_DOMAIN" >&2; exit 1; }
+if [[ $(id -un) != "$SITE_USER" ]]; then
+  exec runuser -l "$SITE_USER" -c "/usr/local/bin/deploy '$SITE_DOMAIN'"
+fi
+
+site_dir=$HOME/$SITE_DOMAIN
+[[ -d $site_dir/.git ]] || { echo "unknown site: $SITE_DOMAIN" >&2; exit 1; }
+
+exec 9> "/tmp/deploy-$SITE_DOMAIN.lock"
+flock 9
+
+# The site's PHP comes first on PATH, for composer and anything else the build runs.
+state=/etc/servers/sites/$SITE_DOMAIN
+php=$(sed -n 's/^php=//p' "$state")
+SITE_ROOT=$(sed -n 's/^root=//p' "$state")
+export PATH="/usr/local/lib/servers/php$php:$PATH"
+export SITE_DOMAIN SITE_ROOT
+
+cd "$site_dir"
+previous_commit=$(git rev-parse HEAD)
+git fetch --quiet origin main
+git reset --hard origin/main
+if ! bash /usr/local/lib/servers/build; then
+  echo "build failed – restoring $previous_commit" >&2
+  git reset --hard "$previous_commit"
+  bash /usr/local/lib/servers/build || true
+  exit 1
+fi
+echo "deployed $SITE_DOMAIN at $(git log -1 --format='%h %s')"

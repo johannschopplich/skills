@@ -1,0 +1,11 @@
+// The tailnet's access controls, pasted into the Tailscale admin console.
+// dev is tagged, so it falls outside `autogroup:member`: the user's devices reach it, it reaches none of them.
+// A tagged device's key never expires.
+{
+	"tagOwners": {
+		"tag:dev": ["autogroup:admin"],
+	},
+	"grants": [
+		{"src": ["autogroup:member"], "dst": ["*"], "ip": ["*"]},
+	],
+}

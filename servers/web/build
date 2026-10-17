@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Builds a site after `deploy` has reset it to origin/main; `SITE_DOMAIN` and `SITE_ROOT` are set by `deploy`.
+set -euo pipefail
+
+# Deploys are non-interactive: no purge prompt, no update notifier.
+export CI=true
+
+if [[ ! -f .env && -f .env.production.example ]]; then
+  cp .env.production.example .env
+fi
+
+# A plugin playground runs Kirby from require-dev.
+composer_flags=(--no-interaction --prefer-dist --optimize-autoloader)
+jq -e '."require-dev"["getkirby/cms"]' composer.json > /dev/null || composer_flags+=(--no-dev)
+composer install "${composer_flags[@]}"
+
+if [[ -f package.json ]]; then
+  set +u
+  . "$HOME/.nvm/nvm.sh"
+  set -u
+  corepack install
+  pnpm install --frozen-lockfile
+  if jq -e '.scripts["build:playground"]' package.json > /dev/null; then
+    pnpm run build:playground
+  else
+    pnpm run build
+  fi
+fi
+
+rm -rf "${SITE_ROOT%/*}/storage/cache/$SITE_DOMAIN"

@@ -30,5 +30,6 @@ They stage work behind one approval tray and load **push-right** – install it 
 Tied to my machine and folders – a reference, not an install.
 
 - **kirby** – my Kirby plugins, Kirby core, and the kirby.tools docs.
+- **servers** – my Hetzner web and dev boxes: provisioning, sites, deploys over GitHub Actions.
 - **sevdesk** – sevDesk vouchers booked and audited through the API.
 - **footage-ingest** – camera cards into a multi-drive footage archive.

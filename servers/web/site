@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+# Manages the sites on the web box.
+set -euo pipefail
+
+SITE_USER=johann
+home=/home/$SITE_USER
+templates=/usr/local/share/servers
+
+usage() {
+  cat >&2 <<'EOF'
+usage:
+  site key <domain>                          print the site's GitHub deploy key, created on first call
+  site add <domain> <owner/repo> [web-root]  clone the repo and serve HTTP (web-root: public, or kept on a rerun)
+  site action-key <domain>                   rotate the key GitHub Actions deploys with, print its private half
+  site cert <domain>                         issue the certificate once DNS points here, then serve HTTPS
+  site php <domain> <version>                switch the site's PHP, for PHP-FPM and for deploys
+  site test <domain> [path]                  render a page through PHP-FPM, without DNS or nginx
+  site render <domain>                       rewrite the vhost from the templates, without reloading nginx
+  site remove <domain>                       drop the vhost, certificate, and keys; the checkout stays
+  site list                                  list sites with their PHP, HTTPS, and HEAD
+EOF
+  exit 1
+}
+
+[[ $(id -u) == 0 ]] || { echo "run as root" >&2; exit 1; }
+command=${1:-}
+domain=${2:-}
+[[ $command == list || $domain =~ ^[a-z0-9.-]+\.[a-z]+$ ]] || usage
+site_dir=$home/$domain
+vhost=/etc/nginx/conf.d/$domain.conf
+# Holds `root=` and `php=`; `deploy` reads both too.
+state=/etc/servers/sites/$domain
+
+# An apex domain also answers on www.
+is_apex() { [[ $(tr -cd . <<< "$domain" | wc -c) == 1 ]]; }
+server_names=$domain
+if is_apex; then server_names+=" www.$domain"; fi
+
+# Everything under the site user's home is written as that user: root following a planted symlink would hand over root's files.
+as_site_user() { runuser -l "$SITE_USER" -c "$1"; }
+
+render() {
+  sed -e "s|{{DOMAIN}}|$domain|g" -e "s|{{ROOT}}|$root|g" -e "s|{{PHP}}|$php|g" \
+    -e "s|{{SERVER_NAMES}}|$server_names|g" "$templates/$1"
+}
+
+write_vhost() {
+  {
+    render site-http.conf
+    if [[ -f /etc/letsencrypt/live/$domain/fullchain.pem ]]; then
+      render site-https.conf
+      if is_apex; then render site-www.conf; fi
+    fi
+  } > "$vhost"
+}
+
+read_state() {
+  [[ -f $state ]] || { echo "no site $domain – run site add first" >&2; exit 1; }
+  # shellcheck source=/dev/null
+  . "$state"
+}
+
+write_state() { printf 'root=%s\nphp=%s\n' "$root" "$php" > "$state"; }
+
+newest_php() { find /usr/sbin -name 'php-fpm*' -printf '%f\n' | sed 's/php-fpm//' | sort -V | tail -1; }
+
+# Rewrites authorized_keys without the site's action key, then appends the line given, if any.
+replace_action_key() {
+  { if [[ -n ${1:-} ]]; then printf '%s\n' "$1"; fi; } |
+    as_site_user "cd ~/.ssh && umask 077 && { awk '\$NF != \"deploy:$domain\"' authorized_keys 2> /dev/null || true; cat; } > authorized_keys.new && mv authorized_keys.new authorized_keys"
+}
+
+reload_nginx() { nginx -t && systemctl reload nginx; }
+
+case $command in
+  key)
+    key=.ssh/deploy/$domain
+    as_site_user "[[ -f ~/$key ]] || ssh-keygen -q -t ed25519 -N '' -C 'web:$domain' -f ~/$key; cat ~/$key.pub"
+    ;;
+
+  add)
+    repo=${3:-}
+    [[ $repo =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]] || usage
+    if [[ -f $state ]]; then
+      read_state
+      if [[ -n ${4:-} ]]; then root=$site_dir/$4; fi
+    else
+      php=$(newest_php)
+      root=$site_dir/${4:-public}
+    fi
+    write_state
+    as_site_user "umask 077 && cat > ~/.ssh/config.d/$domain" <<EOF
+Host github.com-$domain
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/deploy/$domain
+  IdentitiesOnly yes
+EOF
+    [[ -d $site_dir/.git ]] || as_site_user "git clone --branch main 'git@github.com-$domain:$repo.git' '$site_dir'"
+    write_vhost
+    reload_nginx
+    ;;
+
+  action-key)
+    scratch=$(mktemp -d)
+    trap 'rm -rf "$scratch"' EXIT
+    ssh-keygen -q -t ed25519 -N '' -C "deploy:$domain" -f "$scratch/key"
+    replace_action_key "restrict,command=\"/usr/local/bin/deploy $domain\" $(cat "$scratch/key.pub")"
+    cat "$scratch/key"
+    ;;
+
+  cert)
+    read_state
+    names=()
+    for name in $server_names; do names+=(-d "$name"); done
+    certbot certonly --webroot -w /var/www/acme --cert-name "$domain" --expand "${names[@]}" \
+      --non-interactive --agree-tos --register-unsafely-without-email --keep-until-expiring
+    write_vhost
+    reload_nginx
+    ;;
+
+  php)
+    read_state
+    php=${3:-}
+    [[ -n $php ]] || usage
+    [[ -x /usr/sbin/php-fpm$php ]] || { echo "PHP $php is not installed – add it to PHP_VERSIONS in provision.sh" >&2; exit 1; }
+    write_state
+    write_vhost
+    reload_nginx
+    ;;
+
+  test)
+    read_state
+    # `head` closing the pipe early is no failure.
+    SCRIPT_FILENAME=$root/index.php DOCUMENT_ROOT=$root SCRIPT_NAME=/index.php REQUEST_URI=${3:-/} \
+      REQUEST_METHOD=GET HTTP_HOST=$domain HTTPS=on \
+      cgi-fcgi -bind -connect "/run/php/php$php-fpm.sock" | head -20 || true
+    ;;
+
+  render)
+    read_state
+    write_vhost
+    ;;
+
+  remove)
+    read_state
+    certbot delete --cert-name "$domain" --non-interactive 2> /dev/null || true
+    rm -f "$vhost" "$state"
+    as_site_user "rm -f ~/.ssh/config.d/$domain ~/.ssh/deploy/$domain ~/.ssh/deploy/$domain.pub"
+    replace_action_key ""
+    reload_nginx
+    echo "kept $site_dir – its storage/ has no other copy" >&2
+    ;;
+
+  list)
+    for state in /etc/servers/sites/*; do
+      [[ -f $state ]] || continue
+      domain=$(basename "$state")
+      php=$(sed -n 's/^php=//p' "$state")
+      https=http
+      if [[ -f /etc/letsencrypt/live/$domain/fullchain.pem ]]; then https=https; fi
+      head_commit=$(as_site_user "git -C '$home/$domain' log -1 --format='%h %cs %s'" 2> /dev/null || echo 'no checkout')
+      printf '%s\t%s\t%s\t%s\n' "$domain" "$php" "$https" "$head_commit"
+    done
+    ;;
+
+  *) usage ;;
+esac

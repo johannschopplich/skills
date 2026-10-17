@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+# Provisions the dev box: hardening, Tailscale, Docker, PHP, gh, and nvm, Claude Code, and T3 Code for the user.
+set -euo pipefail
+
+PHP_VERSIONS="8.4 8.5"
+DEV_USER=johann
+NODE_VERSION=24
+SWAP_SIZE=4G
+
+[[ $(id -u) == 0 ]] || { echo "run as root" >&2; exit 1; }
+export DEBIAN_FRONTEND=noninteractive
+
+# #region System
+hostnamectl set-hostname dev
+echo 'preserve_hostname: true' > /etc/cloud/cloud.cfg.d/99-hostname.cfg
+timedatectl set-timezone Europe/Berlin
+
+if [[ ! -f /swapfile ]]; then
+  fallocate -l "$SWAP_SIZE" /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  echo '/swapfile none swap sw 0 0' >> /etc/fstab
+  swapon /swapfile
+fi
+
+# Security, -updates, and the third-party repos; reboots are manual.
+cat > /etc/apt/apt.conf.d/20auto-upgrades <<'EOF'
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+EOF
+cat > /etc/apt/apt.conf.d/52servers <<'EOF'
+Unattended-Upgrade::Origins-Pattern {
+  "origin=Ubuntu,archive=${distro_codename}-updates";
+  "origin=deb.sury.org,codename=${distro_codename}";
+  "origin=Tailscale,codename=${distro_codename}";
+  "origin=gh,codename=stable";
+};
+Dpkg::Options {
+  "--force-confdef";
+  "--force-confold";
+};
+EOF
+
+install -d -m 755 /etc/apt/keyrings
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o /etc/apt/keyrings/githubcli.gpg
+cat > /etc/apt/sources.list.d/github-cli.sources <<'EOF'
+Types: deb
+URIs: https://cli.github.com/packages
+Suites: stable
+Components: main
+Signed-By: /etc/apt/keyrings/githubcli.gpg
+EOF
+
+curl -fsSL https://packages.sury.org/debsuryorg-archive-keyring.deb -o /tmp/debsuryorg-archive-keyring.deb
+dpkg -i /tmp/debsuryorg-archive-keyring.deb
+cat > /etc/apt/sources.list.d/php.sources <<EOF
+Types: deb
+URIs: https://packages.sury.org/php
+Suites: $(lsb_release -cs)
+Components: main
+Signed-By: /usr/share/keyrings/debsuryorg-archive-keyring.gpg
+EOF
+
+php_packages=()
+for version in $PHP_VERSIONS; do
+  php_packages+=("php$version-"{cli,curl,gd,intl,mbstring,xml,zip})
+done
+
+# Docker writes its own iptables rules past ufw: published ports bind to localhost only.
+install -d /etc/docker
+echo '{ "ip": "127.0.0.1" }' > /etc/docker/daemon.json
+
+apt-get update -q
+apt-get upgrade -yq
+apt-get install -yq --no-install-recommends \
+  ufw unattended-upgrades \
+  build-essential git curl unzip jq rsync tmux mosh ripgrep fd-find gh \
+  docker.io docker-compose-v2 docker-buildx composer "${php_packages[@]}"
+
+command -v tailscale > /dev/null || curl -fsSL https://tailscale.com/install.sh | sh
+ln -sf /usr/bin/fdfind /usr/local/bin/fd
+# #endregion
+
+# #region Firewall
+ufw allow in on tailscale0
+# Public SSH only until the box has joined the tailnet.
+if tailscale status > /dev/null 2>&1; then
+  ufw delete allow 22/tcp > /dev/null 2>&1 || true
+  # `t3 pair --tailscale` drives `tailscale serve` as the user.
+  tailscale set --operator="$DEV_USER"
+else
+  ufw allow 22/tcp
+fi
+ufw --force enable
+# #endregion
+
+# #region User
+id "$DEV_USER" &> /dev/null || useradd --create-home --shell /bin/bash "$DEV_USER"
+usermod -aG sudo,docker "$DEV_USER"
+echo "$DEV_USER ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/$DEV_USER"
+chmod 440 "/etc/sudoers.d/$DEV_USER"
+visudo -cq
+
+home=/home/$DEV_USER
+install -d -m 700 -o "$DEV_USER" -g "$DEV_USER" "$home/.ssh"
+if [[ ! -s $home/.ssh/authorized_keys ]]; then
+  install -m 600 -o "$DEV_USER" -g "$DEV_USER" /root/.ssh/authorized_keys "$home/.ssh/authorized_keys"
+fi
+loginctl enable-linger "$DEV_USER"
+
+# Root login closes here, once the user holds root's keys.
+cat > /etc/ssh/sshd_config.d/10-servers.conf <<'EOF'
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+EOF
+sshd -t
+systemctl restart ssh
+
+if [[ ! -d $home/.nvm ]]; then
+  runuser -l "$DEV_USER" -c 'curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash'
+fi
+# Node 25+ no longer bundles corepack.
+runuser -l "$DEV_USER" -c ". ~/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && npm install -g corepack@latest && corepack enable"
+
+runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/claude ]] || curl -fsSL https://claude.ai/install.sh | bash'
+runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/t3 ]] || curl -fsSL https://t3.codes/install.sh | sh'
+# Ubuntu's AppArmor blocks the sandbox of T3's browser until this runs.
+"$home/.local/bin/t3" browser setup
+# #endregion
+
+echo "dev provisioned"
