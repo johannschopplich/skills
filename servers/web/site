@@ -133,7 +133,7 @@ EOF
     read_state
     # `head` closing the pipe early is no failure.
     SCRIPT_FILENAME=$root/index.php DOCUMENT_ROOT=$root SCRIPT_NAME=/index.php REQUEST_URI=${3:-/} \
-      REQUEST_METHOD=GET HTTP_HOST=$domain HTTPS=on \
+      REQUEST_METHOD=GET HTTP_HOST=$domain SERVER_NAME=$domain SERVER_PORT=443 HTTPS=on \
       cgi-fcgi -bind -connect "/run/php/php$php-fpm.sock" | head -20 || true
     ;;
 
