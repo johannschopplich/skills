@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Provisions the dev box: hardening, Tailscale, Docker, PHP, gh, and nvm, Claude Code, and T3 Code for the user.
+# Provisions the dev box: hardening, Tailscale, Docker, PHP, gh, and nvm, Claude Code, T3 Code, and the dotfiles for the user.
 set -euo pipefail
 
 PHP_VERSIONS="8.4 8.5"
 DEV_USER=johann
 NODE_VERSION=24
+DOTFILES_REPO=https://github.com/johannschopplich/dotfiles.git
 SWAP_SIZE=4G
 
 [[ $(id -u) == 0 ]] || { echo "run as root" >&2; exit 1; }
@@ -119,6 +120,12 @@ fi
 runuser -l "$DEV_USER" -c ". ~/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && npm install -g corepack@latest && corepack enable"
 
 runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/claude ]] || curl -fsSL https://claude.ai/install.sh | bash'
+if [[ -d $home/dotfiles ]]; then
+  runuser -l "$DEV_USER" -c 'git -C ~/dotfiles pull -q --ff-only'
+else
+  runuser -l "$DEV_USER" -c "git clone -q $DOTFILES_REPO ~/dotfiles"
+fi
+runuser -l "$DEV_USER" -c '~/dotfiles/install.sh'
 runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/t3 ]] || curl -fsSL https://t3.codes/install.sh | sh'
 # Ubuntu's AppArmor blocks the sandbox of T3's browser until this runs.
 "$home/.local/bin/t3" browser setup

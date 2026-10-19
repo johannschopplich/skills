@@ -57,6 +57,7 @@ After the first run, the user completes each login in their own terminal, inside
 4. `t3 service install`, then `t3 pair --tailscale` – the pairing link or QR code goes to the phone's T3 app.
 
 - **Credentials** – GitHub and Claude only. Work accounts stay on the Mac. A lost phone: remove it in the Tailscale admin console, then on dev `t3 auth session list` and `t3 auth session revoke <id>`.
+- **Dotfiles** – `DOTFILES_REPO` is cloned to `~/dotfiles` and linked into `~/.claude`. After a push to it: `ssh dev git -C dotfiles pull`.
 - **T3 Code** – permission mode stays off Auto (t3code #15353, #15503).
 - **PHP** – the CLI runs the newest of `PHP_VERSIONS`; `sudo update-alternatives --set php /usr/bin/php<version>` switches it.
 - **Docker** – published ports bind to localhost; reach them through `tailscale serve` or an SSH tunnel.
