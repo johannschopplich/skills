@@ -83,15 +83,10 @@ ln -sf /usr/bin/fdfind /usr/local/bin/fd
 
 # #region Firewall
 ufw allow in on tailscale0
-# Public SSH only until the box has joined the tailnet.
-if tailscale status > /dev/null 2>&1; then
-  ufw delete allow 22/tcp > /dev/null 2>&1 || true
-  # `t3 pair --tailscale` drives `tailscale serve` as the user.
-  tailscale set --operator="$DEV_USER"
-else
-  ufw allow 22/tcp
-fi
+ufw allow 22/tcp
 ufw --force enable
+# `t3 pair --tailscale` drives `tailscale serve` as the user.
+tailscale status > /dev/null 2>&1 && tailscale set --operator="$DEV_USER"
 # #endregion
 
 # #region User

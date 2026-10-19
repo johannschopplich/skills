@@ -10,7 +10,7 @@ Two Hetzner Cloud boxes, Ubuntu 26.04, reached through the SSH aliases in the Ma
 | Alias | Box | Login |
 |---|---|---|
 | `web` | the sites | `root`; sites, builds, and PHP run as `johann` |
-| `dev` | coding agents | `johann` with passwordless sudo, Tailscale only |
+| `dev` | coding agents | `johann` with passwordless sudo; T3 Code over Tailscale only |
 
 Each box is the output of its idempotent `provision.sh`. A change to a box is an edit here plus a rerun; a hand edit on the box is drift the next run overwrites. `PHP_VERSIONS` and `NODE_VERSION` are set in both `provision.sh`: a new version goes into both. Drop a PHP version only once `ssh web site list` shows no site on it, then purge its `php8.x-*` on both boxes. Locked out: the Hetzner Console's rescue system.
 
@@ -51,7 +51,7 @@ A full disk: `ssh web 'du -sh /home/johann/.local/share/pnpm /home/johann/.cache
 
 After the first run, the user completes each login in their own terminal, inside `ssh dev`:
 
-1. Once the tailnet's access controls hold [`dev/tailnet-policy.hujson`](dev/tailnet-policy.hujson) and its DNS settings have MagicDNS and HTTPS Certificates on: `sudo tailscale up --advertise-tags=tag:dev`, then set the alias's `Hostname` to the tailnet name `dev` and rerun provision, which closes public SSH.
+1. Once the tailnet's access controls hold [`dev/tailnet-policy.hujson`](dev/tailnet-policy.hujson) and its DNS settings have MagicDNS and HTTPS Certificates on: `sudo tailscale up --advertise-tags=tag:dev`, then rerun provision, which hands `tailscale serve` to `johann`.
 2. `gh auth login`, then `git config --global user.name '<name>'` and `git config --global user.email '<email>'`
 3. `claude`, then `/login`
 4. `t3 service install`, then `t3 pair --tailscale` – the pairing link or QR code goes to the phone's T3 app.
