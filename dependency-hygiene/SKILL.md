@@ -50,24 +50,28 @@ The safe batch is **Done**, never a Decision.
 
 <brief-template>
 ## Dependency Hygiene · <sweep | dep old → new> · <workspace> – <ready to push | blocked by N decisions>
-<N> outdated · <S> safe bumped · majors: `eslint` 8→9 (Q1), `pinia` 2→3 not assessed (name it or re-run `major` to land)
+<N> outdated · <S> safe bumped · majors: eslint 8→9 (Q1), pinia 2→3 not assessed (name it or re-run `major` to land)
 
-**Needs you** – `Q1 a, Q2 a, ship 1–<n>`
-**Q1** <opted major / great breaking change>: proceed now? a) proceed · b) pin/defer – **<letter>**: <reason> · [guide]
-**Q2** Adopt rule `<x>`? fires <K>× a) yes · b) no – **a**: <tradeoff>
-**Q3** Peer `<B>` pins an older major: a) align · b) keep – **<letter>**: <reason>
+**Needs you** · `Q1 a, Q2 a, ship 1–<n>`
+
+| | Recommendation | Alternative | Reason |
+|---|---|---|---|
+| Q1 `<letter>` | <proceed with \| pin> <opted major / great breaking change> | <letter>) <pin/defer \| proceed> | <reason> · [guide] |
+| Q2 `a` | adopt rule <x>, fires <K>× | b) skip it | <tradeoff> |
+| Q3 `<letter>` | <align \| keep> peer <B> on its older major | <letter>) <keep \| align> | <reason> |
+
 1. push commits to <branch>
 2. open the MR (D<n>)
 3. post the tracker update or ticket (D<n>)
 
-**Done** <S> safe deps bumped in the catalog (vite 5.2→5.4, …; <proof>) · `<API>` migrated in <K> files (<proof>) · <N> aligned via catalog
+**Done** <S> safe deps bumped in the catalog (vite 5.2→5.4, …; <proof>) · <API> migrated in <K> files (<proof>) · <N> aligned via catalog
 **Verification** <install | lint | typecheck | build | tests> ✗ <what failed>
 
 **Drafts**
 **D<n>** → <MR description | tracker update | follow-up ticket>
 > <full text>
 
-Practice discovered, versions, call sites, guide paths: `<report dir>/brief.md`
+Practice discovered, versions, call sites, guide paths: <report dir>/brief.md
 </brief-template>
 
 ## After Approval

@@ -44,12 +44,18 @@ The **thread is the state**. The marker is the authenticated account's newest no
 ## The Brief
 
 <brief-template>
-## <noun> [<sigil><id>](<url>) <short title> – <ready to merge | ready after rebase | blocked by N decisions | waiting on author (N findings)>
-<N behind | diverged> · <P> unpushed · CI <✓ | ✗> · <K> threads (<by bucket>) · <no ticket> · <teach | take-over | own>
+## <noun> [<sigil><id>](<url>) <short title> · `<ready to merge | ready after rebase | blocked by N decisions | waiting on author (N findings)>`
 
-**Needs you** – `Q1 a, Q2 a, ship 1–<n>`
-**Q1** <judgment call as a question> *<who flagged it>*
-a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
+| behind | unpushed | CI | threads | ticket | mode |
+|---|---|---|---|---|---|
+| <N \| diverged> | <P> | <✓ \| ✗> | <K> · <by bucket> | <✓ \| none> | <teach \| take-over \| own> |
+
+**Needs you** · `Q1 a, Q2 a, ship 1–<n>`
+
+| | Recommendation | Alternative | Reason |
+|---|---|---|---|
+| Q1 `<letter>` | <recommended option> | <letter>) <other option> | <one line> *<who flagged it>* · [diff] [thread] |
+
 1. fold <F> fixups (`git rebase --autosquash --autostash --keep-base <upstream sha>`)
 2. rebase onto <target> (<N> behind)
 3. push <P> commits to <branch>
@@ -62,18 +68,16 @@ a) <option> · b) <option> – **<letter>**: <one line> · [diff] [thread]
 10. post the tracker comment (D<n>)
 11. Slack note (D<n>, copy)
 
-**Done** <fix> (<traced | reproduced | checked | mutated>) · …
+**Done** <fix> (`<traced | reproduced | checked | mutated>`) · …
 **Waiting on** <CI, author, PM>
 **Next** <the next MR, or the land re-fire>
 
 **Drafts**
-**D<n>** → <author> on `<file:line>` (<severity | bucket>), <via Q<n> | resolve candidate>
+**D<n>** → <author> on <file:line> (<severity | bucket>), <via Q<n> | resolve candidate>
 > <full text>
 
 **Review** <code-review's line, with its report path>
 </brief-template>
-
-`<P> unpushed` shows at zero too.
 
 `waiting on author` counts blocker and major drafts.
 

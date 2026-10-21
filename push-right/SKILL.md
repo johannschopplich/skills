@@ -57,7 +57,7 @@ One artifact, in this order:
 - **Drafts** – every outward draft in full, `D1`…`Dn`, referenced from the ship item that posts it.
 - **Detail** – the path to a file in the run's report dir (default `$TMPDIR/<skill>-<unit>/`) holding full paths, evidence, nits, and refutations.
 
-Each fact shows once. Green checks, zero counts, and empty sections are silent; a clean run is its title and state line. Glyphs `✓` done · `✗` failed · `?` unproven · `–` not run, `·` between fields, no emoji. Degradation: what couldn't be established and the cheapest next step, in place of an unproven cause.
+Each fact shows once. Green checks, zero counts, and empty sections are silent; a clean run is its title and state line. Glyphs `✓` done · `✗` failed · `?` unproven · `–` not run, `·` between fields, no emoji. Inline code marks only a state or a command the user types; paths, branches, packages, and symbols stay plain. Decisions form one table – `Q<n> <letter>`, the recommended option readable without its question, the alternative, the reason; each draft sits in a quote. No `<placeholder>` reaches the user. Degradation: what couldn't be established and the cheapest next step, in place of an unproven cause.
 
 ## After the Checkpoint
 

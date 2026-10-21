@@ -71,9 +71,13 @@ FLAKY / INFRA / INCONCLUSIVE **collapse** to the root line plus "recommend retry
 ## <noun> #<id> <branch> – <K> failing roots, <fix | revert | retry> staged
 **<stage/job>** <REAL REGRESSION | CONFIG | FLAKY | INFRA-DEPLOY | INCONCLUSIVE> · <sha · file:line> · reproduced <local | container | by bisect> · ruled out <the obvious cause> (<how>) · <N> cascaded      (a line per root)
 
-**Needs you** – `Q1 a, Q2 a, ship 1–<n>`
-**Q1** <fix | revert <sha>> (staged), or <the alternative>? a) staged · b) alternative – **a**: <reason>
-**Q2** Keep the repro test `<file>`? (borderline) a) keep · b) drop – **a**: guards <X>
+**Needs you** · `Q1 a, Q2 a, ship 1–<n>`
+
+| | Recommendation | Alternative | Reason |
+|---|---|---|---|
+| Q1 `a` | push the staged <fix \| revert <sha>> | b) <the alternative> | <reason> |
+| Q2 `a` | keep the repro test <file> | b) drop it | guards <X> (borderline) |
+
 1. push the staged <fix | revert> to <branch>
 2. retry every failed job
 3. push the quarantine to <branch>
@@ -86,7 +90,7 @@ FLAKY / INFRA / INCONCLUSIVE **collapse** to the root line plus "recommend retry
 **D<n>** → <tracking issue | comment>
 > <full text>
 
-Last green → first red, the failing log lines, the cascade: `<report dir>/brief.md`
+Last green → first red, the failing log lines, the cascade: <report dir>/brief.md
 </brief-template>
 
 ## After Approval

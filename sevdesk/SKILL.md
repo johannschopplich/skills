@@ -111,8 +111,12 @@ Rendered in German: finalize reads „speichern“ (Entwurf → offen), never �
 ## sevDesk · <mode> · <unit> – <ready to book | blocked by N decisions | N checks fail>
 <N> unlinked bank rows · <D> drafts · <O> open vouchers · baseline <timestamp>
 
-**Needs you** – `Q1 a, ship 1–<n>`
-**Q1** <voucher / bank row>: <question> a) … · b) … – **<letter>**: <why, and for a tax question the § and each option's effect on the year's tax payable> · [document]
+**Needs you** · `Q1 a, ship 1–<n>`
+
+| | Recommendation | Alternative | Reason |
+|---|---|---|---|
+| Q1 `<letter>` | <voucher / bank row>: <recommended option> | <letter>) <other option> | <why; for a tax question the § and each option's effect on the year's tax payable> · [document] |
+
 1. finalize <N> drafts
 2. link <N> payments
 3. correct <voucher> (P1)
