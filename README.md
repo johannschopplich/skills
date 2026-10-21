@@ -23,7 +23,7 @@ They stage work behind one approval tray and load **push-right** – install it 
 - **audit-prompt** – audit a prompt an app sends to a Claude or OpenAI model.
 - **writing-for-developers** – issue replies, review comments, PR descriptions, and commit subjects in my voice.
 - **generate-tailwind-shades** – Tailwind v4 OKLCH palettes anchored at shade 500.
-- **asana-formatting** – Asana MCP writes that keep their formatting and don't 400.
+- **asana** – Asana MCP: rich text that doesn't 400, custom fields, search by field, section moves.
 
 ## Personal
 
