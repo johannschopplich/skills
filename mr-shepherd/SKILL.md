@@ -26,7 +26,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 ## Run – in Order
 
 1. **Check auth.** `glab api user` / `gh api user` and one cheap tracker call; a failure, here or later, ends the run with the fix (`! glab auth login`, `/mcp`). A missing MR or failed checkout goes in the brief; the rest still runs.
-2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by a tracker search for the MR URL. In Asana, invoke the `asana` skill and search the **Merge request** field for the full URL. No hit, no ticket.
+2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by a tracker search for the MR URL. In Asana, invoke the `asana` skill if installed and search the **Merge request** field for the full URL. No hit, no ticket.
 3. **Pre-check merge safety.** Read-only, after `git fetch`: behind, diverged, CI on the latest push, conflicts – for the state line.
 4. **Add a worktree** at `../<repo>-mr-<id>`, reused on re-fire, never the user's checkout.
 5. **Review.** Invoke the `code-review` skill from the worktree. Fixed point: the target's merge-base. Spec: the ticket URL. Context: the mode (own → Own Work; else report only), the author, and product or design decisions the ticket shows as accepted. Triage:
@@ -39,7 +39,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 9. **Draft.**
    - **Inline drafts** on the finding's line, in `writing-for-developers`' review-comment shape: one per confirmed blocker, major, or minor; nits → at most one summary draft; `plausible` → Decisions. A `suggestion` block, holding only the changed lines, only with an uncommitted fix. GitLab: read [`GITLAB.md`](GITLAB.md) first.
    - **Replies** – one per human thread that wants one.
-   - Optional, recipient named, only when it adds something: a tightened description (current one thin, verbose, or a diff list); a tracker comment (Asana: invoke the `asana` skill); a Slack note.
+   - Optional, recipient named, only when it adds something: a tightened description (current one thin, verbose, or a diff list); a tracker comment (Asana: invoke the `asana` skill if installed); a Slack note.
 
 ## The Brief
 
