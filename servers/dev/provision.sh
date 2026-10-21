@@ -135,6 +135,21 @@ else
   runuser -l "$DEV_USER" -c "git clone -q $DOTFILES_REPO ~/dotfiles"
 fi
 runuser -l "$DEV_USER" -c '~/dotfiles/install.sh'
+# Installs the skills the dotfiles' skills.txt lists and removes the CLI's installs it no longer does.
+runuser -l "$DEV_USER" -c "$(cat <<'EOF'
+set -euo pipefail
+. ~/.nvm/nvm.sh
+listed=()
+while read -r repo skills <&3; do
+  [[ -z $repo || $repo == '#'* ]] && continue
+  npx -y skills add "$repo" -g -y --skill $skills < /dev/null > /dev/null
+  listed+=($skills)
+done 3< ~/dotfiles/skills.txt
+for installed in $(jq -r '.skills | keys[]' ~/.agents/.skill-lock.json); do
+  [[ " ${listed[*]} " == *" $installed "* ]] || npx -y skills remove -g -y "$installed" < /dev/null > /dev/null
+done
+EOF
+)"
 runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/t3 ]] || curl -fsSL https://t3.codes/install.sh | sh'
 # Ubuntu's AppArmor blocks the sandbox of T3's browser until this runs.
 "$home/.local/bin/t3" browser setup
