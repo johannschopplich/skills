@@ -52,11 +52,11 @@ A full disk: `ssh web 'du -sh /home/johann/.local/share/pnpm /home/johann/.cache
 After the first run, the user completes each login in their own terminal, inside `ssh dev`:
 
 1. Once the tailnet's access controls hold [`dev/tailnet-policy.hujson`](dev/tailnet-policy.hujson) and its DNS settings have MagicDNS and HTTPS Certificates on: `sudo tailscale up --advertise-tags=tag:dev`, then rerun provision, which hands `tailscale serve` to `johann`.
-2. `gh auth login` over HTTPS, so git uses gh's token, then `git config --global user.name '<name>'` and `git config --global user.email '<email>'`
+2. `gh auth login` and `glab auth login`, both over HTTPS, so git uses their tokens, then `git config --global user.name '<name>'` and `git config --global user.email '<email>'`
 3. `claude`, then `/login`
 4. `t3 service install`, then `t3 pair --tailscale` – the pairing link or QR code goes to the phone's T3 app.
 
-- **Credentials** – GitHub and Claude only. Work accounts stay on the Mac. A lost phone: remove it in the Tailscale admin console, then on dev `t3 auth session list` and `t3 auth session revoke <id>`.
+- **Credentials** – GitHub, GitLab, and Claude only. A lost phone: remove it in the Tailscale admin console, then on dev `t3 auth session list` and `t3 auth session revoke <id>`.
 - **Dotfiles** – `DOTFILES_REPO` is cloned to `~/dotfiles` and linked into `~/.claude`. After a push to it: `ssh dev git -C dotfiles pull`.
 - **T3 Code** – permission mode stays off Auto (t3code #15353, #15503).
 - **PHP** – the CLI runs the newest of `PHP_VERSIONS`; `sudo update-alternatives --set php /usr/bin/php<version>` switches it.

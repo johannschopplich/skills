@@ -79,6 +79,15 @@ apt-get install -yq --no-install-recommends \
   docker.io docker-compose-v2 docker-buildx composer "${php_packages[@]}"
 
 command -v tailscale > /dev/null || curl -fsSL https://tailscale.com/install.sh | sh
+# Ubuntu's glab lags far behind; the latest release's .deb, checked against its checksums.
+glab_version=$(curl -fsS 'https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/releases?per_page=1' | jq -r '.[0].tag_name | ltrimstr("v")')
+glab_release=https://gitlab.com/gitlab-org/cli/-/releases/v$glab_version/downloads
+if [[ $(dpkg-query -W -f='${Version}' glab 2> /dev/null) != "$glab_version" ]]; then
+  glab_deb=glab_${glab_version}_linux_$(dpkg --print-architecture).deb
+  (cd /tmp && curl -fsSLO "$glab_release/$glab_deb" && curl -fsSL "$glab_release/checksums.txt" | grep " $glab_deb\$" | sha256sum -c -)
+  apt-get install -yq "/tmp/$glab_deb"
+  rm "/tmp/$glab_deb"
+fi
 ln -sf /usr/bin/fdfind /usr/local/bin/fd
 # #endregion
 
