@@ -135,6 +135,59 @@ else
   runuser -l "$DEV_USER" -c "git clone -q $DOTFILES_REPO ~/dotfiles"
 fi
 runuser -l "$DEV_USER" -c '~/dotfiles/install.sh'
+# Managed settings outrank the user's own, which Claude Code itself writes to.
+install -d /etc/claude-code
+cat > /etc/claude-code/managed-settings.json <<'EOF'
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "disableClaudeAiConnectors": true,
+  "syncClaudeAiSkills": false,
+  "disableArtifact": true,
+  "disableRemoteControl": true,
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/skill-mentions.mjs"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git show*)",
+      "Bash(git rev-parse*)",
+      "Bash(git commit --fixup*)",
+      "Bash(git commit --amend*)",
+      "Bash(git rebase --autosquash*)",
+      "Bash(pnpm -s lint*)",
+      "Bash(pnpm -s test:types*)",
+      "Bash(pnpm -s vitest run*)",
+      "Bash(vendor/bin/phpunit*)"
+    ],
+    "deny": [
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "DesignSync",
+      "NotebookEdit",
+      "AskUserQuestion",
+      "CronCreate",
+      "CronDelete",
+      "CronList"
+    ],
+    "defaultMode": "auto"
+  }
+}
+EOF
 # Installs the skills the dotfiles' skills.txt lists and removes the CLI's installs it no longer does.
 runuser -l "$DEV_USER" -c "$(cat <<'EOF'
 set -euo pipefail

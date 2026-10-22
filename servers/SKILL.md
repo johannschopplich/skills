@@ -58,6 +58,7 @@ After the first run, the user completes each login in their own terminal, inside
 
 - **Credentials** – GitHub, GitLab, and Claude only. A lost phone: remove it in the Tailscale admin console, then on dev `t3 auth session list` and `t3 auth session revoke <id>`.
 - **Dotfiles** – `DOTFILES_REPO` is cloned to `~/dotfiles` and linked into `~/.claude`; its `skills.txt` lists the skills dev installs. After a push to it, rerun provision.
+- **Claude Code settings** – `provision.sh` writes them as managed settings, which outrank `~/.claude/settings.json`.
 - **T3 Code** – permission mode stays off Auto (t3code #15353, #15503).
 - **PHP** – the CLI runs the newest of `PHP_VERSIONS`; `sudo update-alternatives --set php /usr/bin/php<version>` switches it.
 - **Docker** – published ports bind to localhost; reach them through `tailscale serve` or an SSH tunnel.
