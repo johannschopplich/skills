@@ -177,12 +177,8 @@ cat > /etc/claude-code/managed-settings.json <<'EOF'
     "deny": [
       "EnterPlanMode",
       "ExitPlanMode",
-      "DesignSync",
-      "NotebookEdit",
       "AskUserQuestion",
-      "CronCreate",
-      "CronDelete",
-      "CronList"
+      "DesignSync"
     ],
     "defaultMode": "auto"
   }
