@@ -28,7 +28,7 @@ Pull the clone in `/tmp`, or clone it there shallow from `https://github.com/get
 - **kirbyuse** – `~/Projects/kirbyuse`, Panel composables (`usePanel`, `useApi`, `useDialog`, …), typed by kirby-types.
 - **kirbyup** – `~/Projects/kirbyup`, the plugins' build tool.
 
-Kirby 6 work sits on each package's `feat/kirby-6` (kirbyup: `feat/vue-3`). A change across them releases in order: kirby-types, kirbyuse, then kirbyup or the plugin.
+Kirby 6 work sits on kirby-types' and kirbyuse's `feat/kirby-6`; kirbyup 4 (Vue 3) is on `main`, published as `next`. A change across them releases in order: kirby-types, kirbyuse, then kirbyup or the plugin.
 
 ## Gotchas
 
