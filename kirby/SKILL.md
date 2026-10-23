@@ -28,13 +28,13 @@ Pull the clone in `/tmp`, or clone it there shallow from `https://github.com/get
 - **kirbyuse** – `~/Projects/kirbyuse`, Panel composables (`usePanel`, `useApi`, `useDialog`, …), typed by kirby-types.
 - **kirbyup** – `~/Projects/kirbyup`, the plugins' build tool.
 
-Kirby 6 work sits on kirby-types' and kirbyuse's `feat/kirby-6`; kirbyup 4 (Vue 3) is on `main`, published as `next`. A change across them releases in order: kirby-types, kirbyuse, then kirbyup or the plugin.
+Kirby 6 work sits on `main` in kirbyup, kirbyuse, kirby-types, kirby-tools-utils and both licensing repos, prereleases published as `next`; their Kirby 5 lines live on `v3`, `v1`, `v1`, `v0.1` and `v0.9`. The plugins port on `feat/kirby-6`. A change across them releases in order: kirby-types, kirbyuse, then kirbyup or the plugin.
 
 ## Gotchas
 
 - **`panel.api` resets the loader** – `api.request()` sets `panel.isLoading = false` when its last request ends, `silent` or not (`panel/src/api/index.js`, K6 `index.ts`). A run mixing `panel.api` calls with long local work shows its own loading state.
 - **Runtime markup** – the Panel adds classes no `.vue` file holds (`k-text` on the writer's ProseMirror node, from `Editor`). Props and defaults come from the source; markup and computed styles from a running Panel: a playground for Kirby 5, [kirby-6-panel.md](kirby-6-panel.md) for Kirby 6.
-- **Prerelease notes** – changelogithub starts them at the newest tag reachable from the branch. After a stable release, merge `main` into `feat/kirby-6`, never rebase.
+- **Prerelease notes** – changelogithub starts them at the newest tag reachable from the branch. After a plugin's stable release, merge `main` into its `feat/kirby-6`, never rebase.
 - **Bumping a helper** – `pnpm dedupe` after `pnpm add`.
 
 ## Plugins
