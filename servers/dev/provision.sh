@@ -147,6 +147,9 @@ cat > /etc/claude-code/managed-settings.json <<'EOF'
   "syncClaudeAiSkills": false,
   "disableArtifact": true,
   "disableRemoteControl": true,
+  "enabledPlugins": {
+    "cowork-plugin-management@synced": false
+  },
   "hooks": {
     "UserPromptSubmit": [
       {
