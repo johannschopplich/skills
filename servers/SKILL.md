@@ -56,7 +56,7 @@ After the first run, the user completes each login in their own terminal, inside
 3. `claude`, then `/login`
 4. `t3 service install`, then `t3 pair --tailscale` – the pairing link or QR code goes to the phone's T3 app.
 
-- **Credentials** – GitHub, GitLab, and Claude only. A lost phone: remove it in the Tailscale admin console, then on dev `t3 auth session list` and `t3 auth session revoke <id>`.
+- **Credentials** – GitHub, GitLab, and Claude, plus what a private setup script adds. A lost phone: remove it in the Tailscale admin console, then on dev `t3 auth session list` and `t3 auth session revoke <id>`.
 - **Dotfiles** – `DOTFILES_REPO` is cloned to `~/dotfiles` and linked into `~/.claude`; its `skills.txt` lists the skills dev installs. After a push to it, rerun provision.
 - **Claude Code settings** – `provision.sh` writes them as managed settings, which outrank `~/.claude/settings.json`.
 - **T3 Code** – permission mode stays off Auto (t3code #15353, #15503).
