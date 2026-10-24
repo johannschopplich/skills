@@ -147,6 +147,7 @@ cat > /etc/claude-code/managed-settings.json <<'EOF'
   "syncClaudeAiSkills": false,
   "disableArtifact": true,
   "disableRemoteControl": true,
+  "cleanupPeriodDays": 180,
   "enabledPlugins": {
     "cowork-plugin-management@synced": false
   },
