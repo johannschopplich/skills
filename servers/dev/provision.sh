@@ -127,6 +127,12 @@ if [[ ! -d $home/.nvm ]]; then
 fi
 # Node 25+ no longer bundles corepack.
 runuser -l "$DEV_USER" -c ". ~/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && npm install -g corepack@latest && corepack enable"
+# Uninstalls every Node version but the default, which nvm never does on its own.
+removed_node_versions=$(runuser -l "$DEV_USER" -c '. ~/.nvm/nvm.sh && for dir in ~/.nvm/versions/node/*; do [[ ${dir##*/} == $(nvm version default) ]] || { nvm uninstall "${dir##*/}" > /dev/null && echo "${dir##*/}"; }; done')
+# T3's sessions keep the PATH of the Node it started under, so it restarts once that Node is gone – ending the running sessions.
+if [[ -n $removed_node_versions && -f $home/.config/systemd/user/t3code.service ]]; then
+  systemctl --user -M "$DEV_USER@" restart t3code
+fi
 
 runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/claude ]] || curl -fsSL https://claude.ai/install.sh | bash'
 if [[ -d $home/dotfiles ]]; then

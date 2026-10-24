@@ -117,6 +117,8 @@ if [[ ! -d $home/.nvm ]]; then
 fi
 # Node 25+ no longer bundles corepack.
 runuser -l "$SITE_USER" -c ". ~/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && npm install -g corepack@latest && corepack enable"
+# Uninstalls every Node version but the default, which nvm never does on its own.
+runuser -l "$SITE_USER" -c '. ~/.nvm/nvm.sh && for dir in ~/.nvm/versions/node/*; do [[ ${dir##*/} == $(nvm version default) ]] || nvm uninstall "${dir##*/}" > /dev/null; done'
 # #endregion
 
 # #region PHP
