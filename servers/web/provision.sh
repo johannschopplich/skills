@@ -127,7 +127,7 @@ for version in $PHP_VERSIONS; do
     -e "s/^listen.owner = .*/listen.owner = nginx/" \
     -e "s/^listen.group = .*/listen.group = nginx/" \
     -e "s/^pm = .*/pm = ondemand/" \
-    -e "s/^pm.max_children = .*/pm.max_children = 8/" \
+    -e "s/^pm.max_children = .*/pm.max_children = 16/" \
     -e "s/^;\?request_terminate_timeout = .*/request_terminate_timeout = 120s/" \
     "/etc/php/$version/fpm/pool.d/www.conf"
   printf '%s\n' 'memory_limit = 1024M' 'upload_max_filesize = 64M' 'post_max_size = 64M' \
