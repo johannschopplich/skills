@@ -2,7 +2,7 @@
 # Provisions the web box: hardening, nginx.org nginx, PHP-FPM, certbot, nvm, the `site` and `deploy` commands.
 set -euo pipefail
 
-PHP_VERSIONS="8.4 8.5"
+PHP_VERSIONS="8.5"
 SITE_USER=johann
 NODE_VERSION=24
 SWAP_SIZE=2G

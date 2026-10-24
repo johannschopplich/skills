@@ -2,7 +2,7 @@
 # Provisions the dev box: hardening, Tailscale, Docker, PHP, gh, and nvm, Claude Code, T3 Code, and the dotfiles for the user.
 set -euo pipefail
 
-PHP_VERSIONS="8.4 8.5"
+PHP_VERSIONS="8.5"
 DEV_USER=johann
 NODE_VERSION=24
 DOTFILES_REPO=https://github.com/johannschopplich/dotfiles.git
