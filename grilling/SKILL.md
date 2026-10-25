@@ -12,15 +12,15 @@ Keep the tree in `$TMPDIR/grill-<topic>.md`, the session's record: add each node
 
 - `fact` – the environment holds the answer or a probe shows it.
 - `assume` – one answer is right whatever the user's taste: implementation inside an agreed design, test design, cleanup, keeping or cutting a comment, commit splitting, verification setup, your own orchestration.
-- `ask` – scope and any new artifact; behavior a user of the product sees; taste and voice; people and ticket-owned calls; when anything ships or is posted; facts only the user holds.
+- `ask` – scope and any new artifact; behavior a user of the product sees; taste and voice; people and ticket-owned calls; the timing of anything shipped or posted; facts only the user holds.
 
 ## Settle
 
-Finding _facts_ is your job, never the user's. Dispatch sub-agents for the `fact` nodes, one per topic; probes run as scratch under `$TMPDIR`. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report; ask the rest of the frontier now. The user's premises are `fact` nodes too; one the environment contradicts becomes an `ask` node, its evidence in the question.
+Finding _facts_ is your job, never the user's. Dispatch sub-agents for the `fact` nodes, one per topic; probes stay local and reversible, as scratch under `$TMPDIR`. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report; ask the rest of the frontier now. The user's premises are `fact` nodes too; one the environment contradicts becomes an `ask` node, its evidence in the question.
 
 ## Rounds
 
-The _decisions_ are the user's: put each to them and wait. Work the `ask` nodes in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question, make it stand on its own, and give your recommended answer, leaning to less: the smallest option and no new artifact. Word each question so "yes" accepts the recommendation.
+The _decisions_ are the user's: put each to them and wait. Work the `ask` nodes in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question, give it one line of context so it stands on its own, and give your recommended answer, leaning to less: the smallest option and no new artifact. Word each question so "yes" accepts the recommendation.
 
 Under the questions, list the `assume` nodes whose branch is settled, one line each. They stand unless vetoed; a vetoed line becomes an `ask` node.
 
