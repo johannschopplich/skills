@@ -33,14 +33,14 @@ Kirby 6 work sits on `main` in kirbyup, kirbyuse, kirby-types, kirby-tools-utils
 ## Gotchas
 
 - **`panel.api` resets the loader** – `api.request()` sets `panel.isLoading = false` when its last request ends, `silent` or not (`panel/src/api/index.js`, K6 `index.ts`). A run mixing `panel.api` calls with long local work shows its own loading state.
-- **Runtime markup** – the Panel adds classes no `.vue` file holds (`k-text` on the writer's ProseMirror node, from `Editor`). Props and defaults come from the source; markup and computed styles from a running Panel: a playground for Kirby 5, [kirby-6-panel.md](kirby-6-panel.md) for Kirby 6.
+- **Runtime markup** – the Panel adds classes no `.vue` file holds (`k-text` on the writer's ProseMirror node, from `Editor`). Props and defaults come from the source; markup and computed styles from a running Panel: a playground, or [kirby-6-panel.md](kirby-6-panel.md) for `v6/develop`.
 - **Prerelease notes** – changelogithub starts them at the newest tag reachable from the branch. After a plugin's stable release, merge `main` into its `feat/kirby-6`, never rebase.
 - **Bumping a helper** – `pnpm dedupe` after `pnpm add`.
 
 ## Plugins
 
-- **Playground** – runs on the Kirby 5 in `vendor/`. Before a [smoke test](panel-smoke.md), `pnpm build` in place – no asking, `index.js` stays uncommitted – and name the commit it was built from. A leftover `index.dev.mjs` wins over `index.js`. A playground-only feature (`__PLAYGROUND__`, a build-time constant) takes `pnpm build:playground`.
-- **Shared files** – the `kirby-*` plugins share `.gitignore`, `.gitattributes`, `tsconfig.json`, and `playground/site/plugins/playground/`, shaped after `kirby-copilot`; the ones with Panel tests share `tests/panel/helpers/mock-kirbyuse.ts` byte for byte. Change every sibling or none; never prune a line one repo doesn't use.
+- **Playground** – runs on the Kirby in `vendor/`: 5 on `main`, 6 on `feat/kirby-6`. Before a [smoke test](panel-smoke.md), `pnpm build` in place – no asking, `index.js` stays uncommitted – and name the commit it was built from. A leftover `index.dev.mjs` wins over `index.js`. A playground-only feature (`__PLAYGROUND__`, a build-time constant) takes `pnpm build:playground`.
+- **Shared files** – the `kirby-*` plugins share `.gitignore`, `.gitattributes`, `tsconfig.json`, and `playground/site/plugins/playground/`, shaped after `kirby-copilot`; the ones with Panel tests share `tests/panel/helpers/mock-kirbyuse.ts` byte for byte. A `feat/kirby-6` branch shares them with the other `feat/kirby-6` branches. Change every sibling or none; never prune a line one repo doesn't use.
 - **UnoCSS** – `presetWind3` with a prefix per plugin (`uno.config.ts`: `kai-`, `kct-`, `ksr-`, …). Kirby tokens take the bracket form, `kai-mt-[var(--spacing-4)]`; Tailwind v4's `mt-(--spacing-4)` generates nothing. Sibling spacing is `[&>*+*]:kai-mt-[var(--spacing-N)]`, never `space-y-*` – Wind3 and the Tailwind v4 mocks in kirby.tools compile it differently.
 
 ## Docs
