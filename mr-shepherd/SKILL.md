@@ -34,7 +34,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
    - **Prevention** – a finding class recurring in the MR or the thread gets one Decision on where to stop it: lint rule, repo skill or `AGENTS.md` line, CodeRabbit path instruction.
    - **Product scope** – visual and product-value doubts on work a PM or designer accepted (`PM:` lines) → one line for them, never an author comment.
 6. **Triage every thread.** Buckets: **blocker**, **nit**, **idea**, **question**, **noise** (false positive, handled, out of scope). A bot's concrete defect gets the mode's treatment and a short reply; the rest → one batch-resolve tray item, unreplied.
-7. **Stage fixes** (take-over). Control flow – guards, early returns, error handling, defaults – is proposed, unless the sole fix for a reproduced crash.
+7. **Stage fixes** (take-over) under push-right's Apply.
 8. **Verify.** A fix that reddens anything else is discarded, its finding → Decision. UI: reproduce live via `chrome-devtools` MCP on the preview or a local server; else the closest component or e2e test, gap named. Asked to compare visuals: one before/after page, target and branch side by side, light and dark where both exist.
 9. **Draft.**
    - **Inline drafts** (review), created now as the user's pending review – GitLab via [`GITLAB.md`](GITLAB.md), its replies as draft replies; GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`:

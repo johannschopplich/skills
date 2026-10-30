@@ -56,8 +56,8 @@ Verdict: `incomplete` when an axis returned nothing or was unknown – name it; 
 
 When the diff is the user's own branch (commits by `git config user.email`, pushed or not) and nobody asked for the report alone, invoke the `push-right` skill and carry on after the verdict under it; its hard failures here are step 1's bad ref and empty diff.
 
-- Decisions: every `plausible` finding, every `choice` finding, and every behavior change with `proof: said`.
-- Capture the baseline from step 3's checks, then apply every other `confirmed` finding:
+- Decisions: every `plausible` finding and every behavior change with `proof: said`.
+- Capture the baseline from step 3's checks, then apply every other `confirmed` finding, a `choice` as its fix under push-right's Apply:
   - **Unpushed commit** – a fixup on top: `git commit --fixup=<sha>`. A commit the user called settled gets a new commit on HEAD instead.
   - **Pushed commit** – a new commit on HEAD.
   - **Uncommitted** – an edit in place.

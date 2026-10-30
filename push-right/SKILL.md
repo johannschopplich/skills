@@ -8,7 +8,7 @@ user-invocable: false
 
 Maximal non-destructive work first; every irreversible action waits behind one late checkpoint: the brief.
 
-The checkpoint is the only stop, besides a hard failure the invoking skill names. Where a step or loaded skill would ask the user (missing ref or spec, ambiguous choice), take the conservative default, note it, and carry the question into Decisions.
+The checkpoint is the only stop, besides a hard failure the invoking skill names. Where a step or loaded skill would ask the user (missing ref or spec, ambiguous choice), take the recommended option under Apply; only what the run can't settle goes into Decisions.
 
 ## Boundary Marker
 
@@ -21,12 +21,12 @@ The **artifact** is the state the invoking skill names. No state file. A **re-fi
 
 ## Apply vs. Propose
 
-- **Apply** – one correct change, or a choice with one right answer whatever the user's taste: a local commit once its verification is green, one theme per commit. An applied choice's Done line opens with `decided:`, for veto.
-- **Propose** – in the brief, off disk: scope and any new artifact, behavior a user of the product sees, API or interface shape, taste and naming, people and ticket-owned calls.
+- **Apply** – everything within the task, a choice as its recommended option: a local commit once its verification is green, one theme per commit, a choice in its own so a veto drops it. Its Done line opens with `decided:` and names the alternative.
+- **Propose** – in the brief, off disk: work beyond the task, and calls a person or a ticket owns.
 
 ## Verification – Differential
 
-- **Baseline** – the repo's checks (lint, typecheck, build, tests) before this run's commits. Pre-existing failures are brief context, never a blocker.
+- **Baseline** – the checks the repo's CI runs, from its CI config, before this run's commits. Pre-existing failures are brief context, never a blocker.
 - **Done** only if its own target passes **and** it adds **no new failures vs. baseline**; otherwise it goes where the invoking skill says.
 - **Disprove before asserting** a behavior change: run its original repro and one neighboring path it touches.
 - Each Done line names its proof; short of it, the item is proposed.

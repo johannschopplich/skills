@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 - **Input** – the argument: a spec, a ticket, or a `.scratch/<feature>/` dir. A spec with an `issues/` sibling means its tickets, worked on the frontier (any ticket whose blockers are all done). No argument → the current conversation is the spec. Write it to `$TMPDIR/implement-spec.md`.
 - **Seams** – the spec's Testing Decisions are the agreed seams, which settles `tdd`'s confirm-with-the-user step. None named → the highest existing public seam.
-- **Baseline** – note `HEAD` as the start commit; run typecheck and lint.
+- **Baseline** – note `HEAD` as the start commit; run push-right's Baseline.
 
 ## Per Slice
 
