@@ -61,7 +61,6 @@ When the diff is the user's own branch (commits by `git config user.email`, push
   - **Unpushed commit** – a fixup on top: `git commit --fixup=<sha>`. A commit the user called settled gets a new commit on HEAD instead.
   - **Pushed commit** – a new commit on HEAD.
   - **Uncommitted** – an edit in place.
-- The edit in place is an explicit exception to push-right's commit rule.
 - Each fix passes push-right's Verification before it counts as Done; a failing one becomes a Decision. Copy taken from a finding's fix is Done once its claim is `traced` to the code and, when not English, read back for grammar. A fixup's Done line names the subject of the commit it targets.
 - Re-review once over the fixes: report dir suffixed `-re-review`, `axes` without `spec`, `compare: 'trees'` from the first review's head with `context` "this diff is only the fixes for the previous review; judge only what it changes, and report a hunk that leaves the code worse than its old side even when it is right on its own"; `HEAD` for edits in place, without that `context`.
 - Then stop:
