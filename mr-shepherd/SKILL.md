@@ -1,6 +1,6 @@
 ---
 name: mr-shepherd
-description: Take a GitLab MR or GitHub PR – or a tracker ticket, several related MRs, or a stack – to ready-to-ship behind one approval tray. Use when asked to review, shepherd, rebase, or land an MR or PR.
+description: Take a GitLab MR or GitHub PR to ready-to-ship. Use when asked to review, shepherd, rebase, or land an MR or PR.
 argument-hint: "MR/PR URL(s) or a tracker ticket URL, then 'review' or 'take-over'; or 'merged' to land the next in a stack"
 ---
 
@@ -34,12 +34,16 @@ The **thread is the state**. The marker is the authenticated account's newest no
    - **Prevention** – a finding class recurring in the MR or the thread gets one Decision on where to stop it: lint rule, repo skill or `AGENTS.md` line, CodeRabbit path instruction.
    - **Product scope** – visual and product-value doubts on work a PM or designer accepted (`PM:` lines) → one line for them, never an author comment.
 6. **Triage every thread.** Buckets: **blocker**, **nit**, **idea**, **question**, **noise** (false positive, handled, out of scope). A bot's concrete defect gets the mode's treatment and a short reply; the rest → one batch-resolve tray item, unreplied.
-7. **Stage fixes** (take-over). Control flow – guards, early returns, error handling, defaults – is proposed, unless the sole fix for a reproduced crash. Stack on the author's HEAD, never rewrite their commits.
+7. **Stage fixes** (take-over). Control flow – guards, early returns, error handling, defaults – is proposed, unless the sole fix for a reproduced crash.
 8. **Verify.** A fix that reddens anything else is discarded, its finding → Decision. UI: reproduce live via `chrome-devtools` MCP on the preview or a local server; else the closest component or e2e test, gap named. Asked to compare visuals: one before/after page, target and branch side by side, light and dark where both exist.
 9. **Draft.**
-   - **Inline drafts** (review), created now as the user's pending review, on the finding's line: one per confirmed blocker, major, or minor the MR introduces; one the target already has → Next; nits → at most one summary draft; `plausible` → Decisions. A `suggestion` block holds only the changed lines. GitLab via [`GITLAB.md`](GITLAB.md), its replies as draft replies; GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`.
+   - **Inline drafts** (review), created now as the user's pending review – GitLab via [`GITLAB.md`](GITLAB.md), its replies as draft replies; GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`:
+     - a confirmed blocker, major, or minor the MR introduces → one on its line; a `suggestion` block holds only the changed lines
+     - one the target already has → Next
+     - nits → at most one summary draft
+     - `plausible` → Decisions
    - **Replies** – one per human thread that wants one; outside a pending review, on the tray.
-   - Optional, recipient named, only when it adds something: a tightened description (current one thin, verbose, or a diff list); a tracker comment (Asana: invoke the `asana` skill if installed); a Slack note.
+   - Optional, recipient named, only when it adds something: a tightened description (current one thin, verbose, or a diff list); a tracker comment; a Slack note.
 
 ## The Brief
 
@@ -56,7 +60,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 |---|---|---|---|
 | Q1 `<letter>` | <recommended option> | <letter>) <other option> | <one line> *<who flagged it>* · [diff] [thread] |
 
-1. fold <F> fixups (`git rebase --autosquash --autostash --keep-base <upstream sha>`)
+1. fold <F> fixups
 2. rebase onto <target> (<N> behind)
 3. push <P> commits to <branch>
 4. post <M> replies (D<n>…)
@@ -82,4 +86,4 @@ The **thread is the state**. The marker is the authenticated account's newest no
 
 ## After Approval
 
-Tray order is the safe order. A fold or rebase conflict aborts the item, never resolved; a push after a rebase carries a `git range-diff` summary proving nothing was lost; defects resolve before the bot batch. After a push, triage the bot's new threads and report a short delta.
+Tray order is the safe order. A fold or rebase conflict aborts the item, never resolved; a push after a rebase carries a `git range-diff` summary proving nothing was lost. After a push, triage the bot's new threads and report a short delta.
