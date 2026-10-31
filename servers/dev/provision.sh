@@ -210,6 +210,7 @@ done
 EOF
 )"
 runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/t3 ]] || curl -fsSL https://t3.codes/install.sh | sh'
+runuser -l "$DEV_USER" -c '~/.local/bin/t3 update --yes'
 # Ubuntu's AppArmor blocks the sandbox of T3's browser until this runs.
 "$home/.local/bin/t3" browser setup
 # #endregion
