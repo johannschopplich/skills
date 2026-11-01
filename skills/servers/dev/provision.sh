@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Provisions the dev box: hardening, Tailscale, Docker, PHP, gh, and nvm, Claude Code, T3 Code, and the dotfiles for the user.
+# Provisions the dev box: hardening, Tailscale, Docker, PHP, gh, and nvm, Claude Code, T3 Code, and the skills repo for the user.
 set -euo pipefail
 
 PHP_VERSIONS="8.5"
 DEV_USER=johann
 NODE_VERSION=24
-DOTFILES_REPO=https://github.com/johannschopplich/dotfiles.git
+SKILLS_REPO=https://github.com/johannschopplich/skills.git
 SWAP_SIZE=4G
 
 [[ $(id -u) == 0 ]] || { echo "run as root" >&2; exit 1; }
@@ -135,12 +135,11 @@ if [[ -n $removed_node_versions && -f $home/.config/systemd/user/t3code.service 
 fi
 
 runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/claude ]] || curl -fsSL https://claude.ai/install.sh | bash'
-if [[ -d $home/dotfiles ]]; then
-  runuser -l "$DEV_USER" -c 'git -C ~/dotfiles pull -q --ff-only'
+if [[ -d $home/skills ]]; then
+  runuser -l "$DEV_USER" -c 'git -C ~/skills pull -q --ff-only'
 else
-  runuser -l "$DEV_USER" -c "git clone -q $DOTFILES_REPO ~/dotfiles"
+  runuser -l "$DEV_USER" -c "git clone -q $SKILLS_REPO ~/skills"
 fi
-runuser -l "$DEV_USER" -c '~/dotfiles/install.sh'
 # Managed settings outrank the user's own, which Claude Code itself writes to.
 install -d /etc/claude-code
 cat > /etc/claude-code/managed-settings.json <<'EOF'
@@ -194,7 +193,7 @@ cat > /etc/claude-code/managed-settings.json <<'EOF'
   }
 }
 EOF
-# Installs the skills the dotfiles' skills.txt lists and removes the CLI's installs it no longer does.
+# Installs the skills skills.txt lists and removes the CLI's installs it no longer does.
 runuser -l "$DEV_USER" -c "$(cat <<'EOF'
 set -euo pipefail
 . ~/.nvm/nvm.sh
@@ -203,12 +202,14 @@ while read -r repo skills <&3; do
   [[ -z $repo || $repo == '#'* ]] && continue
   npx -y skills add "$repo" -g -y --skill $skills < /dev/null > /dev/null
   listed+=($skills)
-done 3< ~/dotfiles/skills.txt
+done 3< ~/skills/skills.txt
 for installed in $(jq -r '.skills | keys[]' ~/.agents/.skill-lock.json); do
   [[ " ${listed[*]} " == *" $installed "* ]] || npx -y skills remove -g -y "$installed" < /dev/null > /dev/null
 done
 EOF
 )"
+# After the sync: a CLI copy still in a skill's place makes install.sh skip that skill.
+runuser -l "$DEV_USER" -c '~/skills/install.sh'
 runuser -l "$DEV_USER" -c '[[ -x ~/.local/bin/t3 ]] || curl -fsSL https://t3.codes/install.sh | sh'
 runuser -l "$DEV_USER" -c "XDG_RUNTIME_DIR=/run/user/$(id -u "$DEV_USER") ~/.local/bin/t3 update --yes"
 # Ubuntu's AppArmor blocks the sandbox of T3's browser until this runs.
