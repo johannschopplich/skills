@@ -4,8 +4,8 @@
 //   name=         With the color left empty, the 500 comes from --current (the name must match `--color-<name>-*`).
 //   --current     Absolute path of the project's palette file (`@theme` CSS, UnoCSS `base.css`, or a `tokens.ts`
 //                 `name = { 50: "…" }` object); shown as the first row of the page.
-//   --ladder      tailwind (default): the neighbors' lightness ladder and hue offsets (kirby.tools, finanzfluss).
-//                 even: the hand-made ladder of the earthy sites (johannschopplich.com, realtroll.de) – even steps
+//   --ladder      tailwind (default): the neighbors' lightness ladder and hue offsets, for product UI.
+//                 even: the ladder for earthy sites – even steps
 //                 from 97.2% down to a third of the 500's lightness, dark chroma proportional to L, hue constant.
 //   --share       Re-tunes the 500's chroma to this share of the sRGB maximum at its L and H (0.6 earthy – 0.9).
 //   --tints       Scales the chroma of 50–400; 0.8 = milder tints.
