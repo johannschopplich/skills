@@ -1,3 +1,2 @@
-# <owner/repo> <skill>… – the skills on the dev server.
-johannschopplich/skills code-review grilling implement kirby mr-shepherd push-right writing-for-developers
+# <owner/repo> <skill>… – the third-party skills on the dev server; install.sh links this repo's own.
 mattpocock/skills codebase-design diagnosing-bugs domain-modeling handoff improve-codebase-architecture retro tdd teach to-spec writing-for-agents
