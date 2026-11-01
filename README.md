@@ -1,9 +1,9 @@
 # Skills
 
-Agent skills I reach for more than once. Install one:
+Agent skills I reach for more than once, and the Claude Code config they run under. Install one skill:
 
 ```sh
-npx skills add johannschopplich/skills/<name>
+npx skills add johannschopplich/skills --skill <name>
 ```
 
 ## Workflows
@@ -30,3 +30,13 @@ Tied to my machine and folders – a reference, not an install.
 - **servers** – my Hetzner web and dev boxes: provisioning, sites, deploys over GitHub Actions.
 - **sevdesk** – sevDesk vouchers booked and audited through the API.
 - **footage-ingest** – camera cards into a multi-drive footage archive.
+
+## My Setup
+
+`claude/` holds my global `CLAUDE.md`, rules, and hooks. `install.sh` links them into `~/.claude` and every skill into `~/.agents/skills`, on my Mac and my dev server:
+
+```sh
+git clone https://github.com/johannschopplich/skills.git ~/skills && ~/skills/install.sh
+```
+
+`skills.txt` lists the third-party skills the dev server installs.
