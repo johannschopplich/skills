@@ -30,7 +30,6 @@ Tied to my machine and folders – a reference, not an install.
 
 - [**kirby**](skills/kirby/SKILL.md) – my Kirby plugins, Kirby core, and the kirby.tools docs.
 - [**/servers**](skills/servers/SKILL.md) – my Hetzner web and dev boxes: provisioning, sites, deploys over GitHub Actions.
-- [**/sevdesk**](skills/sevdesk/SKILL.md) – sevDesk vouchers booked and audited through the API.
 - [**/footage-ingest**](skills/footage-ingest/SKILL.md) – camera cards into a multi-drive footage archive.
 
 ## Setup
