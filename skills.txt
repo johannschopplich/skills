@@ -1,0 +1,3 @@
+# <owner/repo> <skill>… – the skills on the dev server.
+johannschopplich/skills code-review grilling implement kirby mr-shepherd push-right writing-for-developers
+mattpocock/skills codebase-design diagnosing-bugs domain-modeling handoff improve-codebase-architecture retro tdd teach to-spec writing-for-agents
