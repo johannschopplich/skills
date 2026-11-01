@@ -66,6 +66,7 @@ Sales:
 
 - **At 0 % the gross is the document total** – any "VAT" or "Tax" a foreign supplier printed is cost.
 - `voucherDate`, `deliveryDate`, and `paymentDeadline` take the document date, `description` the invoice number, `supplierName` the supplier as free text (`supplier: null`).
+- A position's `comment` names what was bought in one to four German words, its kind or purpose in parentheses when the name alone doesn't say it: `Domain & E-Mail`, `AirPods 5 (Arbeitsgerät)`. A recurring item copies its precedent's text. Positions sharing an account and rate merge into one.
 - A bank that invoices its fees gets a voucher on 6855, linked to the fee rows it covers. The invoice's rule follows its note:
   - a reverse-charge note – the rule the bank's prefix picks
   - a printed VAT exemption – rule 9 at 0 %
