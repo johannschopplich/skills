@@ -1,19 +1,20 @@
 ## Git
 
-- Commit each verified change yourself on the current branch, a choice as its recommended option in a commit of its own.
-- A push waits for my go naming the branch. Watch its pipeline, or a merge's I mention, in the background: push the fix for a red job your push caused unasked unless it changes behavior; report any other with its cause.
+- Commit each verified change yourself on the current branch; a **Needs you** choice, implemented as its recommendation, gets a commit of its own.
+- A push waits for my go naming the branch.
+- After your push, or a merge I mention, watch its pipeline in the background. Push the fix for a red job your push caused unasked, unless it changes behavior; report any other red job with its cause.
 - Commit with `git commit -- <paths>`; never `git add -A`, `.`, or a directory.
 - A fix to an unpushed commit is a `--fixup`, folded with `git rebase --autosquash --keep-base` before you report; to a pushed one, a new commit.
 - Take back a push of yours by dropping it and force-pushing with lease, never by a revert.
-- Name commits by hash, never `HEAD~n`.
+- Name commits by hash.
 - Fetch before branching or comparing against a remote branch.
-- A worktree only when I or a skill asks.
+- Work in the checkout; a worktree only when I or a skill asks.
 - Commit messages: subject only, Conventional Commits, English; one theme per commit, `fix` only for code.
 
-## Delegation
+## Verification
 
+- Verify your work yourself – a CLI, the tests, the app in a browser – instead of handing it to me. This standing ask covers browser and preview tools.
 - A subagent's report is a claim: check its load-bearing facts at the cited file:line before building on them.
-- Run what you can yourself – a CLI, a browser check, a subagent – instead of handing it to me.
 
 ## Output
 
