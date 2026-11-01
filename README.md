@@ -8,7 +8,7 @@ npx skills add johannschopplich/skills --skill <name>
 
 ## Workflows
 
-They stage work behind one approval tray and load **push-right** – install it alongside.
+They stage work behind one approval tray and load **push-right** – install it alongside. **implement** and **code-review** also judge code against my rules in `claude/rules/`, read from `~/.claude/rules/`; without them, the review names each missing rule set and carries on.
 
 - **push-right** – the shared doctrine: non-destructive work first, verify against a baseline, every irreversible step behind one tray.
 - **implement** – a spec, ticket, or conversation, built test-first, a commit per slice, reviewed by **code-review**. Needs Matt Pocock's `tdd`.
