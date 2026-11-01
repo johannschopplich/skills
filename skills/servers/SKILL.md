@@ -1,6 +1,7 @@
 ---
 name: servers
-description: The user's Hetzner servers – web (Kirby sites) and dev (remote Claude Code and T3 Code). Use when provisioning, patching, or debugging a box, or adding or deploying a site.
+description: The user's Hetzner servers – web (Kirby sites) and dev (remote Claude Code and T3 Code): provisioning, patching, debugging, and adding or deploying a site.
+disable-model-invocation: true
 ---
 
 # Servers
