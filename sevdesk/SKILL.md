@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 Books of a German Freiberufler: SKR04, Ist-Versteuerung, no UStVA filed (Finanzamt exemption), ZM filed quarterly – every period of the open year is editable. Years with a filed annual return (currently 2025 and earlier) are read-only.
 
-**Invoke the `push-right` skill first.** Where it and this skill differ, this skill wins. Its exceptions: Apply is a sevDesk draft, not a commit; the checks are the `ustva` and `balanceList` reports; a Done line's proof is `✓ verified` (step 4's match); no Outward Copy; a missing API key is the one stop before the checkpoint. Irreversible: **finalize**, **link a payment**, **correct a finalized voucher**, **delete**, **tag**. `enshrine` (Festschreiben) never runs.
+**Invoke the `push-right` skill first.** Where it and this skill differ, this skill wins. Its exceptions: Apply is a sevDesk draft, not a commit; the checks are the `ustva` and `balanceList` reports; a Done line's proof is `✓ verified` (step 4's match); no Outward Copy. Irreversible: **finalize**, **link a payment**, **correct a finalized voucher**, **delete**, **tag**.
 
 ## API
 
@@ -35,7 +35,7 @@ Beyond the spec:
 | Payment | `PUT /Voucher/{id}/bookAmount` with `date` the bank row's `valueDate`, `type` `FULL_PAYMENT` (`N` for each partial row before the last), `checkAccount` the bank row's `checkAccount`, `checkAccountTransaction: {id, objectName: "CheckAccountTransaction"}`, and `createFeed: true`. `amount` carries the bank row's sign: negative for an expense (`C`), positive for a revenue (`D`). A row paying several vouchers links each with `FULL_PAYMENT` and that voucher's amount. Existing links: one `GET /CheckAccountTransactionLog?limit=1000&countAll=true`, mapped locally by `checkAccountTransaction` and `object` (the voucher), the amount in `amountPaid`. A filter by `object` is silently ignored. |
 | Foreign currency | `sum*ForeignCurrency` is the document amount, `sum*` EUR at the document rate, `sum*Accounting` EUR as paid. Every save, finalizing included, sends `currency`, `propertyForeignCurrencyDeadline`, and each position in document currency. The deadline is the document date as `dd.mm.yyyy`. A position that exists is sent by its `id`. A save without positions, a `resetToOpen`, and a `resetToDraft` each convert the stored EUR sums again: check `sumGrossForeignCurrency` after every save. A payment that differs from `sumGross` links with `type: "MTC"`, the difference landing on 6855 (`FULL_PAYMENT` and `CF` answer 422, `O` books it against the expense account). |
 
-Not yet proven through the API, so each is a Decision: goods bought from an EU seller and an asset. An asset is a durable item above 250 € net, import duty and courier fee included (GWG up to 800 € net if self-contained, otherwise AfA).
+Not yet proven through the API: goods bought from an EU seller and an asset. An asset is a durable item above 250 € net, import duty and courier fee included (GWG up to 800 € net if self-contained, otherwise AfA).
 
 ## Boundary Marker
 
