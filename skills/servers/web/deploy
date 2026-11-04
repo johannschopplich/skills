@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Resets a site to origin/main and runs `build` on it; a failed build restores the previous commit.
+# Resets a site to origin/main, runs `build` on it, and installs the jobs its `crontab` lists; a failed build
+# restores the previous commit.
 # GitHub Actions reach it as the forced command of a `site action-key` key.
 set -euo pipefail
 
@@ -32,6 +33,10 @@ if ! bash /usr/local/lib/servers/build; then
   echo "build failed – restoring $previous_commit" >&2
   git reset --hard "$previous_commit"
   bash /usr/local/lib/servers/build || true
+  exit 1
+fi
+if ! bash /usr/local/lib/servers/schedule "$SITE_DOMAIN" crontab; then
+  echo "crontab rejected – the site is deployed, its scheduled jobs are unchanged" >&2
   exit 1
 fi
 echo "deployed $SITE_DOMAIN at $(git log -1 --format='%h %s')"

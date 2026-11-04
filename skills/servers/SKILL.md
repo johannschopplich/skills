@@ -36,12 +36,16 @@ Each box is the output of its idempotent `provision.sh`. A change to a box is an
 
 A push to `main` deploys. By hand, or to read a red run's output: `ssh web deploy <domain>`. A red deploy restores the previous commit.
 
+### Scheduled Jobs
+
+A site schedules jobs in a repo-root `crontab`: one command and its arguments per line, run from the site's checkout – no `&&`, pipes, or redirects. Every deploy and provision run rewrites the site's block in johann's crontab from it, wrapping each command in `site-run` – the site's PHP first on PATH, one run at a time. A job still running at 04:30 can die in the patch reboot. A job's output: `ssh web journalctl -t site-<domain>`; its failures sit at `-p err`.
+
 ### Patch
 
 Unattended, rebooting itself at 04:30 when a package asks. Health check:
 
 ```sh
-ssh web 'apt list --upgradable; cat /var/run/reboot-required; systemctl --failed --no-legend; certbot certificates 2>/dev/null | grep -E "Certificate Name|Expiry"; grep -h max_children /var/log/php*-fpm.log | tail -3; df -h /'
+ssh web 'apt list --upgradable; cat /var/run/reboot-required; systemctl --failed --no-legend; journalctl --since -7d -p err | grep -F " site-" | tail -5; certbot certificates 2>/dev/null | grep -E "Certificate Name|Expiry"; grep -h max_children /var/log/php*-fpm.log | tail -3; df -h /'
 ```
 
 A full disk: `ssh web 'du -sh /home/johann/.local/share/pnpm /home/johann/.cache'`, then prune with `ssh web "runuser -l johann -c '. ~/.nvm/nvm.sh && pnpm store prune && composer clear-cache'"`.

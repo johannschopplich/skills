@@ -16,7 +16,7 @@ usage:
   site php <domain> <version>                switch the site's PHP, for PHP-FPM and for deploys
   site test <domain> [path]                  render a page through PHP-FPM, without DNS or nginx
   site render <domain>                       rewrite the vhost from the templates, without reloading nginx
-  site remove <domain>                       drop the vhost, certificate, and keys; the checkout stays
+  site remove <domain>                       drop the vhost, certificate, keys, and jobs; the checkout stays
   site list                                  list sites with their PHP, HTTPS, and HEAD
 EOF
   exit 1
@@ -144,6 +144,8 @@ EOF
 
   remove)
     read_state
+    # First, so no job runs against a site whose state is gone.
+    as_site_user "bash /usr/local/lib/servers/schedule '$domain'"
     certbot delete --cert-name "$domain" --non-interactive 2> /dev/null || true
     rm -f "$vhost" "$state"
     as_site_user "rm -f ~/.ssh/config.d/$domain ~/.ssh/deploy/$domain ~/.ssh/deploy/$domain.pub"

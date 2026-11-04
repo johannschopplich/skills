@@ -75,7 +75,7 @@ done
 apt-get update -q
 apt-get upgrade -yq
 apt-get install -yq --no-install-recommends \
-  nginx certbot ufw fail2ban unattended-upgrades \
+  nginx certbot ufw fail2ban unattended-upgrades cron \
   git curl unzip jq rsync libfcgi-bin composer "${php_packages[@]}"
 # #endregion
 
@@ -153,9 +153,13 @@ install -d /usr/local/share/servers /etc/servers/sites
 install -m 644 "$here"/nginx/site-*.conf /usr/local/share/servers/
 install -m 755 "$here"/site /usr/local/sbin/site
 install -m 755 "$here"/deploy /usr/local/bin/deploy
-install -m 755 "$here"/build /usr/local/lib/servers/build
+install -m 755 "$here"/build "$here"/schedule "$here"/site-run /usr/local/lib/servers/
 for state in /etc/servers/sites/*; do
-  if [[ -f $state ]]; then site render "$(basename "$state")"; fi
+  [[ -f $state ]] || continue
+  domain=$(basename "$state")
+  site render "$domain"
+  runuser -l "$SITE_USER" -c "cd ~/'$domain' && bash /usr/local/lib/servers/schedule '$domain' crontab" ||
+    echo "jobs of $domain not scheduled" >&2
 done
 nginx -t
 systemctl enable nginx

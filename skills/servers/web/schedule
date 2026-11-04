@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Replaces a site's block in the site user's crontab with the jobs its `crontab` file lists, each run through
+# `site-run`; called without a file, it drops the block. A line that isn't a job rejects the whole file.
+set -euo pipefail
+
+SITE_DOMAIN=${1:-}
+jobs_file=${2:-}
+
+[[ $SITE_DOMAIN =~ ^[a-z0-9.-]+$ ]] || { echo "usage: schedule <domain> [crontab file]" >&2; exit 1; }
+
+begin="# begin $SITE_DOMAIN"
+end="# end $SITE_DOMAIN"
+run="/usr/local/lib/servers/site-run $SITE_DOMAIN"
+
+jobs=""
+if [[ -f $jobs_file ]]; then
+  # A job is five time fields, or one `@daily`-style field, then a command. Variable lines are rejected,
+  # since cron would apply them to every later block.
+  jobs=$(awk -v run="$run" '
+    { sub(/\r$/, "") }
+    /^[[:space:]]*(#|$)/ { next }
+    { field = ($1 ~ /^@/) ? 1 : 5 }
+    NF <= field || $1 ~ /=/ { print "not a job line: " $0 > "/dev/stderr"; is_invalid = 1; next }
+    { $field = $field " " run; print }
+    END { exit is_invalid }
+  ' "$jobs_file")
+fi
+
+# Deploys of different sites run in parallel, and each rewrites the one crontab.
+exec 9> /tmp/servers-schedule.lock
+flock 9
+
+# Read in full before `crontab -` replaces it.
+current=$(crontab -l 2> /dev/null || true)
+
+{
+  if [[ -n $current ]]; then
+    awk -v begin="$begin" -v end="$end" '$0 == begin { skip = 1 } !skip { print } $0 == end { skip = 0 }' <<< "$current"
+  fi
+  if [[ -n $jobs ]]; then printf '%s\n%s\n%s\n' "$begin" "$jobs" "$end"; fi
+} | crontab -
