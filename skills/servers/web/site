@@ -28,7 +28,7 @@ domain=${2:-}
 [[ $command == list || $domain =~ ^[a-z0-9.-]+\.[a-z]+$ ]] || usage
 site_dir=$home/$domain
 vhost=/etc/nginx/conf.d/$domain.conf
-# Holds `root=` and `php=`; `deploy` reads both too.
+# Holds `root=` and `php=`; `deploy` reads both too, `site-run` the PHP.
 state=/etc/servers/sites/$domain
 
 # An apex domain also answers on www.

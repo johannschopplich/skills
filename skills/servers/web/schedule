@@ -1,36 +1,42 @@
 #!/usr/bin/env bash
 # Replaces a site's block in the site user's crontab with the jobs its `crontab` file lists, each run through
-# `site-run`; called without a file, it drops the block. A line that isn't a job rejects the whole file.
+# `site-run`; called without a file, or with one that doesn't exist, it drops the block. A line that isn't a job
+# rejects the whole file.
 set -euo pipefail
 
 SITE_DOMAIN=${1:-}
 jobs_file=${2:-}
 
 [[ $SITE_DOMAIN =~ ^[a-z0-9.-]+$ ]] || { echo "usage: schedule <domain> [crontab file]" >&2; exit 1; }
+[[ $(id -un) == johann ]] || { echo "run as johann" >&2; exit 1; }
 
 begin="# begin $SITE_DOMAIN"
 end="# end $SITE_DOMAIN"
 run="/usr/local/lib/servers/site-run $SITE_DOMAIN"
 
+# Deploys of different sites run in parallel, and each rewrites the one crontab.
+exec 9> /tmp/servers-schedule.lock
+flock 9
+
 jobs=""
 if [[ -f $jobs_file ]]; then
-  # A job is five time fields, or one `@daily`-style field, then a command. Variable lines are rejected,
-  # since cron would apply them to every later block.
+  # A job is five time fields, or one `@daily`-style field, then a command and plain arguments. Variable lines
+  # are rejected, since cron would apply them to every later block, and so is shell syntax: cron reads `%` as a
+  # newline and hands the rest to `sh`, where `&&` or a pipe runs past `site-run`.
   jobs=$(awk -v run="$run" '
     { sub(/\r$/, "") }
     /^[[:space:]]*(#|$)/ { next }
     { field = ($1 ~ /^@/) ? 1 : 5 }
-    NF <= field || $1 ~ /=/ { print "not a job line: " $0 > "/dev/stderr"; is_invalid = 1; next }
+    NF <= field || $1 ~ /=/ || $2 ~ /^=/ { print "not a job line: " $0 > "/dev/stderr"; is_invalid = 1; next }
+    {
+      for (i = field + 1; i <= NF; i++)
+        if ($i ~ /[^[:alnum:]_.\/:=,+@-]/) { print "shell syntax in a job: " $0 > "/dev/stderr"; is_invalid = 1; next }
+    }
     { $field = $field " " run; print }
     END { exit is_invalid }
   ' "$jobs_file")
 fi
 
-# Deploys of different sites run in parallel, and each rewrites the one crontab.
-exec 9> /tmp/servers-schedule.lock
-flock 9
-
-# Read in full before `crontab -` replaces it.
 current=$(crontab -l 2> /dev/null || true)
 
 {

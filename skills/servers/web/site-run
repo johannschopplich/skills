@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
-# Runs one scheduled job of a site as the site user: in its checkout, with its PHP first on PATH, never twice
-# at once. Everything it prints goes to the journal as `site-<domain>`, a failure at priority err.
+# Runs one scheduled job of a site: in its checkout, with its PHP first on PATH, never twice at once. Everything
+# it prints goes to the journal as `site-<domain>`, a failure at priority err.
 set -euo pipefail
 
 SITE_DOMAIN=${1:-}
 shift || true
 
 [[ $SITE_DOMAIN =~ ^[a-z0-9.-]+$ && $# -gt 0 ]] || { echo "usage: site-run <domain> <command>…" >&2; exit 1; }
+[[ $(id -un) == johann ]] || { echo "run as johann" >&2; exit 1; }
 
 # From here on, a failure lands in the journal too; systemd-cat reads a `<3>` prefix as priority err.
 exec > >(systemd-cat --identifier="site-$SITE_DOMAIN") 2>&1
-trap 'status=$?; if ((status != 0 && status != 75)); then echo "<3>$* failed with exit code $status"; fi' EXIT
+log_failure() { if (($1 != 0)); then echo "<3>$2 failed with exit code $1"; fi; }
+trap 'log_failure $? "$*"' EXIT
 
 php=$(sed -n 's/^php=//p' "/etc/servers/sites/$SITE_DOMAIN")
 export PATH="/usr/local/lib/servers/php$php:$PATH"
 cd "$HOME/$SITE_DOMAIN"
 
-lock=/tmp/site-run-$SITE_DOMAIN-$(printf '%s' "$*" | md5sum | cut -c1-8).lock
-status=0
-flock --nonblock --conflict-exit-code 75 "$lock" "$@" || status=$?
-if ((status == 75)); then echo "<4>skipped $*: its previous run still holds the lock"; fi
-exit "$status"
+exec 8> "/tmp/site-run-$SITE_DOMAIN-$(printf '%s' "$*" | md5sum | cut -c1-8).lock"
+flock --nonblock 8 || { echo "<4>skipped $*: its previous run still holds the lock"; exit 0; }
+"$@"

@@ -136,7 +136,7 @@ for version in $PHP_VERSIONS; do
     'opcache.memory_consumption = 256' 'opcache.max_accelerated_files = 32531' \
     > "/etc/php/$version/fpm/conf.d/99-servers.ini"
   systemctl restart "php$version-fpm"
-  # `deploy` puts this directory first on PATH; composer gets a wrapper, since its shebang names /usr/bin/php.
+  # `deploy` and `site-run` put this directory first on PATH; composer gets a wrapper, since its shebang names /usr/bin/php.
   install -d "/usr/local/lib/servers/php$version"
   ln -sf "/usr/bin/php$version" "/usr/local/lib/servers/php$version/php"
   printf '#!/bin/sh\nexec /usr/bin/php%s /usr/bin/composer "$@"\n' "$version" > "/usr/local/lib/servers/php$version/composer"
