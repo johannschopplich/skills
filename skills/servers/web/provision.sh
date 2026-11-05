@@ -75,7 +75,7 @@ done
 apt-get update -q
 apt-get upgrade -yq
 apt-get install -yq --no-install-recommends \
-  nginx certbot ufw fail2ban unattended-upgrades cron \
+  nginx certbot ufw fail2ban unattended-upgrades cron logrotate \
   git curl unzip jq rsync libfcgi-bin composer "${php_packages[@]}"
 # #endregion
 

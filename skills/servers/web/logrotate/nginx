@@ -1,11 +1,12 @@
+# Rotates every day, empty or not, so no line outlives 30 days.
 /var/log/nginx/*.log {
         daily
         missingok
-        rotate 52
-        maxage 30
+        rotate 28
+        maxage 28
         compress
         delaycompress
-        notifempty
+        ifempty
         create 640 nginx adm
         sharedscripts
         postrotate
