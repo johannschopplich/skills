@@ -151,6 +151,7 @@ EOF
     as_site_user "rm -f ~/.ssh/config.d/$domain ~/.ssh/deploy/$domain ~/.ssh/deploy/$domain.pub"
     replace_action_key ""
     reload_nginx
+    rm -f /var/log/nginx/"$domain".error.log*
     echo "kept $site_dir – its storage/ has no other copy" >&2
     ;;
 
