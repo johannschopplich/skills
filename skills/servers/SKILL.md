@@ -22,7 +22,7 @@ Each box is the output of its idempotent `provision.sh`. A change to a box is an
 - **Site** – `/home/johann/<domain>`, a checkout of `main`. `ssh web site` prints its commands.
 - **Box-only data** – every path `git status --ignored` lists that neither `web/build` nor Kirby recreates; Kirby recreates `public/media/` and `storage/`'s `cache/`, `sessions/` and `logs/`. Hetzner Backups, 7 daily, are their only copy: no `git clean` in a site. Restore one site: in the Console, create a temporary server from a backup, rsync that site's box-only paths back to web, then delete the temporary server. Rebuilding web from a backup rolls back every site. Deleting web deletes its backups – convert the one to keep into a snapshot first.
 - **PHP** – every version in `PHP_VERSIONS` (`web/provision.sh`) runs its own PHP-FPM; a new site gets the newest, `site php` switches one.
-- **Logs** – PHP and nginx errors: `/var/log/nginx/<domain>.error.log`; PHP-FPM pool warnings: `/var/log/php<version>-fpm.log`.
+- **Logs** – PHP and nginx errors: `/var/log/nginx/<domain>.error.log`, deleted after 30 days (`web/logrotate/nginx`, the sites' privacy policies state it); PHP-FPM pool warnings: `/var/log/php<version>-fpm.log`.
 
 ### Add a Site
 

@@ -149,6 +149,7 @@ rm -f /etc/nginx/conf.d/default.conf
 install -d /etc/nginx/snippets /var/www/acme
 install -m 644 "$here"/nginx/00-http.conf "$here"/nginx/00-default.conf "$here"/nginx/cloudflare.conf /etc/nginx/conf.d/
 install -m 644 "$here"/nginx/kirby.conf /etc/nginx/snippets/
+install -m 644 "$here"/logrotate/nginx /etc/logrotate.d/nginx
 install -d /usr/local/share/servers /etc/servers/sites
 install -m 644 "$here"/nginx/site-*.conf /usr/local/share/servers/
 install -m 755 "$here"/site /usr/local/sbin/site
