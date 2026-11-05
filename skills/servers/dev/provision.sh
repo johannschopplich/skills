@@ -190,6 +190,16 @@ cat > /etc/claude-code/managed-settings.json <<'EOF'
       "DesignSync"
     ],
     "defaultMode": "auto"
+  },
+  "autoMode": {
+    "environment": [
+      "$defaults",
+      "**Authenticated CLIs**: `gws` and `glab` are the user's own Google Workspace and GitLab. Their `list`, `get`, and `view` calls are reads, as is `glab api` without `-X`, `--method`, `-f`, `-F`, or `--input`. Secret reads like `glab variable get` are excluded."
+    ],
+    "allow": [
+      "$defaults",
+      "Brief Gemini Trash: During `/brief`, trashing the mails from `gemini-notes@google.com` it has read with `gws gmail users messages trash` is not External System Writes."
+    ]
   }
 }
 EOF
