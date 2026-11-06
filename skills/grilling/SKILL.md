@@ -20,7 +20,7 @@ Finding _facts_ is your job, never the user's. Dispatch sub-agents for the `fact
 
 ## Rounds
 
-The _decisions_ are the user's: put each to them and wait. Work the `ask` nodes in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question, give it one line of context so it stands on its own, and give your recommended answer, leaning to less: the smallest option and no new artifact. Word each question so "yes" accepts the recommendation.
+The _decisions_ are the user's: put each to them and wait. Work the `ask` nodes in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question, give it one line of context in the user's words so it stands on its own, and give your recommended answer, leaning to less: the smallest option and no new artifact. Word each question so "yes" accepts the recommendation.
 
 Under the questions, list the `assume` nodes whose branch is settled, one line each. They stand unless vetoed; a vetoed line becomes an `ask` node.
 
