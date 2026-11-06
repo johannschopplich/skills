@@ -13,3 +13,5 @@ A line carries only what an agent can't read its way to: an absence, a coupling 
 Shape of an `AGENTS.md`, or a `CLAUDE.md` standing in for one: H1 product name → one-sentence identity → `GLOSSARY.md` pointer if one exists → `## Commands` (fenced `bash`, trailing comments) → `## Conventions` → repo-specific H2s → `## Search Hints` (`symbol` – purpose, never file paths).
 
 On top of `writing-for-agents`: no rationale clause, no re-taught tool, nothing `~/.claude/CLAUDE.md` or `~/.claude/rules/` already says unless the skill is public, and one repo's fact goes in that repo's `AGENTS.md`.
+
+After an edit, a fresh subagent gets the old text, the new text, and the document's purpose; a hunk it judges worse, or longer without gain, goes back.
