@@ -1,6 +1,6 @@
 ---
 name: writing-for-developers
-description: Draft and rewrite developer-facing copy in the user's voice. Use when drafting or reviewing an issue reply, a review comment, a Slack, tracker, or Notion note, a PR/MR description, a commit subject, a README, or a doc page.
+description: Draft and rewrite developer-facing copy in the user's voice. Use when drafting or reviewing an issue reply, a review comment, a Slack, tracker, or Notion note, a PR/MR description, or a commit subject.
 ---
 
 # Writing for Developers
@@ -25,7 +25,7 @@ Reader: a domain peer, sometimes a PM who never opens the code. Write in the rec
 - Spaced en dash ( – ) for the parenthetical break; never an em dash.
 - Three or more items go as bullets, never a run of semicolons or commas.
 - Backticks on every identifier where code renders, commit subjects included.
-- Headings in APA title case, carrying the point: "Pick the Mode First", not "Modes".
+- Headings in APA title case.
 
 ## Replies and Notes
 
@@ -84,10 +84,3 @@ fix(comparisons): safely access `parsedData` value to prevent runtime errors
 refactor: harmonize `useState` keys
 feat!: rename `OpenAPI` to `OpenAPIBuilder`
 ```
-
-## Docs and READMEs
-
-- **One Diátaxis mode per document.**
-- **Status quo.** What is true now, no history. A file count, path list, or tree only when the reader needs it, with the command that regenerates it.
-- **Name the hard part.** A step readers get wrong says where it fails and why.
-- **Fresh read.** After an edit, a fresh subagent gets the old text, the new text, and the document's purpose; a hunk it judges worse, or longer without gain, goes back.
