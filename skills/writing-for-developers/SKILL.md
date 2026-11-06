@@ -1,6 +1,6 @@
 ---
 name: writing-for-developers
-description: Draft and rewrite developer-facing copy in the user's voice. Use when the user asks to draft an issue reply, an MR review comment, a Slack or tracker note, a PR/MR description, or a commit subject, or to write or review a README or doc page.
+description: Draft and rewrite developer-facing copy in the user's voice. Use when drafting or reviewing an issue reply, a review comment, a Slack, tracker, or Notion note, a PR/MR description, a commit subject, a README, or a doc page.
 ---
 
 # Writing for Developers
@@ -22,6 +22,7 @@ Reader: a domain peer, sometimes a PM who never opens the code. Write in the rec
 ## Typography
 
 - Spaced en dash ( – ) for the parenthetical break; never an em dash.
+- Three or more items go as bullets, never a run of semicolons or commas.
 - Backticks on every identifier where code renders, commit subjects included.
 - Headings in APA title case, carrying the point: "Pick the Mode First", not "Modes".
 
