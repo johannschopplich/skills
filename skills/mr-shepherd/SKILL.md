@@ -13,7 +13,7 @@ Merging stays the user's or CI's call. **Invoke the `push-right` skill first.** 
 - **Host** from the URL or the local remote: GitLab → `glab` · `!` · *MR*; GitHub → `gh` · `#` · *PR*.
 - **Mode** – the argument, else inferred:
   - **review** – someone else's MR, the default. Commit, rebase, and push nothing. Findings become drafts that imply the fix; a single-form fix becomes a `suggestion` block.
-  - **take-over** – the author is away, handing over, or doesn't code. Commit the fixes on top of the author's commits and leave the author no inline drafts. A product call, scope question, or missing spec that no commit settles goes into one blocker summary to copy.
+  - **take-over** – the author is away, handing over, or doesn't code. Commit the fixes on top of the author's commits and leave the author no inline drafts. A title or description the push makes stale is rewritten as part of the push item, without a draft. A product call, scope question, or missing spec that no commit settles goes into one blocker summary to copy.
   - **own** – the authenticated user wrote it. Run `code-review`'s Own Work.
 - **Inputs.** A ticket resolves to its MRs via its merge-request field. Several MRs: jointly when they share lineage or files (one review each, one cross-MR section), else separately – say which. A stack: bottom-up, one section per MR, one tray.
 
