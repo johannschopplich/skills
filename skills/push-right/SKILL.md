@@ -47,7 +47,7 @@ One artifact, in this order:
 - **Needs you**
   - a reply line taking every recommendation: `Q1 a, Q2 a, ship 1–6`
   - the Decisions, only calls the user might well overturn, as one table – `Q<n> <letter>`, the recommended option readable without its question and named in the user's words, the alternative, the reason; a fact the run can observe gets observed
-  - the tray as a numbered ship list; a push item names its branch (`push 3 commits to feat/x`) and whether `code-review` covered every commit it pushes
+  - the tray as a numbered ship list; a push item names its branch (`push 3 commits to feat/x`), every commit it pushes covered by `code-review` first
 - **Done** – each applied fix once, with its proof.
 - **Waiting on**, **Next**.
 - **Drafts** – every outward draft in full, each in a quote, `D1`…`Dn`, referenced from the ship item that posts it.
