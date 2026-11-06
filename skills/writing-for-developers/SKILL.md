@@ -88,5 +88,5 @@ feat!: rename `OpenAPI` to `OpenAPIBuilder`
 
 - **One Diátaxis mode per document.**
 - **Status quo.** What is true now, no history. A file count, path list, or tree only when the reader needs it, with the command that regenerates it.
-- **A step that takes three tries says so.**
+- **Name the hard part.** A step readers get wrong says where it fails and why.
 - **Fresh read.** After an edit, a fresh subagent gets the old text, the new text, and the document's purpose; a hunk it judges worse, or longer without gain, goes back.
