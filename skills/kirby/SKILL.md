@@ -36,6 +36,7 @@ Kirby 6 work sits on `main` in kirbyup, kirbyuse, kirby-types, kirby-tools-utils
 - **Runtime markup** – the Panel adds classes no `.vue` file holds (`k-text` on the writer's ProseMirror node, from `Editor`). Props and defaults come from the source; markup and computed styles from a running Panel: a playground, or [kirby-6-panel.md](kirby-6-panel.md) for `v6/develop`.
 - **After a plugin's stable release** – merge `main` into its `feat/kirby-6`, never rebase.
 - **Bumping a helper** – `pnpm dedupe` after `pnpm add`.
+- **Site content** – in a site with `scripts/sync-content.sh`, web holds the content: `--download --apply` before a content edit, `--upload --apply` after.
 
 ## Plugins
 
