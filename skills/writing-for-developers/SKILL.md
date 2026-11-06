@@ -16,7 +16,8 @@ Reader: a domain peer, sometimes a PM who never opens the code. Write in the rec
 - **Open on the fact.** Key facts and consequence, not the path or a recap. Not shallow: a shorter version that needs rereading got worse. Substantive acknowledge-and-pivot is fine: "Great idea overall, but …"
 - **Number, symbol, or link** on every technical claim: "A column rename fails the build", not "schema changes can cause issues".
 - **Machine tells.** The reveal against a framing nobody held ("not as a product, but as an experiment"); the fact-free sentence ("version 4 came from the issue tracker, not from my head"); the quotable phrase; a run of same-length short sentences. A rule that worsens a sentence yields.
-- **One name per thing.** Across edits, unchanged sentences stay unchanged.
+- **One name per thing.**
+- **Minimal edit.** An edit rewrites only the sentences it has to change.
 - **No calques.** An English sentence that translates back into German word for word was written in German. Rewrite it from the meaning.
 
 ## Typography
