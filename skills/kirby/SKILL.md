@@ -24,7 +24,7 @@ Pull the clone in `/tmp`, or clone it there shallow from `https://github.com/get
 
 ## Helper Packages
 
-- **kirby-types** – `~/Projects/kirby-types`, types for `window.panel` and headless use. Panel type audits: its user-invoked `/audit-panel-types` skill.
+- **kirby-types** – `~/Projects/kirby-types`, types for `window.panel` and headless use. Type audits, KQL included: its user-invoked `/audit-types` skill.
 - **kirbyuse** – `~/Projects/kirbyuse`, Panel composables (`usePanel`, `useApi`, `useDialog`, …), typed by kirby-types.
 - **kirbyup** – `~/Projects/kirbyup`, the plugins' build tool.
 
