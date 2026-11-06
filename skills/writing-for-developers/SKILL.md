@@ -75,7 +75,7 @@ Migration steps when there are any. Follow-ups and links to other commits stay o
 
 ## Commit Messages
 
-Conventional Commits in English, subject only: short, high-level. The subject is the changelog line and stands alone; longer context goes in the MR description, never a body. `fix` is for code; data and prose changes are `chore` or `docs`. A scope only where the repo's history uses scopes.
+Conventional Commits in English, subject only: short, high-level. The subject is the changelog line and stands alone; longer context goes in the MR description. `fix` is for code; data and prose changes are `chore` or `docs`. A scope only where the repo's history uses scopes.
 
 ```
 feat(api): add `/scalar` and `/swagger` docs routes
