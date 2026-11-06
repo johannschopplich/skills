@@ -4,7 +4,7 @@
 - A push waits for my go, except to your own feature branch already on the remote. Releases are mine.
 - After your push, or a merge I mention, watch its pipeline in the background. Push the fix for a red job your push caused unasked, unless it changes behavior; report any other red job with its cause.
 - Commit with `git commit -- <paths>`, naming each file.
-- A fix to an unpushed commit is a `--fixup`, folded with `git rebase --autosquash --keep-base` before you report.
+- A fix to an unpushed commit is a `--fixup=<hash>`, folded with `git rebase --autosquash --keep-base` before you report. Once I review your commits, fixes go on top, folded by theme before the push.
 - Take back a push of yours by dropping it and force-pushing with lease.
 - Name commits by hash.
 - Fetch before branching or comparing against a remote branch.
