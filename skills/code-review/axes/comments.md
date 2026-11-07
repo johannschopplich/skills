@@ -1,6 +1,6 @@
 # Comments Axis
 
-Judge every comment line the diff adds or changes against the Comments section of `~/.claude/rules/code-style.md`, and every README or doc page it touches as Prose Files says. Start from the list in the comments file, then the comment lines in the diff it missed. A comment or prose line that claims more than the code does – a failure the code recovers from, a limit it doesn't enforce – is never a **keep**: **delete** it, or **rewrite** it down to what the code does.
+Judge every comment line the diff adds or changes against the Comments section of `~/.claude/rules/code-style.md`, and every README or doc page it touches as Prose Files says. Start from the list in the comments file, then the comment lines in the diff it missed. A comment or prose line that claims more than the code does – a failure the code recovers from, a limit it doesn't enforce – is never a **keep**: **delete** it, or **rewrite** it down to what the code does. Name a missing source in `note` and carry on.
 
 Done when every added or changed comment line has a verdict: **keep**, **delete**, or **rewrite** (with the rewritten line). A keep names what the line says that the code cannot. A line that doesn't earn its place is deleted, never rewritten.
 
