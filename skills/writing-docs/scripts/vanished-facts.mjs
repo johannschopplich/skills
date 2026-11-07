@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Lists the numbers, a bare 0, 1, or 2 aside, and the backticked identifiers a change removed from the Markdown
-// pages under a docs directory that no tracked or untracked Markdown page there still contains.
+// pages under a docs directory that no tracked or untracked Markdown page there still contains. A changelog,
+// `GLOSSARY.md`, an ADR under `adr/`, `AGENTS.md`, `CLAUDE.md`, and a dot-named file or directory are no pages: a fact
+// that survives only there is gone.
 // Usage: vanished-facts.mjs [--per-dir] <range> [<docs-dir>] – `<range>` as `git diff` takes it; a bare base compares
 // against the working tree, which is what the pages are read from. `<docs-dir>` defaults to `docs`. With `--per-dir`,
 // each top-level directory of `<docs-dir>` is its own corpus, so a fact that survives only in another directory still
@@ -17,6 +19,9 @@ const trivialNumbers = new Set(['0', '1', '2'])
 const maxFactLength = 40
 const markdownPathspecs = ['*.md', '*.mdx']
 const rootGroup = ''
+const changelogPattern = /^changelog\.mdx?$/i
+const nonPageFileNames = new Set(['GLOSSARY.md', 'GLOSSARY-MAP.md', 'AGENTS.md', 'CLAUDE.md'])
+const adrDirectoryPattern = /^adrs?$/i
 
 let isPerDirectory = false
 const positionals = []
@@ -61,7 +66,7 @@ for (const [group, facts] of removedFacts) {
 function readPages() {
   return git(['ls-files', '--cached', '--others', '--exclude-standard', '-z', '--', ...markdownPathspecs])
     .split('\0')
-    .filter(path => path && existsSync(join(docsDirectory, path)))
+    .filter(path => path && isPage(path) && existsSync(join(docsDirectory, path)))
     .map(path => ({ path, content: readFileSync(join(docsDirectory, path), 'utf8') }))
 }
 
@@ -84,7 +89,7 @@ function collectRemovedFacts(diffText) {
         isInFileHeader = false
       continue
     }
-    if (!line.startsWith('-'))
+    if (!line.startsWith('-') || !isPage(currentFile))
       continue
 
     const text = line.slice(1)
@@ -105,6 +110,15 @@ function collectRemovedFacts(diffText) {
   }
 
   return factsByGroup
+}
+
+function isPage(path) {
+  const segments = path.split('/')
+  const fileName = segments.at(-1)
+  return !changelogPattern.test(fileName)
+    && !nonPageFileNames.has(fileName)
+    && !segments.some(segment => segment.startsWith('.'))
+    && !segments.slice(0, -1).some(segment => adrDirectoryPattern.test(segment))
 }
 
 function isPresent(fact, corpus) {
