@@ -23,7 +23,7 @@ Reader: a domain peer, sometimes a PM who never opens the code. Write in the rec
 ## Typography
 
 - Spaced en dash ( – ) for the parenthetical break; never an em dash.
-- Three or more items go as bullets, never a run of semicolons or commas.
+- Three or more parallel items with their own conditions go as bullets, never a run of semicolons or commas. A plain run of names stays in the sentence.
 - Backticks on every identifier where code renders, commit subjects included.
 - Headings in APA title case.
 
