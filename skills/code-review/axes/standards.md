@@ -4,7 +4,7 @@
 
 Name a missing source in `note` and carry on. Done when every standard the diff touches is named with its source.
 
-- The repo's own: `AGENTS.md`/`CLAUDE.md` at the root and beside every touched file, `CODING_STANDARDS.md`, `CONTRIBUTING.md`, lint and format config, and every repo skill under `.claude/skills/` or `.agents/skills/` whose description matches the touched code.
+- The repo's own: search the repo for every file that documents how code should be written – `AGENTS.md`/`CLAUDE.md` at the root and beside every touched file, lint and format config, and every repo skill under `.claude/skills/` or `.agents/skills/` whose description matches the touched code. `CODING_STANDARDS.md` and `CONTRIBUTING.md` count whenever they exist.
 - The **Naming** section of `~/.claude/rules/code-style.md` – its Comments section and `~/.claude/rules/tests.md` belong to other axes.
 - The smell baseline in `smells.md` beside this file.
 - For a touched Markdown file in a skill's directory, `AGENTS.md`, `CLAUDE.md`, or `GLOSSARY.md`: `~/.agents/skills/writing-for-agents/SKILL.md` and `~/.claude/rules/agent-docs.md`. Every touched paragraph gets **keep**, **cut**, or **rewrite**; a rewrite that drops a fact the agent needs got worse.
@@ -16,6 +16,7 @@ Name a missing source in `note` and carry on. Done when every standard the diff 
 - **Platform before hand-rolled.** Check each new mechanism – a DOM query, a global listener, an effect with side effects, a custom deferred or queue, URL or date parsing, a mock server – against the framework, an installed library (read its source in `node_modules`), and in-repo utilities. The finding questions whether the approach should exist at all; narrowing a fragile mechanism only patches the symptom.
 - **Duplication.** A new shape beside an existing helper; centralizing is a `choice`.
 - **Fit on the touched path.** A half-applied change, leftovers the diff abandoned, a sibling file the change should have reached.
+- **Unasked guards.** A guard added for a failure that hasn't happened counts as Speculative Generality.
 - **Naming.** Wrong or misleading names, plus Mysterious Name as a `choice`; other taste stays with the author.
 
 Skip whatever format, lint, or typecheck already enforces.
