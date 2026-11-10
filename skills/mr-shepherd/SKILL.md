@@ -26,7 +26,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 ## Run – in Order
 
 1. **Check auth.** `glab api user` / `gh api user` and one cheap tracker call; a failure, here or later, ends the run with the fix (`! glab auth login`, `/mcp`). A missing MR or failed checkout goes in the brief; the rest still runs.
-2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by a tracker search for the MR URL. In Asana, invoke the `asana` skill if installed and search the **Merge request** field for the full URL. No hit, no ticket.
+2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by a tracker search for the MR URL; with Asana, call the Skill tool with "asana-ticket" if installed and take only the find step of its Close Out. No hit, no ticket.
 3. **Pre-check merge safety.** Read-only, after `git fetch`: behind, diverged, CI on the latest push, conflicts – for the state line.
 4. **Add a worktree** at `../<repo>-mr-<id>`, reused on re-fire, never the user's checkout.
 5. **Review.** Call the Skill tool with "code-review" from the worktree. Fixed point: the target's merge-base. Spec: the ticket URL. Context: the mode (own → Own Work; else report only), the author, and product or design decisions the ticket shows as accepted. Triage:
@@ -37,11 +37,11 @@ The **thread is the state**. The marker is the authenticated account's newest no
 7. **Stage fixes** (take-over) under push-right's Apply.
 8. **Verify.** A fix that reddens anything else is discarded, its finding → Decision. UI: reproduce live via `chrome-devtools` MCP on the preview or a local server; else the closest component or e2e test, gap named. Asked to compare visuals: one before/after page, target and branch side by side, light and dark where both exist.
 9. **Draft.**
-   - **Inline drafts** (review), created now as the user's pending review – GitLab via [`GITLAB.md`](GITLAB.md), its replies as draft replies; GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`:
-     - a confirmed blocker, major, or minor the MR introduces → one on its line; a `suggestion` block holds only the changed lines
+   - **Inline drafts** (review), created now as the user's pending review – GitLab via [`GITLAB.md`](GITLAB.md), its replies as draft replies; GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`. A finding takes the first match:
+     - `plausible` → Decisions
      - one the target already has → Next
      - nits → at most one summary draft
-     - `plausible` → Decisions
+     - a confirmed blocker, major, or minor the MR introduces → one on its line; a `suggestion` block holds only the changed lines
    - **Replies** – one per human thread that wants one; outside a pending review, on the tray.
    - Optional, recipient named, only when it adds something: a tightened description (current one thin, verbose, or a diff list); a tracker comment; a Slack note.
 
@@ -82,7 +82,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 **Review** <code-review's line, with its report path>
 </brief-template>
 
-`waiting on author` counts blocker and major drafts.
+The title state, first match: `blocked by N decisions`, `waiting on author` (counting blocker and major drafts), `ready after rebase` (behind or diverged), `ready to merge`.
 
 ## After the Checkpoint
 
