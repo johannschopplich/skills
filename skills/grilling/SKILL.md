@@ -18,7 +18,7 @@ An `ask` whose recommendation is the only credible branch is an `assume`. An `as
 
 ## Settle
 
-Finding _facts_ is your job, never the user's. Dispatch sub-agents for the `fact` nodes, one per topic; probes stay local and reversible, as scratch under `$TMPDIR`. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report; ask the rest of the frontier now. The user's premises are `fact` nodes too; one the environment contradicts becomes an `ask` node, its evidence in the question.
+Finding _facts_ is your job, never the user's. Dispatch sub-agents with a fresh context window for the `fact` nodes, one per topic; probes stay local and reversible, as scratch under `$TMPDIR`. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report; ask the rest of the frontier now. The user's premises are `fact` nodes too; one the environment contradicts becomes an `ask` node, its evidence in the question.
 
 ## Rounds
 
