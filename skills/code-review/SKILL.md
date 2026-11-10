@@ -12,7 +12,16 @@ The review reports; fixing belongs to the caller, except in Own Work.
 
 Every command runs in the repo or worktree root.
 
-1. **Pin the diff.** `head` is `git rev-parse HEAD`; report dir: `$TMPDIR/code-review-<short head sha>/`. The fixed point is the argument; `HEAD` reviews uncommitted changes, untracked files included, index untouched. Without an argument, `git fetch` and take the merge-base with the default branch's remote. When the branch's record (step 5) holds the current merge-base and its head still resolves, the recorded head is the fixed point instead, with `compare: 'trees'`. If there is also no spec argument, drop `spec` from `axes` and say in `context` that the diff is only the delta since the recorded review. A bad ref or an empty diff ends the run with one line.
+1. **Pin the diff.** `head` is `git rev-parse HEAD`; report dir: `$TMPDIR/code-review-<short head sha>/`. Without an argument, `git fetch` first. The fixed point, first match:
+
+   | Argument | Fixed point |
+   |---|---|
+   | `HEAD` | `HEAD` – the diff is the uncommitted changes, untracked files included, index untouched |
+   | a sha or branch | the argument |
+   | none, and the branch's record (step 5) holds the current merge-base and a head that still resolves | the recorded head, with `compare: 'trees'` |
+   | none | the merge-base with the default branch's remote |
+
+   On the recorded head with no spec argument, drop `spec` from `axes` and say in `context` that the diff is only the delta since the recorded review. A bad ref or an empty diff ends the run with one line.
 2. **Find the spec.** The argument; else a ticket linked from the commits, the branch name, or the MR; else a spec file under `.scratch/`, `docs/`, or `specs/` matching the branch or feature; else none. Fetch a tracker ticket with its comments into `<report dir>/ticket.md` and pass that path. A failed fetch is no spec; carry on.
 3. **Run the deterministic checks.** Run the repo's format check, lint, typecheck, and test scripts, with full output to `<report dir>/checks.txt`. Mark each check `✓`, `✗`, or `–` (no script); the axes never see them. Then `node <this skill's dir>/scripts/added-comments.mjs <fixed point> [--trees] > <report dir>/added-comments.txt`.
 4. **Run the axes.** Workflow tool with `script` set to the text of `<this skill's dir>/code-review.workflow.js`; it refuses the file as `scriptPath`. Its `args`: `skillDir`, `repo` (absolute root), `base` (the fixed point), `head`, `spec`, `commentsFile`, `reportDir`, and:
@@ -56,12 +65,22 @@ Verdict: `incomplete` when an axis returned nothing or was unknown – name it; 
 
 When the diff is the user's own branch (commits by `git config user.email`, pushed or not) and nobody asked for the report alone, call the Skill tool with "push-right" and carry on after the verdict under it; its hard failures here are step 1's bad ref and empty diff.
 
-- Decisions: every `plausible` finding and every behavior change with `proof: said`.
-- Capture the baseline from step 3's checks, then apply every other `confirmed` finding, a `choice` as its fix under push-right's Apply:
-  - **Unpushed commit** – a fixup on top: `git commit --fixup=<sha>`. A commit the user called settled gets a new commit on HEAD instead.
+Each surviving finding takes the first route that matches:
+
+| Finding | Route |
+|---|---|
+| `plausible`, blocker or major | Decision |
+| `plausible`, minor or nit | no Decision – it stays a line in `report.md` |
+| `confirmed` behavior change with `proof: said` | Decision |
+| any other `confirmed` | applied, a `choice` as its fix under push-right's Apply |
+
+An applied fix is Done once it passes push-right's Verification; a failing one becomes a Decision.
+
+- Capture the baseline from step 3's checks before the first fix. A fix lands by where the code it changes sits:
+  - **Unpushed commit** – a fixup on top: `git commit --fixup=<sha>`. A commit the user has reviewed gets a new commit on HEAD instead, one per theme.
   - **Pushed commit** – a new commit on HEAD.
   - **Uncommitted** – an edit in place.
-- Each fix passes push-right's Verification before it counts as Done; a failing one becomes a Decision. Copy taken from a finding's fix is Done once its claim is `traced` to the code and, when not English, read back for grammar. A fixup's Done line names the subject of the commit it targets.
+- Copy taken from a finding's fix is Done once its claim is `traced` to the code and, when not English, read back for grammar. A fixup's Done line names the subject of the commit it targets.
 - Re-review once over the fixes: report dir suffixed `-re-review`, `axes` without `spec`, `compare: 'trees'` from the first review's head with `context` "this diff is only the fixes for the previous review; judge only what it changes, and report a hunk that leaves the code worse than its old side even when it is right on its own"; `HEAD` for edits in place, without that `context`.
 - Then stop:
   - A fix the re-review finds worse than the reviewed side is undone the way it landed: another fixup of the same commit, a new commit, or the edit reverted in place. Its finding becomes a Decision, whatever the severity.
