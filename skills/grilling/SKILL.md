@@ -11,8 +11,8 @@ Interview the user relentlessly until you reach a shared understanding. Map this
 Keep the tree in `$TMPDIR/grill-<topic>.md`, the session's record: add each node as it appears, write each answer in as it lands, and reread the file after a compaction. Tag every node before it reaches a round:
 
 - `fact` – the environment holds the answer or a probe shows it.
-- `assume` – one answer is right whatever the user's taste, or follows from what they settled or a pattern the environment already keeps: implementation inside an agreed design, the one fix a defect allows, test design, cleanup, keeping or cutting a comment, commit splitting, verification setup, your own orchestration.
-- `ask` – a **fork** whose branches the user would tell apart, or a fact only they hold: scope and a new kind of artifact; behavior a user of the product sees; taste and voice; people and ticket-owned calls; the timing of anything shipped or posted.
+- `assume` – one answer is right whatever the user's taste, or follows from what they settled or a pattern the environment already keeps, test design included.
+- `ask` – a **fork** whose branches the user would tell apart, a fact only they hold, or the timing of anything shipped or posted.
 
 An `ask` whose recommendation is the only credible branch is an `assume`. An `assume` whose reason does not fit one clause, or whose alternative the user would notice, is an `ask`.
 
