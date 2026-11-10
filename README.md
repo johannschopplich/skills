@@ -12,7 +12,7 @@ A `/name` skill runs only when you type it; the others also load on their own wh
 
 They load **push-right** – install it alongside. **implement** and **code-review** also judge code against my rules in [`claude/rules/`](claude/rules/); without them, the review names each missing rule set and carries on.
 
-- [**push-right**](skills/push-right/SKILL.md) – the shared doctrine: non-destructive work first, verify against a baseline, every irreversible step behind one tray.
+- [**push-right**](skills/push-right/SKILL.md) – the shared doctrine: non-destructive work first, verify against a baseline, every irreversible step behind one checkpoint.
 - [**/implement**](skills/implement/SKILL.md) – a spec, ticket, or conversation, built test-first, a commit per theme, reviewed by **code-review**. Needs Matt Pocock's `tdd`.
 - [**code-review**](skills/code-review/SKILL.md) – five axes in fresh contexts, every finding refuted, a verdict: ship, fix, or incomplete. On your own branch it applies the fixes and re-reviews once. Replaces Matt Pocock's `code-review`, carries his 12 smells verbatim, needs his `tdd` and `writing-for-agents`, and **writing-docs** for doc pages.
 - [**mr-shepherd**](skills/mr-shepherd/SKILL.md) – a teammate's MR or PR, ticket, or stack to ready-to-ship: review, thread triage, fixes or inline drafts.

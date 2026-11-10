@@ -84,6 +84,6 @@ The **thread is the state**. The marker is the authenticated account's newest no
 
 `waiting on author` counts blocker and major drafts.
 
-## After Approval
+## After the Checkpoint
 
 Tray order is the safe order. A fold or rebase conflict aborts the item, never resolved; a push after a rebase carries a `git range-diff` summary proving nothing was lost. After a push, triage the bot's new threads and report a short delta.

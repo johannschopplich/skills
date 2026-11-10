@@ -6,9 +6,9 @@ user-invocable: false
 
 # Push Right
 
-Maximal non-destructive work first; every irreversible action waits behind one late checkpoint: the brief.
+Maximal non-destructive work first; every irreversible action waits behind one late **checkpoint**, the run's only stop besides a hard failure the invoking skill names. There the user gets the **brief**; its **tray** numbers the irreversible actions, and the user's reply is the **pick**: an answer to each Decision the brief lists, a veto of any `decided:` line, and the tray items to run.
 
-The checkpoint is the only stop, besides a hard failure the invoking skill names. Where a step or loaded skill would ask the user (missing ref or spec, ambiguous choice), take the recommended option under Apply; only what the run can't settle goes into Decisions.
+Where a step or loaded skill would ask the user (missing ref or spec, ambiguous choice), take the recommended option under Apply; only what the run can't settle goes into Decisions.
 
 ## Boundary Marker
 
@@ -47,14 +47,14 @@ One artifact, in this order:
 - **Needs you**
   - a reply line taking every recommendation: `Q1 a, Q2 a, ship 1–6`
   - the Decisions, only calls the user might well overturn, as one table – `Q<n> <letter>`, the recommended option readable without its question and named in the user's words, the alternative, the reason; a fact the run can observe gets observed
-  - the tray as a numbered ship list; a push item names its branch (`push 3 commits to feat/x`), every commit it pushes covered by `code-review` first
+  - the tray; a push item names its branch (`push 3 commits to feat/x`), every commit it pushes covered by `code-review` first
 - **Done** – each applied fix once, with its proof.
 - **Waiting on**, **Next**.
-- **Drafts** – every outward draft in full, each in a quote, `D1`…`Dn`, referenced from the ship item that posts it.
+- **Drafts** – every outward draft in full, each in a quote, `D1`…`Dn`, referenced from the tray item that posts it.
 - **Detail** – the path to a file in the run's report dir (default `$TMPDIR/<skill>-<unit>/`) holding full paths, evidence, nits, and refutations.
 
 Each fact shows once. Green checks, zero counts, and empty sections are silent; a clean run is its title and state line. Glyphs `✓` done · `✗` failed · `?` unproven · `–` not run, `·` between fields. Inline code marks only a state or a command the user types; paths, branches, packages, and symbols stay plain. No `<placeholder>` reaches the user. Degradation: what couldn't be established and the cheapest next step, in place of an unproven cause.
 
 ## After the Checkpoint
 
-Once the user has picked from the tray, read [`CHECKPOINT.md`](CHECKPOINT.md).
+After the pick, read [`CHECKPOINT.md`](CHECKPOINT.md).

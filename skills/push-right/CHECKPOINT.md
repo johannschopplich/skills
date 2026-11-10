@@ -1,6 +1,8 @@
 # Checkpoint Execution
 
-Execute only the picked items, in the invoking skill's safe order – code before commentary.
+Work the pick's answers first: a veto drops the commit of the choice it overturns, and an answer with work behind it runs as a re-fire; no tray item runs before the pick on the brief that re-fire ends on.
+
+Then execute only the picked items, in the invoking skill's safe order – code before commentary.
 
 Before each **irreversible** action, re-run its safety check **at execution time**:
 
