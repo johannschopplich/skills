@@ -32,7 +32,7 @@ XML sidecars deleted alongside culled clips are gone; say so.
 
 Ingest decisions are the user's: which folder tree, whether XML sidecars and stills come along, what happens to culled clips, whether a nearly-full working drive gets this batch.
 
-Invoke the `grilling` skill (fallback: ask in rounds, waiting for each), every question carrying your recommendation and built from an inventory finding – an orphan, a collision, a drive that ends the run at 8% free. Done when **every decision the inventory surfaced has an answer you did not supply**.
+Call the Skill tool with "grilling" (fallback: ask in rounds, waiting for each), every question carrying your recommendation and built from an inventory finding – an orphan, a collision, a drive that ends the run at 8% free. Done when **every decision the inventory surfaced has an answer you did not supply**.
 
 ## Copy
 

@@ -37,7 +37,7 @@ The **artifact** is the state the invoking skill names. No state file. A **re-fi
 
 ## Outward Copy
 
-Invoke the `writing-for-developers` skill before the first commit subject, draft, or brief.
+Call the Skill tool with "writing-for-developers" before the first commit subject, draft, or brief.
 
 ## The Brief
 

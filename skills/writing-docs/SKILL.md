@@ -5,7 +5,7 @@ description: Write, edit, or debloat documentation. Use when working on a doc pa
 
 # Writing Docs
 
-The reader opened the docs to do something with the software. Invoke `writing-for-developers` for its voice and typography before the first draft.
+The reader opened the docs to do something with the software. Call the Skill tool with "writing-for-developers" for its voice and typography before the first draft.
 
 The rules below are defaults with a direction, not a template: weigh each against the page in front of you, let one that worsens a sentence yield, and accept some variance across a site. Two parts are firm: the Contract, and the opening paragraph of Headings. A project's own skill or AGENTS.md overrides everything else.
 

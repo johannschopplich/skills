@@ -6,7 +6,7 @@ argument-hint: "MR/PR URL(s) or a tracker ticket URL, then 'review' or 'take-ove
 
 # MR Shepherd
 
-Merging stays the user's or CI's call. **Invoke the `push-right` skill first.** Irreversible: **push to remote**, **post to the thread or tracker** (a bot re-review request included), **resolve a thread**, **edit the description**.
+Merging stays the user's or CI's call. **Call the Skill tool with "push-right" first.** Irreversible: **push to remote**, **post to the thread or tracker** (a bot re-review request included), **resolve a thread**, **edit the description**.
 
 ## Bind the Run
 
@@ -29,7 +29,7 @@ The **thread is the state**. The marker is the authenticated account's newest no
 2. **Resolve the MR.** Metadata, CI, every thread (inline and general), and the ticket. Find the ticket by the forward link, else by a tracker search for the MR URL. In Asana, invoke the `asana` skill if installed and search the **Merge request** field for the full URL. No hit, no ticket.
 3. **Pre-check merge safety.** Read-only, after `git fetch`: behind, diverged, CI on the latest push, conflicts – for the state line.
 4. **Add a worktree** at `../<repo>-mr-<id>`, reused on re-fire, never the user's checkout.
-5. **Review.** Invoke the `code-review` skill from the worktree. Fixed point: the target's merge-base. Spec: the ticket URL. Context: the mode (own → Own Work; else report only), the author, and product or design decisions the ticket shows as accepted. Triage:
+5. **Review.** Call the Skill tool with "code-review" from the worktree. Fixed point: the target's merge-base. Spec: the ticket URL. Context: the mode (own → Own Work; else report only), the author, and product or design decisions the ticket shows as accepted. Triage:
    - **Intent** – MR differs from what the ticket asked: leads the Decisions.
    - **Prevention** – a finding class recurring in the MR or the thread gets one Decision on where to stop it: lint rule, repo skill or `AGENTS.md` line, CodeRabbit path instruction.
    - **Product scope** – visual and product-value doubts on work a PM or designer accepted (`PM:` lines) → one line for them, never an author comment.

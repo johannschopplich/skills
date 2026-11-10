@@ -54,7 +54,7 @@ Verdict: `incomplete` when an axis returned nothing or was unknown – name it; 
 
 ## Own Work
 
-When the diff is the user's own branch (commits by `git config user.email`, pushed or not) and nobody asked for the report alone, invoke the `push-right` skill and carry on after the verdict under it; its hard failures here are step 1's bad ref and empty diff.
+When the diff is the user's own branch (commits by `git config user.email`, pushed or not) and nobody asked for the report alone, call the Skill tool with "push-right" and carry on after the verdict under it; its hard failures here are step 1's bad ref and empty diff.
 
 - Decisions: every `plausible` finding and every behavior change with `proof: said`.
 - Capture the baseline from step 3's checks, then apply every other `confirmed` finding, a `choice` as its fix under push-right's Apply:
