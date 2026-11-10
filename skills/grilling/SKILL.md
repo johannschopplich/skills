@@ -8,7 +8,7 @@ Interview the user relentlessly until you reach a shared understanding. Map this
 
 ## Map
 
-Keep the tree in `$TMPDIR/grill-<topic>.md`, the session's record: add each node as it appears, write each answer in as it lands, and reread the file after a compaction. Tag every node before it reaches a round:
+Keep the tree in `$TMPDIR/grill-<topic>.md`, the session's record: add each node as it appears, write each answer in as it lands and each assumed line as you list it, and reread the file after a compaction. Tag every node before it reaches a round:
 
 - `fact` – the environment holds the answer or a probe shows it.
 - `assume` – one answer is right whatever the user's taste, or follows from what they settled or a pattern the environment already keeps, test design included.
