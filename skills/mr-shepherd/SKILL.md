@@ -38,7 +38,8 @@ The **thread is the state**. The marker is the authenticated account's newest no
 8. **Verify.** A fix that reddens anything else is discarded, its finding → Decision. UI: reproduce live via `chrome-devtools` MCP on the preview or a local server; else the closest component or e2e test, gap named. Asked to compare visuals: one before/after page, target and branch side by side, light and dark where both exist.
 9. **Draft.**
    - **Inline drafts** (review), created now as the user's pending review – GitLab via [`GITLAB.md`](GITLAB.md), its replies as draft replies; GitHub as one `gh api repos/{o}/{r}/pulls/{n}/reviews` call with `comments[]` (`path`, `line`, `side`, `body`) and no `event`. A finding takes the first match:
-     - `plausible` → Decisions
+     - `plausible` blocker or major → Decisions
+     - any other `plausible` → Detail
      - one the target already has → Next
      - nits → at most one summary draft
      - a confirmed blocker, major, or minor the MR introduces → one on its line; a `suggestion` block holds only the changed lines
