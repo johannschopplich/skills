@@ -22,6 +22,7 @@ They load **push-right** – install it alongside. **implement** and **code-revi
 - [**grilling**](skills/grilling/SKILL.md) – a relentless interview in rounds: the design tree kept in a file as it grows, facts looked up, settled assumptions listed for veto. Replaces Matt Pocock's `grilling`, `grill-me`, and `grill-with-docs`; `docs` adds his `domain-modeling`.
 - [**writing-for-developers**](skills/writing-for-developers/SKILL.md) – issue replies, review comments, PR descriptions, and commit subjects in my voice.
 - [**writing-docs**](skills/writing-docs/SKILL.md) – doc pages, READMEs, changelogs, and migration guides: the contract the docs state, headings by job, a debloat pass that lists the numbers and identifiers a cut lost. Needs **writing-for-developers**.
+- [**writing-agents-md**](skills/writing-agents-md/SKILL.md) – `AGENTS.md` files: where each line belongs, from nowhere to the nearest `AGENTS.md`, the shape, and a pass that asks you which of two contradicting lines wins. Needs Matt Pocock's `writing-for-agents`.
 - [**/audit-prompt**](skills/audit-prompt/SKILL.md) – audit a prompt an app sends to a Claude or OpenAI model.
 - [**/generate-tailwind-shades**](skills/generate-tailwind-shades/SKILL.md) – Tailwind v4 OKLCH palettes anchored at shade 500.
 
