@@ -14,4 +14,4 @@ A line carries only what an agent can't read its way to: an absence, a coupling 
 
 On top of `writing-for-agents`, and `writing-agents-md` for an `AGENTS.md`: a reason only where it decides a case the rule doesn't name, no re-taught tool, nothing `~/.claude/CLAUDE.md` or `~/.claude/rules/` already says unless the skill is public, and one repo's fact goes in that repo's `AGENTS.md`.
 
-After an edit, a fresh subagent gets the old text, the new text, and the document's purpose; a hunk it judges worse, or longer without gain, goes back.
+After an edit beyond a line or two, a fresh subagent gets the old text, the new text, and the document's purpose; a hunk it judges worse, or longer without gain, goes back.

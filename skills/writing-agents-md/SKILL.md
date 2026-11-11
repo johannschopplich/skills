@@ -35,4 +35,4 @@ Either every `AGENTS.md` has a `CLAUDE.md` beside it, a symlink to it or an `@AG
    - **Debloating:** every line gets **keep**, **sharpen** (a vague line over a real trap, rewritten as the fact the code confirms), **move** (naming its rung), or **cut** (rung 1, a no-op, a hedge, history); a missing identity sentence or verify command is added.
    - **Adding:** place the new line and fold in what it overlaps.
    - **Creating:** the identity sentence, the verify commands, and a convention per trap met in the code or named by the user, written by hand.
-3. **Fresh read.** A fresh subagent gets the old text, the new text, and the file's purpose; a hunk it judges worse, or longer without gain, goes back.
+3. **Fresh read.** An edit beyond a line or two closes on a fresh subagent that gets the old text, the new text, and the file's purpose; a hunk it judges worse, or longer without gain, goes back.
