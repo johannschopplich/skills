@@ -9,6 +9,19 @@ Each line gets its verdict in two steps:
 
 Done when every added or changed comment line has a verdict: **keep**, **delete**, or **rewrite** (with the rewritten line), each keep and rewrite naming what earned the line its place. A declaration without a comment is no finding.
 
+## Calibration
+
+Deleted in review:
+
+- `// Switched from SMTP to Resend after the March outage.` – history; the commit message carries it.
+- `/** Header action that opens the \`PricingPanel\`. */` – restates the name and the code.
+- `// Called from \`createChild\` in the sidebar store.` – points at another call site and goes stale.
+- `/* Tailwind's docs voice: small mono caps for section labels. */` – narrates design taste.
+- `// The doubled request budget is parse plus start.` – a value another place owns.
+- `/** Returns undefined when the product has no summary risk indicator. */` above a three-line function – the code already says it.
+- `/** Returns today's midnight as a timestamp, which is what \`strtotime()\` makes of a stored \`Y-m-d\`, so the two compare by day. */` above `return strtotime(date('Y-m-d'))` – a one-line body read back, with a reason every call site shows.
+- `// Hetzner silently drops outbound 465/587, so mail goes over Resend's HTTPS.` – hosting history and our reasoning; the class works wherever it is hosted.
+
 ## Constraint Comments
 
 A comment that guards the code – `keep in sync with …`, `do not remove`, a self-justifying workaround – is proposed for encoding where a type, a test, or a lint rule can hold the constraint; otherwise it stays. A workaround in our own code gets questioned before its comment.
