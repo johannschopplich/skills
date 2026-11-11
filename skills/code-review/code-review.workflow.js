@@ -49,6 +49,7 @@ const VERDICTS = {
           id: { type: 'string' },
           verdict: { type: 'string', enum: ['confirmed', 'plausible', 'refuted'] },
           reason: { type: 'string', description: 'One sentence, citing what was read or run' },
+          fix: { type: 'string', description: 'Only when the finding holds but its fix does not: the fix that holds' },
         },
       },
     },
@@ -115,6 +116,7 @@ Try to refute each finding: read the cited code, the quoted rule or spec line, a
 - confirmed – you checked it and it holds.
 - plausible – it may hold, but you could not settle it.
 - refuted – the code, the rule, or a run shows it is wrong; say what shows it.
+A fix that proposes a comment or prose line is part of its claim: hold the proposed line to the axis's rules too, and when it fails them, set \`fix\` to the fix that holds – for a line that earns no place, deleting it.
 
 Findings:
 ${JSON.stringify(findings, null, 2)}`
@@ -147,6 +149,7 @@ async function refuteAxis({ axis, review, error }) {
     refuteFailed: !refutation,
     findings: findings.map(finding => ({
       ...finding,
+      fix: verdictById.get(finding.id)?.fix ?? finding.fix,
       verdict: verdictById.get(finding.id)?.verdict ?? 'plausible',
       verdictReason: verdictById.get(finding.id)?.reason ?? 'no skeptic verdict',
     })),

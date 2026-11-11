@@ -80,7 +80,7 @@ An applied fix is Done once it passes push-right's Verification; a failing one b
   - **Unpushed commit** – a fixup on top: `git commit --fixup=<sha>`. A commit the user has reviewed gets a new commit on HEAD instead, one per theme.
   - **Pushed commit** – a new commit on HEAD.
   - **Uncommitted** – an edit in place.
-- Copy taken from a finding's fix is Done once its claim is `traced` to the code and, when not English, read back for grammar. A fixup's Done line names the subject of the commit it targets.
+- Copy taken from a finding's fix is Done once its claim is `traced` to the code and, when not English, read back for grammar. A comment line from a fix passes the comments axis's Place step before it lands; one that fails it lands as a deletion. A fixup's Done line names the subject of the commit it targets.
 - Re-review once over the fixes: report dir suffixed `-re-review`, `axes` without `spec`, `compare: 'trees'` from the first review's head with `context` "this diff is only the fixes for the previous review; judge only what it changes, and report a hunk that leaves the code worse than its old side even when it is right on its own"; `HEAD` for edits in place, without that `context`.
 - Then stop:
   - A fix the re-review finds worse than the reviewed side is undone the way it landed: another fixup of the same commit, a new commit, or the edit reverted in place. Its finding becomes a Decision, whatever the severity.
