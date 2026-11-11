@@ -21,11 +21,10 @@ A line goes to the first place that matches:
 
 ## Shape
 
-H1 product name → one sentence on what the project is and for whom → `GLOSSARY.md` and `docs/adr/` pointers if they exist → `## Commands` → `## Conventions` → repo-specific H2s → `## Search Hints`. A section with no line is left out.
+H1 product name → one sentence on what the project is and for whom → `GLOSSARY.md` and `docs/adr/` pointers if they exist → `## Commands` → `## Conventions` → repo-specific H2s. A section with no line is left out.
 
 - **Commands**: the commands that verify a change, plus any the environment doesn't show or that carry a trap. A trailing comment says when to run it or what bites (`# lives in tools/phpcs/vendor/bin/`), or the line has none.
 - **Conventions**: one present-tense fact per line, in a plain voice: capitals and ALWAYS over-trigger. A path appears only where it is the convention: `app/composables/` holds `use*` functions only.
-- **Search Hints**: `symbol` – what it is, for an entry point a search for its job would miss; the symbol stands in for its path.
 
 Either every `AGENTS.md` has a `CLAUDE.md` beside it, a symlink to it or an `@AGENTS.md` import, or the repo holds no `CLAUDE.md`, `CLAUDE.local.md`, or `.claude/CLAUDE.md`: once one sits in the working directory or above, Claude Code reads only `CLAUDE.md` files and skips every `AGENTS.md` without one. A new nested `AGENTS.md` gets its `CLAUDE.md` with it; a mix is listed for the user. In a monorepo, the root says in one line to read a package's `AGENTS.md` before working there: an agent started at the root loads it late (Claude Code, on the first read there) or only once the agent opens it (Codex).
 
