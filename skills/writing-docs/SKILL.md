@@ -13,7 +13,7 @@ The rules below are defaults with a direction, not a template: weigh each agains
 
 Docs state the contract: what the reader can set, call, see, catch, pay for, or must work around. Mechanism stays in the source: internal classes and enums, private fields, internal file and script names, the path a value takes, wire formats, internal batch sizes, the arithmetic behind a number, the spellings an input also tolerates. A mechanism the reader feels becomes its consequence, not silence: "Registers a single tool and forces it via `toolChoice`" becomes "Structured output is a forced tool call, so the response always matches your schema." A section whose job is to explain the mechanism, such as How It Works, keeps the mechanism it explains, in the reader's terms.
 
-Docs invite a developer in: the contract is what they need to work with the software, and the types, `--help`, and the source hold the rest. An edit adds a fact only where most readers are stuck without it: "Node.js and Bun need `@napi-rs/canvas`, passed as `canvasImport`." gains neither "0.1.69 or later" nor the error thrown without it.
+Docs invite a developer in and show how to work with the software; the types, `--help`, and the source hold the rest. An edit adds a fact only where a reader following the page is stuck without it.
 
 The reason behind a design belongs in an ADR or the commit, and stays in the docs only where it helps the reader diagnose or decide. Whether a fact costs money or data depends on the project: under per-character billing a batch size is mechanism, under per-request billing it is a cost. A project's own skill or AGENTS.md names its cost model and audience.
 
