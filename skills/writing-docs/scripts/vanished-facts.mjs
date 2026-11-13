@@ -9,6 +9,7 @@
 // against all of it.
 // With `--added`, it lists the facts the change added that no page contained at the base of `<range>`, and names the
 // commit for a fact the history had already removed once.
+import { Buffer } from 'node:buffer'
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -124,7 +125,6 @@ function earlierRemoval(fact, group) {
 function collectChangedFacts(diffText) {
   const factsByGroup = new Map()
   const sign = isAdded ? '+' : '-'
-  const fileHeader = isAdded ? '+++ b/' : '--- a/'
   const maxLength = isAdded ? maxAddedFactLength : maxFactLength
   let currentFile = ''
   let isInFileHeader = false
@@ -136,12 +136,12 @@ function collectChangedFacts(diffText) {
       continue
     }
     if (isInFileHeader) {
-      // The sign's side names the file a fact came from, also for a renamed file; the other side stands in where the
-      // sign's side is `/dev/null`, for a page the change added or deleted. Git ends a path that contains a space with
-      // a tab.
-      if (line.startsWith('--- a/') || line.startsWith('+++ b/')) {
-        if (line.startsWith(fileHeader) || !currentFile)
-          currentFile = line.slice(fileHeader.length + docsPrefix.length).replace(/\t$/, '')
+      // The header on the side of `sign` names the file a fact came from, also for a renamed file; the other side
+      // stands in where that side is `/dev/null`, for a page the change added or deleted.
+      const header = readFileHeader(line)
+      if (header) {
+        if (header.side === sign || !currentFile)
+          currentFile = header.path
       }
       else if (line.startsWith('@@')) {
         isInFileHeader = false
@@ -172,6 +172,41 @@ function collectChangedFacts(diffText) {
   }
 
   return factsByGroup
+}
+
+// Returns null for `/dev/null`. Git puts C-style quotes around a path with a `"`, a backslash, or a control character,
+// and ends a path that contains a space with a tab.
+function readFileHeader(line) {
+  const match = /^(---|\+\+\+) (?:"((?:[^"\\]|\\.)*)"|(.*?))\t?$/.exec(line)
+  if (!match)
+    return null
+  const fullPath = match[2] === undefined ? match[3] : unquoteCPath(match[2])
+  if (!/^[ab]\//.test(fullPath))
+    return null
+  return { side: match[1][0], path: fullPath.slice(2 + docsPrefix.length) }
+}
+
+// Reverses Git's C-style path quoting, where an octal escape is one byte of the UTF-8 path.
+function unquoteCPath(quotedPath) {
+  const escapedBytes = { a: 7, b: 8, t: 9, n: 10, v: 11, f: 12, r: 13 }
+  const backslash = '\\'.charCodeAt(0)
+  const sourceBytes = Buffer.from(quotedPath)
+  const bytes = []
+  for (let index = 0; index < sourceBytes.length; index++) {
+    if (sourceBytes[index] !== backslash) {
+      bytes.push(sourceBytes[index])
+      continue
+    }
+    const next = String.fromCharCode(sourceBytes[++index])
+    if (/[0-7]/.test(next)) {
+      bytes.push(Number.parseInt(sourceBytes.subarray(index, index + 3).toString(), 8))
+      index += 2
+    }
+    else {
+      bytes.push(escapedBytes[next] ?? sourceBytes[index])
+    }
+  }
+  return Buffer.from(bytes).toString('utf8')
 }
 
 function isPage(path) {
