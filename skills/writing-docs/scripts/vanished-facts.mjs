@@ -3,10 +3,12 @@
 // pages under a docs directory that no tracked or untracked Markdown page there still contains. A changelog,
 // `GLOSSARY.md`, an ADR under `adr/`, `AGENTS.md`, `CLAUDE.md`, and a dot-named file or directory are no pages: a fact
 // that survives only there is gone.
-// Usage: vanished-facts.mjs [--per-dir] <range> [<docs-dir>] – `<range>` as `git diff` takes it; a bare base compares
-// against the working tree, which is what the pages are read from. `<docs-dir>` defaults to `docs`. With `--per-dir`,
-// each top-level directory of `<docs-dir>` is its own corpus, so a fact that survives only in another directory still
-// counts as gone; files directly under `<docs-dir>` are checked against all of it.
+// Usage: vanished-facts.mjs [--per-dir] [--added] <range> [<docs-dir>] – `<range>` as `git diff` takes it.
+// `<docs-dir>` defaults to `docs`. With `--per-dir`, each top-level directory of `<docs-dir>` is its own corpus, so a
+// fact that survives only in another directory still counts as gone; files directly under `<docs-dir>` are checked
+// against all of it.
+// With `--added`, it lists the facts the change added that no page contained at the base of `<range>`, and names the
+// commit for a fact the history had already removed once.
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -17,23 +19,36 @@ const numberPattern = /(?<![\w`/.-])\d+(?:[.,]\d+)*(?:-[\dA-Za-z]+(?:\.[\dA-Za-z
 const identifierPattern = /`([^`]+)`/g
 const trivialNumbers = new Set(['0', '1', '2'])
 const maxFactLength = 40
+// A quoted error message is the added fact worth seeing, and it is longer than an identifier.
+const maxAddedFactLength = 100
 const markdownPathspecs = ['*.md', '*.mdx']
 const rootGroup = ''
-const changelogPattern = /^changelog\.mdx?$/i
-const nonPageFileNames = new Set(['GLOSSARY.md', 'GLOSSARY-MAP.md', 'AGENTS.md', 'CLAUDE.md'])
-const adrDirectoryPattern = /^adrs?$/i
+const changelogFileNames = ['changelog.md', 'changelog.mdx']
+const nonPageFileNames = ['GLOSSARY.md', 'GLOSSARY-MAP.md', 'AGENTS.md', 'CLAUDE.md']
+const adrDirectoryNames = ['adr', 'adrs']
+// What `isPage` rejects.
+const nonPagePathspecs = [
+  ...changelogFileNames.map(name => `:(exclude,icase,glob)**/${name}`),
+  ...nonPageFileNames.map(name => `:(exclude,glob)**/${name}`),
+  ...adrDirectoryNames.map(name => `:(exclude,icase,glob)**/${name}/**`),
+  ':(exclude,glob)**/.*',
+  ':(exclude,glob)**/.*/**',
+]
 
 let isPerDirectory = false
+let isAdded = false
 const positionals = []
 for (const argument of process.argv.slice(2)) {
   if (argument === '--per-dir')
     isPerDirectory = true
+  else if (argument === '--added')
+    isAdded = true
   else
     positionals.push(argument)
 }
 const [range, docsDirectoryArgument = 'docs'] = positionals
 if (!range || positionals.length > 2) {
-  console.error('Usage: vanished-facts.mjs [--per-dir] <range> [<docs-dir>]')
+  console.error('Usage: vanished-facts.mjs [--per-dir] [--added] <range> [<docs-dir>]')
   process.exit(1)
 }
 
@@ -47,31 +62,70 @@ const git = args => execFileSync('git', ['-c', 'core.quotePath=false', ...args],
 // Repository-relative path of the docs directory with a trailing slash, empty at the repository root.
 const docsPrefix = git(['rev-parse', '--show-prefix']).trim()
 const diff = git(['diff', '--no-ext-diff', '--no-color', '--no-relative', '--src-prefix=a/', '--dst-prefix=b/', '-U0', range, '--', ...markdownPathspecs])
-const pages = readPages()
+const baseRevision = isAdded ? resolveBaseRevision() : ''
+const pages = isAdded ? readPagesAt(baseRevision) : readPages()
 
-const removedFacts = collectRemovedFacts(diff)
+// `git diff` leaves untracked files out, so a page written since the base is added as a diff of its own.
+const untrackedDiff = isAdded && !range.includes('..')
+  ? listMarkdownFiles('--others')
+      .map(path => [`diff --git a/${docsPrefix}${path} b/${docsPrefix}${path}`, `+++ b/${docsPrefix}${path}`, '@@', ...readFileSync(join(docsDirectory, path), 'utf8').split('\n').map(line => `+${line}`)].join('\n'))
+      .join('\n')
+  : ''
+const changedFacts = collectChangedFacts(`${diff}\n${untrackedDiff}`)
 
-for (const [group, facts] of removedFacts) {
+for (const [group, facts] of changedFacts) {
   const corpus = pages
     .filter(page => group === rootGroup || page.path.startsWith(`${group}/`))
     .map(page => page.content)
     .join('\n')
-  const vanishedFacts = [...facts].filter(([fact]) => !isPresent(fact, corpus))
+  const listedFacts = [...facts].filter(([fact]) => !isPresent(fact, corpus))
   const label = !isPerDirectory ? docsDirectoryArgument : group === rootGroup ? '(root)' : group.replace(/^\d+\./, '')
-  console.log(`== ${label}: ${vanishedFacts.length} facts no longer in the documentation`)
-  for (const [fact, files] of vanishedFacts.sort(([a], [b]) => a.localeCompare(b)))
-    console.log(`   ${fact.padEnd(maxFactLength)} (${[...files].sort().join(', ')})`)
+  console.log(`== ${label}: ${listedFacts.length} facts ${isAdded ? 'new to' : 'no longer in'} the documentation`)
+  const width = Math.max(maxFactLength, ...listedFacts.map(([fact]) => fact.length))
+  for (const [fact, files] of listedFacts.sort(([a], [b]) => a.localeCompare(b))) {
+    const removal = isAdded ? earlierRemoval(fact, group) : ''
+    console.log(`   ${fact.padEnd(width)} (${[...files].sort().join(', ')})${removal && ` – removed before in ${removal}`}`)
+  }
 }
 
 function readPages() {
-  return git(['ls-files', '--cached', '--others', '--exclude-standard', '-z', '--', ...markdownPathspecs])
-    .split('\0')
-    .filter(path => path && isPage(path) && existsSync(join(docsDirectory, path)))
+  return listMarkdownFiles('--cached', '--others')
+    .filter(path => isPage(path) && existsSync(join(docsDirectory, path)))
     .map(path => ({ path, content: readFileSync(join(docsDirectory, path), 'utf8') }))
 }
 
-function collectRemovedFacts(diffText) {
+function listMarkdownFiles(...flags) {
+  return git(['ls-files', ...flags, '--exclude-standard', '-z', '--', ...markdownPathspecs]).split('\0').filter(Boolean)
+}
+
+function readPagesAt(revision) {
+  return git(['ls-tree', '-r', '-z', '--name-only', revision, '--', '.'])
+    .split('\0')
+    .filter(path => path && /\.mdx?$/.test(path) && isPage(path))
+    .map(path => ({ path, content: git(['show', `${revision}:./${path}`]) }))
+}
+
+// Resolves the revision `git diff` compares from: the merge base for `A...B`.
+function resolveBaseRevision() {
+  const [left, right] = range.split(/\.{2,3}/)
+  return range.includes('...') ? git(['merge-base', left || 'HEAD', right || 'HEAD']).trim() : left || 'HEAD'
+}
+
+// Finds the newest commit at or before the base whose diff of the corpus holds the fact: the base lacks the fact, so
+// that commit removed it. The number pattern is `isPresent`'s, as an extended regular expression.
+function earlierRemoval(fact, group) {
+  const pathspecs = group === rootGroup ? markdownPathspecs : markdownPathspecs.map(pathspec => `${group}/${pathspec}`)
+  const pattern = /^\d/.test(fact)
+    ? `(^|[^[:alnum:]_/.-])${escapeRegExp(fact)}([^[:alnum:]_/.,-]|[.,]([^0-9]|$)|$)`
+    : escapeRegExp(fact)
+  return git(['log', '-1', '--format=%h', `-G${pattern}`, baseRevision, '--', ...pathspecs, ...nonPagePathspecs]).trim()
+}
+
+function collectChangedFacts(diffText) {
   const factsByGroup = new Map()
+  const sign = isAdded ? '+' : '-'
+  const fileHeader = isAdded ? '+++ b/' : '--- a/'
+  const maxLength = isAdded ? maxAddedFactLength : maxFactLength
   let currentFile = ''
   let isInFileHeader = false
 
@@ -83,20 +137,20 @@ function collectRemovedFacts(diffText) {
     if (isInFileHeader) {
       // The `---` side names the file a removed line came from, also for a deleted or renamed file. Git ends a path
       // that contains a space with a tab.
-      if (line.startsWith('--- a/'))
-        currentFile = line.slice('--- a/'.length + docsPrefix.length).replace(/\t$/, '')
+      if (line.startsWith(fileHeader))
+        currentFile = line.slice(fileHeader.length + docsPrefix.length).replace(/\t$/, '')
       else if (line.startsWith('@@'))
         isInFileHeader = false
       continue
     }
-    if (!line.startsWith('-') || !isPage(currentFile))
+    if (!line.startsWith(sign) || !isPage(currentFile))
       continue
 
     const text = line.slice(1)
     const facts = [
       ...(text.match(numberPattern) ?? []),
       ...[...text.matchAll(identifierPattern)].map(match => match[1]),
-    ].filter(fact => fact.length <= maxFactLength && !trivialNumbers.has(fact))
+    ].filter(fact => fact.length <= maxLength && !trivialNumbers.has(fact))
 
     const pathSegments = currentFile.split('/')
     const group = isPerDirectory && pathSegments.length > 1 ? pathSegments[0] : rootGroup
@@ -115,10 +169,10 @@ function collectRemovedFacts(diffText) {
 function isPage(path) {
   const segments = path.split('/')
   const fileName = segments.at(-1)
-  return !changelogPattern.test(fileName)
-    && !nonPageFileNames.has(fileName)
+  return !changelogFileNames.includes(fileName.toLowerCase())
+    && !nonPageFileNames.includes(fileName)
     && !segments.some(segment => segment.startsWith('.'))
-    && !segments.slice(0, -1).some(segment => adrDirectoryPattern.test(segment))
+    && !segments.slice(0, -1).some(segment => adrDirectoryNames.includes(segment.toLowerCase()))
 }
 
 function isPresent(fact, corpus) {
