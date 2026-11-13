@@ -88,7 +88,11 @@ A renamed heading moves its anchor: update every link that points at it.
 
 1. **Verdict.** Give every paragraph of the page **keep**, **cut**, or **rewrite** against the sections above, for this page's reader and its mode. Done when no paragraph is left without one.
 2. **Vanished facts.** After the cuts, run `node <this skill's dir>/scripts/vanished-facts.mjs <base> [<docs-dir>]` from the repo: `<docs-dir>` defaults to `docs`, `.` checks a README, and `--per-dir` makes each top-level directory of `<docs-dir>` its own corpus for docs that are one product per directory. It lists the numbers, a bare 0, 1, or 2 aside, and the backticked identifiers the change removed that no page still contains; a changelog, `GLOSSARY.md`, an ADR under `adr/`, `AGENTS.md`, `CLAUDE.md`, and a dot-named file or directory count as no page. A default or an error message in plain words, and a bare 0, 1, or 2, is the verdict's to catch. Done when every listed fact is back on the page or one the Contract leaves to the source.
-3. **Fresh read**, as below.
+3. **Added facts and fresh read**, as below.
+
+## Added Facts
+
+After an edit that adds or rewrites, run the Debloat Pass's command with `--added`. Before keeping a fact an earlier commit removed, read that commit. Done when every listed fact is one the Contract lets an edit add.
 
 ## Fresh Read
 
