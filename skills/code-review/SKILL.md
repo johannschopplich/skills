@@ -30,7 +30,7 @@ Every command runs in the repo or worktree root.
    - `axes` – optional, an array
    - `context` – what the diff can't show (whose code it is, product decisions already accepted)
 
-   Without the Workflow tool: one Agent per axis in a single message, each started with a fresh context window, with the script's prompts, then one skeptic per axis with findings, and the verdict per Report.
+   Without the Workflow tool: one Agent per axis in a single message, each started with a fresh context window, with the script's prompts, then one skeptic per axis with findings, every Agent on `model: 'opus'`, and the verdict per Report.
    Wait for the workflow, or every fallback Agent, to return – an axis still running is pending, not empty – then write the result to `<report dir>/verdicts.json`.
 5. **Record.** Only for a run that had no fixed point argument, covered every axis (`spec` optional), ended on a verdict other than `incomplete`, and ran on a branch, never a detached HEAD. Then overwrite `$(git rev-parse --git-common-dir)/code-review/<branch>.txt` with the reviewed head SHA and its merge-base, one per line; `mkdir -p` the parent.
 6. **Report.**

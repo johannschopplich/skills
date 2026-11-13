@@ -3,8 +3,8 @@ export const meta = {
   name: 'code-review',
   description: 'Review a diff along five axes in fresh contexts, refute every finding, and return a verdict',
   phases: [
-    { title: 'Review', detail: 'one read-only agent per axis' },
-    { title: 'Refute', detail: 'one skeptic per axis with findings' },
+    { title: 'Review', detail: 'one read-only agent per axis', model: 'opus' },
+    { title: 'Refute', detail: 'one skeptic per axis with findings', model: 'opus' },
   ],
 }
 
@@ -124,7 +124,7 @@ ${JSON.stringify(findings, null, 2)}`
 
 async function reviewAxis(axis) {
   try {
-    const result = await agent(reviewPrompt(axis), { label: `review:${axis}`, phase: 'Review', schema: FINDINGS })
+    const result = await agent(reviewPrompt(axis), { label: `review:${axis}`, phase: 'Review', schema: FINDINGS, model: 'opus' })
     return { axis, review: result }
   }
   catch (error) {
@@ -140,7 +140,7 @@ async function refuteAxis({ axis, review, error }) {
     return { axis, findings, note: review.note }
   let refutation = null
   try {
-    refutation = await agent(refutePrompt(axis, findings), { label: `refute:${axis}`, phase: 'Refute', schema: VERDICTS })
+    refutation = await agent(refutePrompt(axis, findings), { label: `refute:${axis}`, phase: 'Refute', schema: VERDICTS, model: 'opus' })
   }
   catch {}
   const verdictById = new Map((refutation?.verdicts ?? []).map(entry => [entry.id, entry]))
