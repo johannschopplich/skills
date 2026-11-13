@@ -4,7 +4,7 @@ export const meta = {
   description: 'Review a diff along five axes in fresh contexts, refute every finding, and return a verdict',
   phases: [
     { title: 'Review', detail: 'one read-only agent per axis', model: 'opus' },
-    { title: 'Refute', detail: 'one skeptic per axis with findings', model: 'opus' },
+    { title: 'Refute', detail: 'one skeptic per axis with findings or comment keeps', model: 'opus' },
   ],
 }
 
@@ -36,6 +36,26 @@ const FINDINGS = {
   },
 }
 
+const COMMENTS_FINDINGS = {
+  ...FINDINGS,
+  properties: {
+    ...FINDINGS.properties,
+    keeps: {
+      type: 'array',
+      description: 'Every comment line judged keep',
+      items: {
+        type: 'object',
+        required: ['location', 'line', 'earnedBy'],
+        properties: {
+          location: { type: 'string', description: 'file:line' },
+          line: { type: 'string', description: 'The comment line as written' },
+          earnedBy: { type: 'string', description: 'What earned the line its place, and the code it was looked for in' },
+        },
+      },
+    },
+  },
+}
+
 const VERDICTS = {
   type: 'object',
   required: ['verdicts'],
@@ -49,7 +69,7 @@ const VERDICTS = {
           id: { type: 'string' },
           verdict: { type: 'string', enum: ['confirmed', 'plausible', 'refuted'] },
           reason: { type: 'string', description: 'One sentence, citing what was read or run' },
-          fix: { type: 'string', description: 'Only when the finding holds but its fix does not: the fix that holds' },
+          fix: { type: 'string', description: 'The fix that holds – only for a finding that holds while its fix does not, or for a refuted keep' },
         },
       },
     },
@@ -93,7 +113,7 @@ function reviewPrompt(axis) {
   const prefix = AXIS_PREFIXES[axis]
   const axisInputs = {
     spec: `Spec: ${spec}`,
-    comments: commentsFile ? `The added comment lines are listed in ${commentsFile}.` : '',
+    comments: `${commentsFile ? `The added comment lines are listed in ${commentsFile}. ` : ''}Return every keep in \`keeps\`.`,
   }
   return `You are the ${axis} axis of a code review. Read ${skillDir}/axes/${axis}.md and follow it.
 
@@ -107,24 +127,34 @@ Report every finding you see, each with its severity and confidence; a separate 
 Findings are numbered ${prefix}1, ${prefix}2, … in the order you return them. Write your full report as Markdown to ${reportDir}/${axis}.md under those IDs, then return the structured findings in that order, the ID out of the finding text. Your reply is final and nobody will answer a question: finish the axis before replying.`
 }
 
-function refutePrompt(axis, findings) {
-  return `You are the skeptic for the ${axis} axis of a code review. Each finding below claims a defect in the diff \`${diffCommand}\` in ${repo}.${untrackedLine}
+function refutePrompt(axis, findings, keeps) {
+  const claims = [
+    findings.length > 0 ? 'Each finding below claims a defect.' : '',
+    keeps.length > 0 ? 'Each keep below claims that a comment line earns its place under the Place step.' : '',
+  ].filter(Boolean).join(' ')
+  const keepRule = keeps.length > 0 ? ' A keep is refuted when the line, or a clause of it, is a read-back: quote the code that says it in `reason`, and set `fix` to deleting the line or to the rewrite that drops the clause.' : ''
+  return `You are the skeptic for the ${axis} axis of a code review of the diff \`${diffCommand}\` in ${repo}.${untrackedLine}
 The axis's rules are in ${skillDir}/axes/${axis}.md.${contextLine}
 
 ${guardLines}
-Try to refute each finding: read the cited code, the quoted rule or spec line, and the call sites; run a cheap read-only check where one settles it. Return one verdict per ID:
+${claims} Try to refute each one: read the cited code, the quoted rule or spec line, and the call sites; run a cheap read-only check where one settles it. Return one verdict per ID:
 - confirmed – you checked it and it holds.
 - plausible – it may hold, but you could not settle it.
-- refuted – the code, the rule, or a run shows it is wrong; say what shows it.
+- refuted – the code, the rule, or a run shows it is wrong; say what shows it.${keepRule}
 A fix that proposes a comment or prose line is part of its claim: hold the proposed line to the axis's rules too, and when it fails them, set \`fix\` to the fix that holds – for a line that earns no place, deleting it.
-
+${findings.length > 0 ? `
 Findings:
-${JSON.stringify(findings, null, 2)}`
+${JSON.stringify(findings, null, 2)}
+` : ''}${keeps.length > 0 ? `
+Keeps:
+${JSON.stringify(keeps, null, 2)}
+` : ''}`
 }
 
 async function reviewAxis(axis) {
   try {
-    const result = await agent(reviewPrompt(axis), { label: `review:${axis}`, phase: 'Review', schema: FINDINGS, model: 'opus' })
+    const schema = axis === 'comments' ? COMMENTS_FINDINGS : FINDINGS
+    const result = await agent(reviewPrompt(axis), { label: `review:${axis}`, phase: 'Review', schema, model: 'opus' })
     return { axis, review: result }
   }
   catch (error) {
@@ -136,23 +166,45 @@ async function refuteAxis({ axis, review, error }) {
   if (!review)
     return { axis, failed: true, findings: [], note: `axis agent returned nothing${error ? `: ${error}` : ''}` }
   const findings = review.findings.map((finding, index) => ({ ...finding, id: `${AXIS_PREFIXES[axis]}${index + 1}` }))
-  if (findings.length === 0)
+  const keeps = (review.keeps ?? []).map((keep, index) => ({ ...keep, id: `CK${index + 1}` }))
+  if (findings.length === 0 && keeps.length === 0)
     return { axis, findings, note: review.note }
   let refutation = null
   try {
-    refutation = await agent(refutePrompt(axis, findings), { label: `refute:${axis}`, phase: 'Refute', schema: VERDICTS, model: 'opus' })
+    refutation = await agent(refutePrompt(axis, findings, keeps), { label: `refute:${axis}`, phase: 'Refute', schema: VERDICTS, model: 'opus' })
   }
   catch {}
   const verdictById = new Map((refutation?.verdicts ?? []).map(entry => [entry.id, entry]))
+  const readBacks = keeps.flatMap((keep) => {
+    const keepVerdict = verdictById.get(keep.id)
+    if (keepVerdict?.verdict !== 'refuted')
+      return []
+    return [{
+      id: keep.id,
+      severity: 'nit',
+      confidence: 'high',
+      location: keep.location,
+      finding: `The axis kept \`\` ${keep.line} \`\`, but it, or a clause of it, reads back the code.`,
+      evidence: keepVerdict.reason,
+      proof: 'traced',
+      fix: keepVerdict.fix ?? 'Delete the line.',
+      form: 'single',
+      verdict: 'confirmed',
+      verdictReason: keepVerdict.reason,
+    }]
+  })
   return {
     axis,
     refuteFailed: !refutation,
-    findings: findings.map(finding => ({
-      ...finding,
-      fix: verdictById.get(finding.id)?.fix ?? finding.fix,
-      verdict: verdictById.get(finding.id)?.verdict ?? 'plausible',
-      verdictReason: verdictById.get(finding.id)?.reason ?? 'no skeptic verdict',
-    })),
+    findings: [
+      ...findings.map(finding => ({
+        ...finding,
+        fix: verdictById.get(finding.id)?.fix ?? finding.fix,
+        verdict: verdictById.get(finding.id)?.verdict ?? 'plausible',
+        verdictReason: verdictById.get(finding.id)?.reason ?? 'no skeptic verdict',
+      })),
+      ...readBacks,
+    ],
     note: review.note,
   }
 }
