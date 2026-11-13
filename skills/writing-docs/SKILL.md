@@ -11,7 +11,7 @@ The rules below are defaults with a direction, not a template: weigh each agains
 
 ## The Contract
 
-Docs state the contract: what the reader can set, call, see, catch, pay for, or must work around. Mechanism stays in the source: internal classes and enums, private fields, internal file and script names, the path a value takes, wire formats, internal batch sizes, the arithmetic behind a number, the spellings an input also tolerates. A mechanism the reader feels becomes its consequence, not silence: "Registers a single tool and forces it via `toolChoice`" becomes "Structured output is a forced tool call, so the response always matches your schema." A section whose job is to explain the mechanism, such as How It Works, keeps the mechanism it explains, in the reader's terms.
+Docs state the contract: what the reader can set, call, feed in, see, catch, pay for, or must work around. Mechanism stays in the source: internal classes and enums, private fields, internal file and script names, the path a value takes, wire formats, internal batch sizes, the arithmetic behind a number, the extra spellings an option accepts (`false` or `0`), the config files and keys the software does not read. A mechanism the reader feels becomes its consequence, not silence: "Registers a single tool and forces it via `toolChoice`" becomes "Structured output is a forced tool call, so the response always matches your schema." A section whose job is to explain the mechanism, such as How It Works, keeps the mechanism it explains, in the reader's terms.
 
 Docs invite a developer in and show how to work with the software; the types, `--help`, and the source hold the rest. An edit adds a fact only where a reader following the page is stuck without it. A claim that needs a qualifier to stay true, such as "In an English Panel", says less until it is true without one.
 
@@ -19,22 +19,26 @@ The reason behind a design belongs in an ADR or the commit, and stays in the doc
 
 A cut or a rewrite keeps:
 
-- The one example that shows a feature's data shape on its own page.
+- The smallest example that shows a feature's shape on its own page, even where a fuller one follows.
 - The workaround snippet behind a "not supported".
 - The exact error message the reader sees, and its likely cause.
 - Precedence and matching rules: which one wins when two match.
 - Defaults and the exact default output.
 - How often reader code runs: "at most once per 250 ms".
 - Who can access what.
+- What tells two options apart where the reader picks one: cost, speed, what each stores.
+- What a limit guarantees and where it gives way: "a chunk closes once it reaches the target, so a long segment can push it past".
 - The consequence of an allow-list, a list that replaces the defaults instead of adding to them.
 - A number, exactly: "for up to 10 minutes", not "for a few minutes". When the number goes, the whole claim goes with it.
 - Every list member and tie-breaker of a sentence being merged into another.
+- Credit to a person.
 
 ## Pages
 
 - **One Diátaxis mode per page,** or per section in a README that is the project's docs.
 - **Status quo.** What is true now: no history, no superseded facts. A count that grows, a path list, or a tree only when the reader needs it, with the command that regenerates it. An upgrade step of the current major stays: with its exact error where no migration guide holds it, else as a link to the guide.
 - **One owner per fact.** The owner is the page whose job the fact belongs to. Elsewhere it shrinks to the clause the reader needs right there, with the link on that clause: "APIful requires Node 24 or later and TypeScript 5.9 or later – see [Install APIful](…)". An upstream's docs are linked, not mirrored: its option table, its count of supported languages.
+- **A shared frame,** a sentence repeated word for word across sibling pages, changes everywhere or nowhere.
 - **Open on the subject.** The first sentence says what the thing does, with an example value: "`apiful/http-status-codes` exports every registered HTTP status code as a constant typed with its literal number, such as `NOT_FOUND` for `404`."
 - **A section that only points elsewhere** becomes a sentence at the end of the paragraph before it.
 - **A lead-in before code, a table, or output** stays when it carries a fact the block does not show: "This displays the following output:" goes.
@@ -64,8 +68,6 @@ The form follows the section's job:
 
 A feature list is one kind, so its headings stay noun phrases even where one names a task.
 
-A renamed heading moves its anchor: update every link that points at it.
-
 ## Wording
 
 - **Present tense** for what the software does: "an exception will be thrown" becomes "throws when the section loads".
@@ -88,12 +90,16 @@ A renamed heading moves its anchor: update every link that points at it.
 
 1. **Verdict.** Give every paragraph of the page **keep**, **cut**, or **rewrite** against the sections above, for this page's reader and its mode. Done when no paragraph is left without one.
 2. **Vanished facts.** After the cuts, run `node <this skill's dir>/scripts/vanished-facts.mjs <base> [<docs-dir>]` from the repo: `<docs-dir>` defaults to `docs`, `.` checks a README, and `--per-dir` makes each top-level directory of `<docs-dir>` its own corpus for docs that are one product per directory. It lists the numbers, a bare 0, 1, or 2 aside, and the backticked identifiers the change removed that no page still contains; a changelog, `GLOSSARY.md`, an ADR under `adr/`, `AGENTS.md`, `CLAUDE.md`, and a dot-named file or directory count as no page. A default or an error message in plain words, and a bare 0, 1, or 2, is the verdict's to catch. Done when every listed fact is back on the page or one the Contract leaves to the source.
-3. **Added facts and fresh read**, as below.
+3. **Loose ends, added facts, and fresh read**, as below.
+
+## Loose Ends
+
+After an edit that cuts, renames, or moves, every link, anchor, section number, and name that the page or another file points at still resolves, and every remaining example runs as pasted, with the sentences around it still fitting. Done when nothing dangles.
 
 ## Added Facts
 
-After an edit that adds or rewrites, run the Debloat Pass's command with `--added`. Before keeping a fact an earlier commit removed, read that commit. Done when every listed fact is one the Contract lets an edit add.
+After an edit that adds or rewrites, run the Debloat Pass's command with `--added`. Before keeping a fact an earlier commit removed, read that commit. Done when every listed fact is one the Contract lets an edit add – for a debloat, when each listed fact rewords one the change removed.
 
 ## Fresh Read
 
-Every doc edit beyond a sentence or two, written or debloated, closes on a fresh subagent that gets the old text if there is one, the new text, and the page's purpose. A hunk it judges worse, or longer without gain, goes back.
+Every doc edit beyond a sentence or two, written or debloated, closes on a fresh subagent that gets the old text if there is one, the new text, the page's purpose, the Contract's keep list, and Loose Ends. A hunk it judges worse, or longer without gain, goes back.

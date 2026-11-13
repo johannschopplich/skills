@@ -132,18 +132,31 @@ function collectChangedFacts(diffText) {
   for (const line of diffText.split('\n')) {
     if (line.startsWith('diff --git ')) {
       isInFileHeader = true
+      currentFile = ''
       continue
     }
     if (isInFileHeader) {
-      // The `---` side names the file a removed line came from, also for a deleted or renamed file. Git ends a path
-      // that contains a space with a tab.
-      if (line.startsWith(fileHeader))
-        currentFile = line.slice(fileHeader.length + docsPrefix.length).replace(/\t$/, '')
-      else if (line.startsWith('@@'))
+      // The sign's side names the file a fact came from, also for a renamed file; the other side stands in where the
+      // sign's side is `/dev/null`, for a page the change added or deleted. Git ends a path that contains a space with
+      // a tab.
+      if (line.startsWith('--- a/') || line.startsWith('+++ b/')) {
+        if (line.startsWith(fileHeader) || !currentFile)
+          currentFile = line.slice(fileHeader.length + docsPrefix.length).replace(/\t$/, '')
+      }
+      else if (line.startsWith('@@')) {
         isInFileHeader = false
+      }
       continue
     }
-    if (!line.startsWith(sign) || !isPage(currentFile))
+    if (!/^[+-]/.test(line) || !currentFile || !isPage(currentFile))
+      continue
+
+    const pathSegments = currentFile.split('/')
+    const group = isPerDirectory && pathSegments.length > 1 ? pathSegments[0] : rootGroup
+    // A group the change touched prints its header even when it has no fact to list.
+    const filesByFact = factsByGroup.get(group) ?? new Map()
+    factsByGroup.set(group, filesByFact)
+    if (!line.startsWith(sign))
       continue
 
     const text = line.slice(1)
@@ -151,15 +164,10 @@ function collectChangedFacts(diffText) {
       ...(text.match(numberPattern) ?? []),
       ...[...text.matchAll(identifierPattern)].map(match => match[1]),
     ].filter(fact => fact.length <= maxLength && !trivialNumbers.has(fact))
-
-    const pathSegments = currentFile.split('/')
-    const group = isPerDirectory && pathSegments.length > 1 ? pathSegments[0] : rootGroup
     for (const fact of facts) {
-      const filesByFact = factsByGroup.get(group) ?? new Map()
       const files = filesByFact.get(fact) ?? new Set()
       files.add(pathSegments.at(-1))
       filesByFact.set(fact, files)
-      factsByGroup.set(group, filesByFact)
     }
   }
 
