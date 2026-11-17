@@ -19,8 +19,6 @@ Pull the clone in `/tmp`, or clone it there shallow from `https://github.com/get
 - **Panel** – a project's `vendor/getkirby/cms` has the PHP `src/` but only `panel/dist`: read the Panel from a clone's `panel/src/`.
 - **Shallow** – a "since" version needs the tag or the full history.
 - **Pinned ref** – `kirby.tools/layers/kirby-panel/kirby/` holds the Kirby 6 source at the commit its `kirby.json` pins (`pnpm kirby-panel:fetch`): read it for work on that layer.
-- **Kirby 6** – `~/Projects/MIGRATION-K6.md` tracks what waits for it across plugins, licensing, and site. Read it before a Vue 3 or Kirby 6 change; record new items there.
-- **Feature freeze** – `main` (Kirby 4 and 5) takes fixes only, targeted at Kirby 5 and 6; Kirby 4 must not break. Every new feature lands on `feat/kirby-6`.
 
 ## Helper Packages
 
@@ -28,19 +26,20 @@ Pull the clone in `/tmp`, or clone it there shallow from `https://github.com/get
 - **kirbyuse** – `~/Projects/kirbyuse`, Panel composables (`usePanel`, `useApi`, `useDialog`, …), typed by kirby-types.
 - **kirbyup** – `~/Projects/kirbyup`, the plugins' build tool.
 
-Kirby 6 work sits on `main` in kirbyup, kirbyuse, kirby-types, kirby-tools-utils and both licensing repos, prereleases published as `next`. The plugins port on `feat/kirby-6`. A change across them releases in order: kirby-types, kirbyuse, then kirbyup or the plugin.
+`main` is Kirby 6 here too, prereleases published as `next`. A change across them releases in order: kirby-types, kirbyuse, then kirbyup or the plugin.
 
 ## Gotchas
 
 - **`panel.api` resets the loader** – `api.request()` sets `panel.isLoading = false` when its last request ends, `silent` or not (`panel/src/api/index.js`, K6 `index.ts`). A run mixing `panel.api` calls with long local work shows its own loading state.
 - **Runtime markup** – the Panel adds classes no `.vue` file holds (`k-text` on the writer's ProseMirror node, from `Editor`). Props and defaults come from the source; markup and computed styles from a running Panel: a playground, or [kirby-6-panel.md](kirby-6-panel.md) for `v6/develop`.
-- **After a plugin's stable release** – merge `main` into its `feat/kirby-6`, never rebase.
 - **Site content** – in a site with `scripts/sync-content.sh`, web holds the content: `--download --apply` before a content edit, `--upload --apply` after.
 
 ## Plugins
 
-- **Playground** – runs on the Kirby in `vendor/`: 5 on `main`, 6 on `feat/kirby-6`. Before a [smoke test](panel-smoke.md), `pnpm build` in place – no asking, `index.js` stays uncommitted – and name the commit it was built from. A leftover `index.dev.mjs` wins over `index.js`. A playground-only feature (`__PLAYGROUND__`, a build-time constant) takes `pnpm build:playground`.
-- **Shared files** – the `kirby-*` plugins share `.gitignore`, `.gitattributes`, `tsconfig.json`, and `playground/site/plugins/playground/`, shaped after `kirby-copilot`; the ones whose tests import `tests/panel/helpers/mock-kirbyuse.ts` share it byte for byte. A `feat/kirby-6` branch shares them with the other `feat/kirby-6` branches. Change every sibling or none; never prune a line one repo doesn't use.
+- **Kirby 6** – `~/Projects/kirby-tools-roadmap.md` § 1 holds what still waits for the RC and release day across plugins, licensing, paywall and site. Read it before work on a plugin's `main`; record new items there.
+- **Lines** – a plugin's `main` is the Kirby 6 line, where every new feature lands. The Kirby 4 and 5 line sits on its version branch (`v3`, `v2`, …) and takes fixes only; Kirby 4 must not break there. A bug in both lines is fixed on each.
+- **Playground** – runs on its line's Kirby in `vendor/`. Before a [smoke test](panel-smoke.md), `pnpm build` in place – no asking, `index.js` stays uncommitted – and name the commit it was built from. A leftover `index.dev.mjs` wins over `index.js`. A playground-only feature (`__PLAYGROUND__`, a build-time constant) takes `pnpm build:playground`.
+- **Shared files** – the `kirby-*` plugins share `.gitignore`, `.gitattributes`, `tsconfig.json`, and `playground/site/plugins/playground/`, shaped after `kirby-copilot`; the ones whose tests import `tests/panel/helpers/mock-kirbyuse.ts` share it byte for byte. Each line shares them across repos: `main` with the other `main`s, a version branch with the other version branches. Change every sibling or none; never prune a line one repo doesn't use.
 - **UnoCSS** – `presetWind3` with a prefix per plugin (`uno.config.ts`: `kai-`, `kct-`, `ksr-`, …). Kirby tokens take the bracket form, `kai-mt-[var(--spacing-4)]`; Tailwind v4's `mt-(--spacing-4)` generates nothing. Sibling spacing is `[&>*+*]:kai-mt-[var(--spacing-N)]`, never `space-y-*` – Wind3 and the Tailwind v4 mocks in kirby.tools compile it differently.
 
 ## Docs
@@ -48,5 +47,5 @@ Kirby 6 work sits on `main` in kirbyup, kirbyuse, kirby-types, kirby-tools-utils
 The Kirby Tools plugins document in `~/Projects/kirby.tools`: `content/1.docs/<n>.<product>/`, the website changelog in `content/<n>.<product>/changelog/`, the agent skill in `server/assets/skills/kirby-<product>/SKILL.md`. A feature or release is done once its docs edit is there. Read `kirby.tools/.claude/skills/kirby-tools-content/SKILL.md` before writing.
 
 - **Editor-first** – keep the gotcha a reader trips over; drop implementation detail an editor never meets.
-- **One Kirby version** – the docs describe the current major the plugins support without naming it (Kirby 5 until they move to 6). No other major or minor version appears, not even as a caveat for a feature Kirby 4 lacks.
+- **One Kirby version** – the docs describe one major without naming it: Kirby 5 on kirby.tools' `main`, Kirby 6 on its `feat/kirby-6` docs branch, which merges on release day. No other major or minor version appears, not even as a caveat for a feature Kirby 4 lacks.
 - **Changelog** – what an editor notices in the Panel; changelogithub writes the technical one on GitHub.
