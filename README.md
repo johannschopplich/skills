@@ -35,7 +35,7 @@ Tied to my machine and folders – a reference, not an install.
 
 ## Setup
 
-[`claude/`](claude/) holds my global `CLAUDE.md`, rules, and a hook that runs a `/skill` typed mid-prompt. `install.sh` links them into `~/.claude` and every skill into `~/.agents/skills`; [`skills.txt`](skills.txt) lists the third-party skills my dev server adds.
+[`claude/`](claude/) holds my global `CLAUDE.md`, rules, and a hook that runs a `/skill` typed mid-prompt. `install.sh` links them into `~/.claude` and every skill into `~/.agents/skills`. On macOS it also registers the [Apple Mail MCP](https://github.com/patrickfreyer/apple-mail-mcp) with sending blocked. [`skills.txt`](skills.txt) lists the third-party skills my dev server adds.
 
 ```sh
 git clone https://github.com/johannschopplich/skills.git ~/skills && ~/skills/install.sh
