@@ -40,7 +40,7 @@ done
 if [[ $(uname) == Darwin ]]; then
   if command -v claude >/dev/null; then
     claude mcp remove -s user apple-mail &>/dev/null || true
-    claude mcp add -s user apple-mail -- uvx mcp-apple-mail --read-only >/dev/null
+    claude mcp add -s user apple-mail -- uvx mcp-apple-mail@3.3.0 --read-only >/dev/null
   else
     echo "skipped apple-mail: claude not on PATH" >&2
   fi
