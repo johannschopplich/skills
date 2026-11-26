@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Provisions the dev box: hardening, Tailscale, Docker, PHP, gh, and nvm, Claude Code, T3 Code, and the skills repo for the user.
+# Provisions the dev box: hardening, Tailscale, Docker, PHP, gh, and git defaults, nvm, Claude Code, T3 Code, and the skills repo for the user.
 set -euo pipefail
 
 PHP_VERSIONS="8.5"
@@ -112,6 +112,8 @@ if [[ ! -s $home/.ssh/authorized_keys ]]; then
   install -m 600 -o "$DEV_USER" -g "$DEV_USER" /root/.ssh/authorized_keys "$home/.ssh/authorized_keys"
 fi
 loginctl enable-linger "$DEV_USER"
+# A rebase moves a stack's other branches along and replays conflicts resolved before.
+runuser -l "$DEV_USER" -c 'git config --global rebase.updateRefs true && git config --global rerere.enabled true && git config --global fetch.prune true'
 
 # Root login closes here, once the user holds root's keys.
 cat > /etc/ssh/sshd_config.d/10-servers.conf <<'EOF'
