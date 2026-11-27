@@ -71,7 +71,7 @@ A feature list is one kind, so its headings stay noun phrases even where one nam
 ## Wording
 
 - **Present tense** for what the software does: "an exception will be thrown" becomes "throws when the section loads".
-- **The software as subject, or an imperative for the reader:** "This allows you to set default options" becomes "This sets default options"; "Kirby Copilot can be configured globally" becomes "Configure Kirby Copilot globally". "You can" stays where it grants permission: "you can download and test it before purchasing".
+- **The software as subject, or an imperative for the reader:** "This allows you to set default options" becomes "This sets default options"; "Kirby Copilot can be configured globally" becomes "Configure Kirby Copilot globally". "You can" stays where it grants permission or names an option: "you can download and test it before purchasing", "you can remove them one by one".
 - **The verb that happens:** "Both methods provide the same functionality" becomes "Both run the same translation". Provide, support, and handle usually stand in for a sharper verb. A sharper claim is checked against the source before it replaces a vague one.
 - **Define a thing by what it is:** "A handler extension returns a function" becomes "A handler extension is a function".
 - **Behavior over adjectives and analogies:** "a jQuery-like, Axios-style API" becomes "each property adds a path segment".
