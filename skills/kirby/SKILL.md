@@ -48,4 +48,3 @@ The Kirby Tools plugins document in `~/Projects/kirby.tools`: `content/1.docs/<n
 
 - **Editor-first** – keep the gotcha a reader trips over; drop implementation detail an editor never meets.
 - **One Kirby version** – the docs describe Kirby 6 without naming it. No other major or minor version appears, not even as a caveat for a feature Kirby 5 lacks.
-- **Changelog** – what an editor notices in the Panel; changelogithub writes the technical one on GitHub.
